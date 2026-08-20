@@ -22,16 +22,20 @@ const historicoVendas12m = [
 ];
 
 const treemapData = [
-  { name: 'Venda Bruta', size: 94.14, fill: '#10b981' },
-  { name: 'Valor CR', size: 17.37, fill: '#f59e0b' },
-  { name: 'Vr Estoque', size: 7.26, fill: '#3b82f6' },
-  { name: 'Valor CP', size: 6.77, fill: '#ef4444' },
-  { name: 'Vr Contas', size: 6.26, fill: '#00d2ff' }
+  { name: 'Venda Bruta', size: 94.14, fill: '#059669' },
+  { name: 'Valor CR', size: 17.37, fill: '#d97706' },
+  { name: 'Vr Estoque', size: 7.26, fill: '#2563eb' },
+  { name: 'Valor CP', size: 6.77, fill: '#dc2626' },
+  { name: 'Vr Contas', size: 6.26, fill: '#0891b2' }
 ];
 
 const CustomTreemapContent = (props) => {
   const { x, y, width, height, name, size, fill } = props;
-  if (!width || !height || width < 15 || height < 15) return null;
+  if (!width || !height || width < 20 || height < 20) return null;
+
+  const words = (name || '').split(' ');
+  const isNarrow = width < 85;
+  const vlrFmt = `R$ ${Number(size).toFixed(2).replace('.', ',')} Mi`;
 
   return (
     <g>
@@ -41,40 +45,103 @@ const CustomTreemapContent = (props) => {
         width={width - 2}
         height={height - 2}
         style={{
-          fill: fill || '#10b981',
+          fill: fill || '#059669',
           stroke: '#070d18',
           strokeWidth: 2,
           rx: 6,
           ry: 6,
         }}
       />
-      {width > 48 && height > 28 && (
-        <text
-          x={x + width / 2}
-          y={y + height / 2 - (height > 48 ? 8 : 0)}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fill="#ffffff"
-          fontSize={width < 80 ? 11 : 13}
-          fontWeight="800"
-          style={{ textShadow: '0 2px 5px rgba(0,0,0,0.95)', letterSpacing: '0.4px' }}
-        >
-          {name}
-        </text>
-      )}
-      {width > 55 && height > 48 && (
-        <text
-          x={x + width / 2}
-          y={y + height / 2 + 12}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fill="#ffffff"
-          fontSize={11}
-          fontWeight="700"
-          style={{ textShadow: '0 2px 5px rgba(0,0,0,0.95)', opacity: 0.95 }}
-        >
-          {`R$ ${Number(size).toFixed(2).replace('.', ',')} Mi`}
-        </text>
+      
+      {/* Caso Bloco Estreito (ex: Vr Estoque, Vr Contas): Quebra de Linha Inteligente */}
+      {isNarrow ? (
+        <>
+          {height >= 55 ? (
+            <>
+              <text
+                x={x + width / 2}
+                y={y + height / 2 - 14}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="#ffffff"
+                fontSize={11}
+                fontWeight="700"
+                style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)', letterSpacing: '0.2px' }}
+              >
+                {words[0]}
+              </text>
+              {words.length > 1 && (
+                <text
+                  x={x + width / 2}
+                  y={y + height / 2 - 1}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill="#ffffff"
+                  fontSize={11}
+                  fontWeight="700"
+                  style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)', letterSpacing: '0.2px' }}
+                >
+                  {words.slice(1).join(' ')}
+                </text>
+              )}
+              <text
+                x={x + width / 2}
+                y={y + height / 2 + 15}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="#ffffff"
+                fontSize={10}
+                fontWeight="700"
+                style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)' }}
+              >
+                {vlrFmt}
+              </text>
+            </>
+          ) : (
+            <text
+              x={x + width / 2}
+              y={y + height / 2}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill="#ffffff"
+              fontSize={10}
+              fontWeight="700"
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)' }}
+            >
+              {name}
+            </text>
+          )}
+        </>
+      ) : (
+        /* Bloco Amplo (ex: Venda Bruta, Valor CR) */
+        <>
+          <text
+            x={x + width / 2}
+            y={y + height / 2 - (height > 50 ? 10 : 0)}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fill="#ffffff"
+            fontSize={width > 160 ? 15 : 13}
+            fontWeight="800"
+            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.6)', letterSpacing: '0.3px' }}
+          >
+            {name}
+          </text>
+          {height > 50 && (
+            <text
+              x={x + width / 2}
+              y={y + height / 2 + 12}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill="#ffffff"
+              fontSize={width > 160 ? 13 : 11}
+              fontWeight="700"
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}
+            >
+              {vlrFmt}
+            </text>
+          )}
+        </>
       )}
     </g>
   );
@@ -117,12 +184,12 @@ export default function PanoramaGeral() {
           <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={20.26} color="#10b981" max={30} />
         </div>
 
-        {/* Treemap com Alto Contraste */}
+        {/* Treemap com Alto Contraste e Quebra Inteligente */}
         <div className="glass-card" style={{ padding: 16 }}>
           <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#cbd5e1', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
             📊 Proporção de Capital &amp; Operação (Treemap)
           </h3>
-          <div style={{ width: '100%', height: 180 }}>
+          <div style={{ width: '100%', height: 220 }}>
             <ResponsiveContainer>
               <Treemap
                 data={treemapData}

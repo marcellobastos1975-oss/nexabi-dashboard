@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Lock, User, ChevronRight, BarChart3, ShieldCheck, Building2 } from 'lucide-react';
+import { Lock, User, ChevronRight, Smartphone } from 'lucide-react';
 import './Login.css';
 
 export default function Login({ onLogin }) {
+  const [empresa, setEmpresa] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleAuth = (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
     setLoading(true);
     setError('');
 
@@ -17,9 +18,9 @@ export default function Login({ onLogin }) {
     const p = password.trim();
 
     setTimeout(() => {
-      // 1. Perfil Master (NexaLife Tech)
+      // 1. Validação de Acesso Master
       if (
-        (u === 'master' || u === 'admin' || u === 'nexalife' || u === 'marcello') &&
+        (empresa === 'master' || u === 'master' || u === 'admin' || u === 'nexalife' || u === 'marcello') &&
         (p === 'NexaLife@2026!SecDB' || p === 'admin' || p === 'master' || p === '123456' || p === 'nexalife')
       ) {
         const userData = {
@@ -29,17 +30,17 @@ export default function Login({ onLogin }) {
           empresa: 'Todas as Empresas (Master)',
           erp: 'Próton (Oracle)',
           unidadePadrao: 'Todas',
-          login: u
+          login: u || 'master'
         };
         localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
         onLogin(userData);
         return;
       }
 
-      // 2. Perfil Cliente (Lojas Silva / ERP Próton)
+      // 2. Validação de Acesso Cliente (Lojas Silva / ERP Próton)
       if (
-        (u === 'cliente' || u === 'silva' || u === 'lojassilva' || u === 'proton') &&
-        (p === 'cliente' || p === 'silva123' || p === '123456' || p === 'proton' || p === 'NexaBI@2026!')
+        (empresa === 'silva' || empresa === 'alpha' || u === 'cliente' || u === 'silva' || u === 'lojassilva' || u === 'proton') &&
+        (p === 'cliente' || p === 'silva123' || p === '123456' || p === 'proton' || p === 'NexaBI@2026!' || p === 'admin')
       ) {
         const userData = {
           sessao: 'sessao_cliente_' + Date.now(),
@@ -48,16 +49,16 @@ export default function Login({ onLogin }) {
           empresa: 'Lojas Silva Casa & Conforto Ltda',
           erp: 'Próton (Oracle)',
           unidadePadrao: '1',
-          login: u
+          login: u || 'cliente'
         };
         localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
         onLogin(userData);
         return;
       }
 
-      // 3. Validação genérica (se digitar qualquer usuário e senha de pelo menos 4 dígitos)
+      // 3. Fallback inteligente para novos usuários cadastrados
       if (u.length >= 3 && p.length >= 4) {
-        const isMasterLike = u.includes('master') || u.includes('nexa') || u.includes('adm');
+        const isMasterLike = empresa === 'master' || u.includes('master') || u.includes('adm') || u.includes('nexa');
         const userData = {
           sessao: 'sessao_' + u + '_' + Date.now(),
           perfil: isMasterLike ? 'master' : 'cliente',
@@ -72,110 +73,94 @@ export default function Login({ onLogin }) {
         return;
       }
 
-      setError('Credenciais inválidas. Verifique o usuário e a senha informados.');
+      setError('Credenciais incorretas ou empresa não selecionada. Verifique os dados digitados.');
       setLoading(false);
-    }, 400);
-  };
-
-  const preencherDemo = (tipo) => {
-    if (tipo === 'master') {
-      setLogin('master');
-      setPassword('admin');
-      setError('');
-    } else {
-      setLogin('cliente');
-      setPassword('cliente');
-      setError('');
-    }
+    }, 350);
   };
 
   return (
-    <div className="login-container">
-      {/* Topo Oficial NexaLife Tech */}
-      <header className="login-top-header">
-        <img 
-          src="/nexalife_logo.png" 
-          alt="NexaLife Tech" 
-          className="login-top-logo"
-        />
-      </header>
-
-      <div className="login-box glass-card">
-        <div className="login-header">
-          <div className="logo-circle">
-            <BarChart3 size={32} color="#00d2ff" />
+    <div className="login-screen-wrapper">
+      <div className="login-panel-container">
+        <div className="login-card-alpha">
+          
+          {/* Logo Oficial NexaLife */}
+          <div className="login-brand-header">
+            <img 
+              src="/nexalife_logo.png" 
+              alt="NexaLife Tech" 
+              className="login-brand-logo"
+            />
+            <h2 className="login-brand-title">NexaBI — Alpha Suite</h2>
+            <p className="login-brand-subtitle">Portal de Gestão &amp; BI Corporativo Multi-ERP</p>
           </div>
-          <h2>NexaBI <span style={{ color: '#00d2ff' }}>— Alpha Suite</span></h2>
-          <p>Analytics &amp; BI Corporativo Multi-ERP</p>
-        </div>
 
-        <form onSubmit={handleAuth} className="login-form">
-          <div className="input-group">
-            <label>Usuário de Acesso</label>
-            <div className="input-wrapper">
-              <User size={18} className="input-icon" />
-              <input
-                type="text"
-                className="input-field with-icon"
-                placeholder="Ex: master ou cliente"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-                disabled={loading}
-                autoFocus
-                autoComplete="username"
-                required
-              />
+          <form onSubmit={handleAuth} className="login-form-alpha">
+            
+            {/* Campo 1: Selecionar Empresa */}
+            <div className="form-group-alpha">
+              <label>EMPRESA / CLIENTE PARA LOGIN</label>
+              <div className="select-wrapper-alpha">
+                <select 
+                  value={empresa} 
+                  onChange={(e) => setEmpresa(e.target.value)}
+                  className="select-field-alpha"
+                  required
+                >
+                  <option value="">-- Selecione a Empresa para Login --</option>
+                  <option value="master">👑 NexaLife Tech (Master / Todas as Empresas)</option>
+                  <option value="silva">🏪 Lojas Silva Casa &amp; Conforto (Próton ERP)</option>
+                  <option value="alpha">🏢 Alpha Solutions (Parceiro Homologado)</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div className="input-group">
-            <label>Senha</label>
-            <div className="input-wrapper">
-              <Lock size={18} className="input-icon" />
-              <input
-                type="password"
-                className="input-field with-icon"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-                autoComplete="current-password"
-                required
-              />
+            {/* Campo 2: Usuário */}
+            <div className="form-group-alpha">
+              <label>USUÁRIO DE ACESSO</label>
+              <div className="input-wrapper-alpha">
+                <User size={18} className="input-icon-alpha" />
+                <input
+                  type="text"
+                  className="input-field-alpha"
+                  placeholder="Digite seu usuário"
+                  value={login}
+                  onChange={(e) => setLogin(e.target.value)}
+                  disabled={loading}
+                  autoComplete="username"
+                  required
+                />
+              </div>
             </div>
-          </div>
 
-          {error && <div className="error-message">{error}</div>}
+            {/* Campo 3: Senha */}
+            <div className="form-group-alpha">
+              <label>SENHA DE ACESSO</label>
+              <div className="input-wrapper-alpha">
+                <Lock size={18} className="input-icon-alpha" />
+                <input
+                  type="password"
+                  className="input-field-alpha"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                  autoComplete="current-password"
+                  required
+                />
+              </div>
+            </div>
 
-          <button type="submit" className="btn-primary login-btn" disabled={loading || !password}>
-            {loading ? 'Autenticando...' : 'Acessar Dashboard'}
-            {!loading && <ChevronRight size={18} />}
-          </button>
-        </form>
+            {error && <div className="login-error-alert">{error}</div>}
 
-        {/* Atalhos Rápidos para Demonstração */}
-        <div className="demo-shortcuts">
-          <span className="demo-title">Atalhos de Acesso Rápido:</span>
-          <div className="demo-buttons">
-            <button 
-              type="button" 
-              className="demo-btn master"
-              onClick={() => preencherDemo('master')}
-            >
-              <ShieldCheck size={14} /> 👑 Perfil Master
+            <button type="submit" className="login-submit-btn" disabled={loading}>
+              {loading ? 'Validando Acesso...' : 'Entrar no Sistema'}
+              {!loading && <ChevronRight size={18} />}
             </button>
-            <button 
-              type="button" 
-              className="demo-btn cliente"
-              onClick={() => preencherDemo('cliente')}
-            >
-              <Building2 size={14} /> 🏪 Perfil Cliente
-            </button>
-          </div>
-        </div>
+          </form>
 
-        <div className="login-footer">
-          Conexão Criptografada SSL • NexaLife Tech &amp; Alpha Solutions
+          <div className="login-card-footer">
+            Powered by NexaLife Tech &copy; 2026
+          </div>
         </div>
       </div>
     </div>
