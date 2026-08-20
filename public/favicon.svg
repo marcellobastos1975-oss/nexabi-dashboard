@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#001a40" />
+      <stop offset="100%" stop-color="#060c17" />
+    </linearGradient>
+    <linearGradient id="nexaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d2ff" />
+      <stop offset="50%" stop-color="#0066ff" />
+      <stop offset="100%" stop-color="#002b66" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  <rect width="512" height="512" rx="128" fill="none" stroke="rgba(0, 210, 255, 0.3)" stroke-width="8" />
+
+  <!-- Stylized NexaLife "N" Logo -->
+  <path d="M 128 390 V 122 L 230 122 C 290 122 344 165 344 228 C 344 285 298 326 238 326 L 196 326 L 196 390 Z M 196 186 V 262 L 230 262 C 258 262 278 245 278 224 C 278 203 258 186 230 186 Z" fill="url(#nexaGrad)" filter="url(#glow)" style="display:none;" />
+  
+  <!-- Sleek Modern Wave N -->
+  <path d="M 120 380 V 132 C 120 122 132 116 140 124 L 320 310 V 132 C 320 122 328 116 338 116 H 372 C 382 116 390 124 390 134 V 380 C 390 390 378 396 370 388 L 190 202 V 380 C 190 390 182 396 172 396 H 138 C 128 396 120 388 120 380 Z" fill="url(#nexaGrad)" filter="url(#glow)" />
+</svg>

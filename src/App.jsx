@@ -33,8 +33,12 @@ export default function App() {
       {/* Header Executivo NexaLife Tech & Alpha Solutions */}
       <header className="glass-card" style={{ padding: '14px 20px', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#fff', fontSize: '18px', boxShadow: '0 4px 15px rgba(0, 210, 255, 0.3)' }}>
-            N
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <img 
+              src="/logo_nexalife.png" 
+              alt="NexaLife Tech Logo Oficial" 
+              style={{ height: 48, objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0, 210, 255, 0.25))' }} 
+            />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -118,7 +122,7 @@ export default function App() {
 
       {/* Rodapé Oficial */}
       <footer style={{ marginTop: 32, textAlign: 'center', fontSize: '11px', color: 'var(--text-muted)', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 16 }}>
-        <strong>NexaBI — Alpha Suite v1.0.0</strong> • Desenvolvido por <strong>NexaLife Tech & Alpha Solutions</strong> • Alta Performance & Zero Impacto no Servidor
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}><img src="/logo_nexalife.png" alt="NexaLife" style={{ height: 24, objectFit: 'contain' }} /><span>•</span><strong>NexaBI — Alpha Suite v1.1.0</strong><span>•</span>Desenvolvido por <strong>NexaLife Tech & Alpha Solutions</strong><span>•</span>Alta Performance & Zero Impacto no Servidor</div>
       </footer>
     </div>
   );
