@@ -29,6 +29,57 @@ const treemapData = [
   { name: 'Vr Contas', size: 6.26, fill: '#00d2ff' }
 ];
 
+const CustomTreemapContent = (props) => {
+  const { x, y, width, height, name, size, fill } = props;
+  if (!width || !height || width < 15 || height < 15) return null;
+
+  return (
+    <g>
+      <rect
+        x={x + 1}
+        y={y + 1}
+        width={width - 2}
+        height={height - 2}
+        style={{
+          fill: fill || '#10b981',
+          stroke: '#070d18',
+          strokeWidth: 2,
+          rx: 6,
+          ry: 6,
+        }}
+      />
+      {width > 48 && height > 28 && (
+        <text
+          x={x + width / 2}
+          y={y + height / 2 - (height > 48 ? 8 : 0)}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fill="#ffffff"
+          fontSize={width < 80 ? 11 : 13}
+          fontWeight="800"
+          style={{ textShadow: '0 2px 5px rgba(0,0,0,0.95)', letterSpacing: '0.4px' }}
+        >
+          {name}
+        </text>
+      )}
+      {width > 55 && height > 48 && (
+        <text
+          x={x + width / 2}
+          y={y + height / 2 + 12}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fill="#ffffff"
+          fontSize={11}
+          fontWeight="700"
+          style={{ textShadow: '0 2px 5px rgba(0,0,0,0.95)', opacity: 0.95 }}
+        >
+          {`R$ ${Number(size).toFixed(2).replace('.', ',')} Mi`}
+        </text>
+      )}
+    </g>
+  );
+};
+
 export default function PanoramaGeral() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -66,23 +117,20 @@ export default function PanoramaGeral() {
           <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={20.26} color="#10b981" max={30} />
         </div>
 
-        {/* Treemap */}
+        {/* Treemap com Alto Contraste */}
         <div className="glass-card" style={{ padding: 16 }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: 10 }}>
-            Proporção de Capital & Operação (Treemap)
+          <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#cbd5e1', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+            📊 Proporção de Capital &amp; Operação (Treemap)
           </h3>
           <div style={{ width: '100%', height: 180 }}>
             <ResponsiveContainer>
               <Treemap
                 data={treemapData}
                 dataKey="size"
-                stroke="rgba(255,255,255,0.2)"
-                fill="#10b981"
-              >
-                {treemapData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
-              </Treemap>
+                aspectRatio={4 / 3}
+                stroke="#070d18"
+                content={<CustomTreemapContent />}
+              />
             </ResponsiveContainer>
           </div>
         </div>

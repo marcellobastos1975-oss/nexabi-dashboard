@@ -17,7 +17,8 @@
   --status-red: #ef4444;
 
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --text-muted: #cbd5e1;
+  --text-dim: #94a3b8;
 
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -61,7 +62,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav-tab-btn {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--text-muted);
+  color: #cbd5e1;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 10px 18px;
   border-radius: 10px;
@@ -105,4 +106,23 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 210, 255, 0.4);
+}
+
+.spin {
+  animation: spinAnim 1s linear infinite;
+}
+
+@keyframes spinAnim {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .header-logo-img {
+    height: 46px !important;
+  }
 }
