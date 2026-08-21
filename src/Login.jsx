@@ -1,10 +1,130 @@
 import React, { useState } from 'react';
-import { Lock, User, ChevronRight } from 'lucide-react';
+import { Lock, User, ChevronRight, AlertCircle } from 'lucide-react';
 import { APP_VERSION } from './config';
 import './Login.css';
 
+// Base de Usuários Cadastrados Globalmente (Unicidade Estrita por Username)
+const USUARIOS_SISTEMA = [
+  // 1. Usuários de Nível Master (NexaLife Tech & Alpha Solutions)
+  {
+    username: 'marcello',
+    senhas: ['NexaLife@2026!SecDB', 'admin', '123456', 'master', 'nexalife'],
+    perfil: 'master',
+    nome: 'Marcello (NexaLife Tech)',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas'
+  },
+  {
+    username: 'master',
+    senhas: ['NexaLife@2026!SecDB', 'master', 'admin', '123456'],
+    perfil: 'master',
+    nome: 'Administrador Master (NexaLife Tech)',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas'
+  },
+  {
+    username: 'admin',
+    senhas: ['admin123', 'admin', 'NexaLife@2026!SecDB', '123456'],
+    perfil: 'master',
+    nome: 'Operador Admin (NexaLife Tech)',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas'
+  },
+  {
+    username: 'nexalife',
+    senhas: ['NexaLife@2026!SecDB', 'nexalife', '123456'],
+    perfil: 'master',
+    nome: 'Diretoria NexaLife Tech',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas'
+  },
+  {
+    username: 'alpha',
+    senhas: ['Alpha@2026!', 'alpha123', '123456'],
+    perfil: 'master',
+    nome: 'Alpha Solutions (Master)',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas'
+  },
+
+  // 2. Usuários de Nível Cliente: Lojas Silva Casa & Conforto (ERP Próton)
+  {
+    username: 'silva',
+    senhas: ['silva123', '123456', 'NexaBI@2026!', 'admin', 'cliente'],
+    perfil: 'cliente',
+    nome: 'Diretoria Lojas Silva',
+    empresaId: 'silva',
+    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas'
+  },
+  {
+    username: 'lojassilva',
+    senhas: ['silva123', '123456', 'NexaBI@2026!'],
+    perfil: 'cliente',
+    nome: 'Lojas Silva Casa & Conforto',
+    empresaId: 'silva',
+    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas'
+  },
+  {
+    username: 'gerente.silva',
+    senhas: ['silva123', '123456'],
+    perfil: 'cliente',
+    nome: 'Gerente Centro (Lojas Silva)',
+    empresaId: 'silva',
+    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: '1'
+  },
+  {
+    username: 'cliente',
+    senhas: ['cliente', 'silva123', '123456', 'admin'],
+    perfil: 'cliente',
+    nome: 'Lojas Silva (Demonstração)',
+    empresaId: 'silva',
+    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas'
+  },
+
+  // 3. Usuários de Nível Cliente: Rede Nordeste (ERP Próton)
+  {
+    username: 'nordeste',
+    senhas: ['nordeste123', '123456'],
+    perfil: 'cliente',
+    nome: 'Rede Nordeste Móveis & Eletro',
+    empresaId: 'nordeste',
+    empresaNome: 'Rede Nordeste Móveis & Eletro Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas'
+  },
+
+  // 4. Usuários de Nível Cliente: Alpha Distribuidora (ERP TOTVS)
+  {
+    username: 'alphadist',
+    senhas: ['alpha123', '123456'],
+    perfil: 'cliente',
+    nome: 'Alpha Distribuidora & Logística',
+    empresaId: 'alpha_dist',
+    empresaNome: 'Alpha Distribuidora & Logística',
+    erp: 'TOTVS Protheus',
+    unidadePadrao: 'Todas'
+  }
+];
+
 export default function Login({ onLogin }) {
-  const [empresa, setEmpresa] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,55 +138,53 @@ export default function Login({ onLogin }) {
     const u = login.trim().toLowerCase();
     const p = password.trim();
 
+    if (!u || !p) {
+      setError('Por favor, informe seu usuário e senha de acesso.');
+      setLoading(false);
+      return;
+    }
+
     setTimeout(() => {
-      // 1. Validação de Acesso Master (NexaLife Tech)
-      if (
-        (empresa === 'master' || u === 'master' || u === 'admin' || u === 'nexalife' || u === 'marcello') &&
-        (p === 'NexaLife@2026!SecDB' || p === 'admin' || p === 'master' || p === '123456' || p === 'nexalife')
-      ) {
-        const userData = {
-          sessao: 'sessao_master_' + Date.now(),
-          perfil: 'master',
-          nome: 'Marcello (NexaLife Tech)',
-          empresa: 'Todas as Empresas (Master)',
-          erp: 'Próton (Oracle)',
-          unidadePadrao: 'Todas',
-          login: u || 'master'
-        };
-        localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
-        onLogin(userData);
-        return;
+      // 1. Busca pelo Username Único Global no Catálogo
+      const usuarioEncontrado = USUARIOS_SISTEMA.find(
+        (usr) => usr.username.toLowerCase() === u
+      );
+
+      if (usuarioEncontrado) {
+        const senhaCorreta = usuarioEncontrado.senhas.includes(p);
+
+        if (senhaCorreta) {
+          const userData = {
+            sessao: `sessao_${usuarioEncontrado.perfil}_${Date.now()}`,
+            perfil: usuarioEncontrado.perfil,
+            nome: usuarioEncontrado.nome,
+            empresaId: usuarioEncontrado.empresaId,
+            empresa: usuarioEncontrado.empresaNome,
+            erp: usuarioEncontrado.erp,
+            unidadePadrao: usuarioEncontrado.unidadePadrao,
+            login: usuarioEncontrado.username
+          };
+          localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
+          onLogin(userData);
+          return;
+        } else {
+          setError('Senha incorreta para o usuário informado. Verifique os dados digitados.');
+          setLoading(false);
+          return;
+        }
       }
 
-      // 2. Validação de Acesso Cliente (Lojas Silva / Clientes Cadastrados)
-      if (
-        (empresa === 'silva' || u === 'cliente' || u === 'silva' || u === 'lojassilva' || u === 'proton') &&
-        (p === 'cliente' || p === 'silva123' || p === '123456' || p === 'proton' || p === 'NexaBI@2026!' || p === 'admin')
-      ) {
-        const userData = {
-          sessao: 'sessao_cliente_' + Date.now(),
-          perfil: 'cliente',
-          nome: 'Lojas Silva (Demonstração)',
-          empresa: 'Lojas Silva Casa & Conforto Ltda',
-          erp: 'Próton (Oracle)',
-          unidadePadrao: '1',
-          login: u || 'cliente'
-        };
-        localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
-        onLogin(userData);
-        return;
-      }
-
-      // 3. Fallback para novos usuários digitados
+      // 2. Fallback Inteligente para Novos Usuários Dinâmicos Cadastrados
       if (u.length >= 3 && p.length >= 4) {
-        const isMasterLike = empresa === 'master' || u.includes('master') || u.includes('adm') || u.includes('nexa');
+        const isMaster = u.includes('master') || u.includes('adm') || u.includes('nexa') || u.includes('marcello');
         const userData = {
-          sessao: 'sessao_' + u + '_' + Date.now(),
-          perfil: isMasterLike ? 'master' : 'cliente',
-          nome: isMasterLike ? `Operador Master (${u})` : `Usuário Cliente (${u})`,
-          empresa: isMasterLike ? 'NexaLife Analytics Multi-ERP' : 'Lojas Silva Casa & Conforto Ltda',
-          erp: 'Próton (Oracle)',
-          unidadePadrao: isMasterLike ? 'Todas' : '1',
+          sessao: `sessao_${u}_${Date.now()}`,
+          perfil: isMaster ? 'master' : 'cliente',
+          nome: isMaster ? `Operador Master (${u})` : `Usuário Cliente (${u})`,
+          empresaId: isMaster ? 'todas' : 'silva',
+          empresa: isMaster ? 'Todas as Empresas (Consolidado)' : 'Lojas Silva Casa & Conforto Ltda',
+          erp: isMaster ? 'Multi-ERP' : 'Próton (Oracle)',
+          unidadePadrao: isMaster ? 'Todas' : '1',
           login: u
         };
         localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
@@ -74,7 +192,7 @@ export default function Login({ onLogin }) {
         return;
       }
 
-      setError('Credenciais incorretas ou empresa não selecionada. Verifique os dados digitados.');
+      setError('Usuário não localizado ou credenciais inválidas. Verifique seu login.');
       setLoading(false);
     }, 350);
   };
@@ -84,7 +202,7 @@ export default function Login({ onLogin }) {
       <div className="login-panel-container">
         <div className="login-card-alpha">
           
-          {/* Logo Ampliada NexaLife TECH */}
+          {/* Logo Oficial NexaLife TECH */}
           <div className="login-brand-header">
             <img 
               src="/nexalife_logo.png" 
@@ -92,52 +210,39 @@ export default function Login({ onLogin }) {
               className="login-brand-logo"
             />
             <h2 className="login-brand-title">NexaBI — Alpha Suite</h2>
-            <p className="login-brand-subtitle">Portal de Gestão &amp; BI Corporativo Multi-ERP</p>
+            <p className="login-brand-subtitle">Portal Corporativo de Business Intelligence Multi-ERP</p>
           </div>
 
+          {/* Formulário Limpo de Login (Apenas Usuário e Senha) */}
           <form onSubmit={handleAuth} className="login-form-alpha">
             
-            {/* Campo 1: Selecionar Empresa */}
+            {/* Campo 1: Usuário */}
             <div className="form-group-alpha">
-              <label>EMPRESA / CLIENTE PARA LOGIN</label>
-              <div className="select-wrapper-alpha">
-                <select 
-                  value={empresa} 
-                  onChange={(e) => setEmpresa(e.target.value)}
-                  className="select-field-alpha"
-                  required
-                >
-                  <option value="">-- Selecione a Empresa para Login --</option>
-                  <option value="master">👑 NexaLife Tech (Master / Todas as Empresas)</option>
-                  <option value="silva">🏪 Lojas Silva Casa &amp; Conforto (Próton ERP)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Campo 2: Usuário */}
-            <div className="form-group-alpha">
-              <label>USUÁRIO DE ACESSO</label>
+              <label htmlFor="login-username">USUÁRIO DE ACESSO</label>
               <div className="input-wrapper-alpha">
                 <User size={18} className="input-icon-alpha" />
                 <input
+                  id="login-username"
                   type="text"
                   className="input-field-alpha"
-                  placeholder="Digite seu usuário"
+                  placeholder="Digite seu usuário ou login"
                   value={login}
                   onChange={(e) => setLogin(e.target.value)}
                   disabled={loading}
                   autoComplete="username"
+                  autoFocus
                   required
                 />
               </div>
             </div>
 
-            {/* Campo 3: Senha */}
+            {/* Campo 2: Senha */}
             <div className="form-group-alpha">
-              <label>SENHA DE ACESSO</label>
+              <label htmlFor="login-password">SENHA DE ACESSO</label>
               <div className="input-wrapper-alpha">
                 <Lock size={18} className="input-icon-alpha" />
                 <input
+                  id="login-password"
                   type="password"
                   className="input-field-alpha"
                   placeholder="••••••••"
@@ -150,17 +255,22 @@ export default function Login({ onLogin }) {
               </div>
             </div>
 
-            {error && <div className="login-error-alert">{error}</div>}
+            {error && (
+              <div className="login-error-alert">
+                <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                <span>{error}</span>
+              </div>
+            )}
 
             <button type="submit" className="login-submit-btn" disabled={loading}>
-              {loading ? 'Validando Acesso...' : 'Entrar no Sistema'}
+              {loading ? 'Identificando e Acessando...' : 'Entrar no Sistema'}
               {!loading && <ChevronRight size={18} />}
             </button>
           </form>
 
-          {/* Rodapé com Versão Oficial */}
+          {/* Rodapé Seguro com Versão Oficial */}
           <div className="login-card-footer">
-            Powered by NexaLife Tech &copy; 2026 • <strong>NexaBI — Alpha Suite {APP_VERSION}</strong>
+            <span>Powered by NexaLife Tech &copy; 2026 • <strong>NexaBI {APP_VERSION}</strong></span>
           </div>
         </div>
       </div>

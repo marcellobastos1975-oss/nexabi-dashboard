@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   BarChart3, ShoppingCart, Truck, CreditCard, Receipt, 
   Landmark, Package, FileText, RefreshCw, Filter, Sparkles,
-  LogOut, ShieldCheck, Building2, User
+  LogOut, ShieldCheck, Building2, User, Layers
 } from 'lucide-react';
 import PanoramaGeral from './views/PanoramaGeral';
 import Vendas from './views/Vendas';
@@ -26,6 +26,53 @@ const MODULOS = [
   { id: 'fiscal', label: 'Fiscal', icon: FileText },
 ];
 
+// Catálogo de Empresas e suas respectivas Unidades / Filiais
+const CATALOGO_EMPRESAS = {
+  todas: {
+    id: 'todas',
+    nome: 'Todas as Empresas (Consolidado)',
+    labelSelect: '🏢 Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidades: [
+      { id: 'Todas', label: '🏢 Todas as Unidades (Rede Global)' }
+    ]
+  },
+  silva: {
+    id: 'silva',
+    nome: 'Lojas Silva Casa & Conforto Ltda',
+    labelSelect: '🏪 Lojas Silva Casa & Conforto (Próton ERP)',
+    erp: 'Próton (Oracle)',
+    unidades: [
+      { id: 'Todas', label: '🏢 Todas as Filiais (Lojas Silva)' },
+      { id: '1', label: '01 - Matriz Centro (Salvador/BA)' },
+      { id: '2', label: '02 - Filial Shopping (Lauro de Freitas/BA)' },
+      { id: '3', label: '03 - Filial Bairro (Feira de Santana/BA)' },
+    ]
+  },
+  nordeste: {
+    id: 'nordeste',
+    nome: 'Rede Nordeste Móveis & Eletro Ltda',
+    labelSelect: '🏢 Rede Nordeste Móveis & Eletro (Próton ERP)',
+    erp: 'Próton (Oracle)',
+    unidades: [
+      { id: 'Todas', label: '🏢 Todas as Filiais (Rede Nordeste)' },
+      { id: '10', label: '10 - CD Central (Camaçari/BA)' },
+      { id: '11', label: '11 - Loja Vitrine (Salvador/BA)' },
+    ]
+  },
+  alpha_dist: {
+    id: 'alpha_dist',
+    nome: 'Alpha Distribuidora & Logística',
+    labelSelect: '🚚 Alpha Distribuidora & Logística (TOTVS)',
+    erp: 'TOTVS Protheus',
+    unidades: [
+      { id: 'Todas', label: '🏢 Todas as Unidades (Alpha)' },
+      { id: '101', label: '101 - Matriz Operacional' },
+      { id: '102', label: '102 - Filial Nordeste' },
+    ]
+  }
+};
+
 export default function App() {
   const [usuario, setUsuario] = useState(() => {
     try {
@@ -37,13 +84,21 @@ export default function App() {
   });
 
   const [moduloAtivo, setModuloAtivo] = useState('panorama');
+  const [clienteSelecionado, setClienteSelecionado] = useState('todas');
   const [unidade, setUnidade] = useState('Todas');
   const [anoMes, setAnoMes] = useState('2026-06');
   const [atualizando, setAtualizando] = useState(false);
 
   useEffect(() => {
-    if (usuario && usuario.unidadePadrao) {
-      setUnidade(usuario.unidadePadrao);
+    if (usuario) {
+      if (usuario.perfil === 'master') {
+        setClienteSelecionado('todas');
+        setUnidade('Todas');
+      } else {
+        const cId = usuario.empresaId || 'silva';
+        setClienteSelecionado(cId);
+        setUnidade(usuario.unidadePadrao || 'Todas');
+      }
     }
   }, [usuario]);
 
@@ -65,6 +120,19 @@ export default function App() {
   }
 
   const isMaster = usuario.perfil === 'master';
+
+  // Obter a configuração da empresa atual
+  const dadosEmpresaAtual = CATALOGO_EMPRESAS[clienteSelecionado] || CATALOGO_EMPRESAS.silva;
+  const listaUnidades = dadosEmpresaAtual.unidades || [
+    { id: 'Todas', label: 'Todas as Filiais Autorizadas' },
+    { id: '1', label: '01 - Matriz Centro' },
+    { id: '2', label: '02 - Filial Shopping' }
+  ];
+
+  const handleMudancaClienteMaster = (novoClienteId) => {
+    setClienteSelecionado(novoClienteId);
+    setUnidade('Todas'); // Reseta a unidade ao trocar de cliente
+  };
 
   return (
     <div style={{ minHeight: '100vh', padding: '16px 20px', maxWidth: 1600, margin: '0 auto' }}>
@@ -92,35 +160,70 @@ export default function App() {
           </div>
         </div>
 
-        {/* Controles, Filtros Globais e Perfil */}
+        {/* Controles, Filtros Hierárquicos e Perfil */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          
+          {/* Badge do ERP Conectado */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(5,16,36,0.85)', padding: '7px 14px', borderRadius: 10, border: '1px solid rgba(0,130,255,0.3)' }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
             <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ERP:</span>
-            <strong style={{ fontSize: '11px', color: '#fff' }}>{usuario.erp || 'Próton (Oracle)'}</strong>
+            <strong style={{ fontSize: '11px', color: '#fff' }}>
+              {isMaster ? dadosEmpresaAtual.erp : (usuario.erp || 'Próton (Oracle)')}
+            </strong>
           </div>
 
+          {/* FILTRO 1 (EXCLUSIVO MASTER): SELEÇÃO DE CLIENTE / EMPRESA */}
+          {isMaster && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <select 
+                value={clienteSelecionado} 
+                onChange={(e) => handleMudancaClienteMaster(e.target.value)}
+                style={{ 
+                  background: 'rgba(10, 25, 55, 0.95)', 
+                  border: '1px solid rgba(0, 210, 255, 0.45)', 
+                  color: '#ffffff', 
+                  padding: '8px 14px', 
+                  borderRadius: 10, 
+                  fontSize: '12px', 
+                  fontWeight: 600,
+                  outline: 'none', 
+                  cursor: 'pointer',
+                  boxShadow: '0 0 10px rgba(0, 210, 255, 0.15)'
+                }}
+                title="Filtro Master: Selecione o Cliente ou Visão Consolidada"
+              >
+                <option value="todas">🏢 Todas as Empresas (Consolidado)</option>
+                <option value="silva">🏪 Lojas Silva Casa &amp; Conforto</option>
+                <option value="nordeste">🏢 Rede Nordeste Móveis &amp; Eletro</option>
+                <option value="alpha_dist">🚚 Alpha Distribuidora &amp; Logística</option>
+              </select>
+            </div>
+          )}
+
+          {/* FILTRO 2: SELEÇÃO DE UNIDADE / FILIAL (DENTRO DO CLIENTE ESCOLHIDO) */}
           <select 
             value={unidade} 
             onChange={(e) => setUnidade(e.target.value)}
-            style={{ background: 'rgba(5,16,36,0.85)', border: '1px solid rgba(0,130,255,0.3)', color: '#fff', padding: '8px 14px', borderRadius: 10, fontSize: '12px', outline: 'none', cursor: 'pointer' }}
+            style={{ 
+              background: 'rgba(5,16,36,0.85)', 
+              border: '1px solid rgba(0,130,255,0.3)', 
+              color: '#fff', 
+              padding: '8px 14px', 
+              borderRadius: 10, 
+              fontSize: '12px', 
+              outline: 'none', 
+              cursor: 'pointer' 
+            }}
+            title="Filtro de Unidade / Filial"
           >
-            {isMaster ? (
-              <>
-                <option value="Todas">🏢 Todas as Unidades</option>
-                <option value="1">01 - Matriz Centro</option>
-                <option value="2">02 - Filial Shopping</option>
-                <option value="3">03 - Filial Bairro</option>
-              </>
-            ) : (
-              <>
-                <option value="1">🏢 01 - Matriz Centro</option>
-                <option value="2">02 - Filial Shopping</option>
-                <option value="Todas">Todas as Filiais Autorizadas</option>
-              </>
-            )}
+            {listaUnidades.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.label}
+              </option>
+            ))}
           </select>
 
+          {/* FILTRO DE PERÍODO / DATA */}
           <select 
             value={anoMes} 
             onChange={(e) => setAnoMes(e.target.value)}
@@ -131,6 +234,7 @@ export default function App() {
             <option value="2026-04">Abril / 2026</option>
           </select>
 
+          {/* Botão de Atualização Rápida */}
           <button 
             className="btn-primary" 
             style={{ padding: '8px 16px', fontSize: '12px', borderRadius: 10 }}
@@ -141,7 +245,7 @@ export default function App() {
             {atualizando ? 'Atualizando...' : 'Atualizar'}
           </button>
 
-          {/* Badge de Identificação do Usuário */}
+          {/* Badge de Identificação do Usuário e Perfil */}
           <div 
             style={{ 
               display: 'flex', 
@@ -155,9 +259,12 @@ export default function App() {
               border: isMaster ? '1px solid rgba(168, 85, 247, 0.45)' : '1px solid rgba(0, 210, 255, 0.4)',
               color: isMaster ? '#d8b4fe' : '#38bdf8'
             }}
+            title={isMaster ? 'Perfil Master: Visão Completa Multi-Cliente' : `Perfil Cliente: ${usuario.empresa}`}
           >
             {isMaster ? <ShieldCheck size={15} color="#c084fc" /> : <Building2 size={15} color="#00d2ff" />}
-            <span>{isMaster ? '👑 Master' : '🏪 Cliente'}</span>
+            <span>
+              {isMaster ? '👑 Master NexaLife' : `🏪 ${usuario.nome || 'Cliente'}`}
+            </span>
           </div>
 
           {/* Botão de Logout */}
