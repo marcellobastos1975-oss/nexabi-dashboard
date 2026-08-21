@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // NexaBI — Alpha Suite | Repositório Central de Autenticação & Usuários
 // Suporte a Unicidade Global de Login, Reset Master e Recuperação via WhatsApp
 // ============================================================================
@@ -196,6 +196,41 @@ export function solicitarRecuperacaoWhatsApp(identificador) {
   const ddd = numLimpo.slice(2, 4) || '71';
   const final = numLimpo.slice(-4) || '8888';
   const telefoneMascarado = `(${ddd}) 9****-${final}`;
+
+  // Disparo assíncrono para a Meta WhatsApp Cloud API Oficial (NexaLife Tech)
+  const META_PHONE_NUMBER_ID = "1203498906186524";
+  const META_WHATSAPP_TOKEN = "EAAPXIMSfPiIBSLeie9nVvTmqVmttnj0m137fHEchZAENQlWSZChLjizAgBE6b59OKGc8sZBJGZAZCBJvoIK0myXpdAZAVnOsZCZA7rh2LPrUv7RQnPxZBeJdjjaLtqFkrlQqP17eqIhW3BcYhUimGXHucp1nv2gZBlkUCTo2sADwFOUPhOnPUvxFl31t5nNtGcqt4n2QZDZD";
+
+  try {
+    const rawDest = numLimpo.startsWith('55') ? numLimpo : `55${numLimpo}`;
+    const payloadMeta = {
+      messaging_product: "whatsapp",
+      to: rawDest,
+      type: "template",
+      template: {
+        name: "alerta_rpa_urgente",
+        language: { code: "pt_BR" },
+        components: [
+          {
+            type: "body",
+            parameters: [
+              { type: "text", text: "RECUPERACAO SENHA" },
+              { type: "text", text: usuario.nome || "Operador" },
+              { type: "text", text: `Seu codigo de seguranca para redefinir senha no NexaBI e: ${codigo6Digitos}. Valido por 10 minutos.` }
+            ]
+          }
+        ]
+      }
+    };
+    fetch(`https://graph.facebook.com/v20.0/${META_PHONE_NUMBER_ID}/messages`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${META_WHATSAPP_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payloadMeta)
+    }).catch(() => {});
+  } catch (e) {}
 
   return {
     sucesso: true,
