@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, User, ChevronRight } from 'lucide-react';
+import { APP_VERSION } from './config';
 import './Login.css';
 
 export default function Login({ onLogin }) {
@@ -159,7 +160,7 @@ export default function Login({ onLogin }) {
 
           {/* Rodapé com Versão Oficial */}
           <div className="login-card-footer">
-            Powered by NexaLife Tech &copy; 2026 • <strong>NexaBI — Alpha Suite v1.2.0</strong>
+            Powered by NexaLife Tech &copy; 2026 • <strong>NexaBI — Alpha Suite {APP_VERSION}</strong>
           </div>
         </div>
       </div>

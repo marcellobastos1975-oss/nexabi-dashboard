@@ -13,6 +13,7 @@ import Tesouraria from './views/Tesouraria';
 import Estoques from './views/Estoques';
 import Fiscal from './views/Fiscal';
 import Login from './Login';
+import { APP_VERSION } from './config';
 
 const MODULOS = [
   { id: 'panorama', label: 'Panorama Geral', icon: BarChart3 },
@@ -225,7 +226,7 @@ export default function App() {
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <strong style={{ color: '#ffffff' }}>NexaBI — Alpha Suite v1.2.2</strong>
+          <strong style={{ color: '#ffffff' }}>NexaBI — Alpha Suite {APP_VERSION}</strong>
           <span>•</span>
           <span>Desenvolvido por <strong style={{ color: '#00d2ff' }}>NexaLife Tech</strong> &amp; <strong style={{ color: '#38bdf8' }}>Alpha Solutions</strong></span>
           <span>•</span>
