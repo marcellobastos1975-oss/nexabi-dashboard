@@ -53,9 +53,9 @@ const CustomTreemapContent = (props) => {
         }}
       />
       
-      {/* Caso Bloco Estreito (ex: Vr Estoque, Vr Contas): Quebra de Linha Inteligente */}
+      {/* Caso Bloco Estreito (ex: Vr Estoque, Vr Contas) */}
       {isNarrow ? (
-        <>
+        <g stroke="none" fill="#ffffff" style={{ pointerEvents: 'none' }}>
           {height >= 55 ? (
             <>
               <text
@@ -64,9 +64,11 @@ const CustomTreemapContent = (props) => {
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill="#ffffff"
+                stroke="none"
+                strokeWidth={0}
                 fontSize={11}
-                fontWeight="700"
-                style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)', letterSpacing: '0.2px' }}
+                fontWeight="600"
+                fontFamily="Inter, sans-serif"
               >
                 {words[0]}
               </text>
@@ -77,9 +79,11 @@ const CustomTreemapContent = (props) => {
                   textAnchor="middle"
                   dominantBaseline="central"
                   fill="#ffffff"
+                  stroke="none"
+                  strokeWidth={0}
                   fontSize={11}
-                  fontWeight="700"
-                  style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)', letterSpacing: '0.2px' }}
+                  fontWeight="600"
+                  fontFamily="Inter, sans-serif"
                 >
                   {words.slice(1).join(' ')}
                 </text>
@@ -90,9 +94,11 @@ const CustomTreemapContent = (props) => {
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill="#ffffff"
+                stroke="none"
+                strokeWidth={0}
                 fontSize={10}
                 fontWeight="700"
-                style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)' }}
+                fontFamily="Inter, sans-serif"
               >
                 {vlrFmt}
               </text>
@@ -104,44 +110,50 @@ const CustomTreemapContent = (props) => {
               textAnchor="middle"
               dominantBaseline="central"
               fill="#ffffff"
+              stroke="none"
+              strokeWidth={0}
               fontSize={10}
               fontWeight="700"
-              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.7)' }}
+              fontFamily="Inter, sans-serif"
             >
               {name}
             </text>
           )}
-        </>
+        </g>
       ) : (
         /* Bloco Amplo (ex: Venda Bruta, Valor CR) */
-        <>
+        <g stroke="none" fill="#ffffff" style={{ pointerEvents: 'none' }}>
           <text
             x={x + width / 2}
-            y={y + height / 2 - (height > 50 ? 10 : 0)}
+            y={y + height / 2 - (height > 50 ? 11 : 0)}
             textAnchor="middle"
             dominantBaseline="central"
             fill="#ffffff"
-            fontSize={width > 160 ? 15 : 13}
-            fontWeight="800"
-            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.6)', letterSpacing: '0.3px' }}
+            stroke="none"
+            strokeWidth={0}
+            fontSize={width > 160 ? 16 : 13}
+            fontWeight="600"
+            fontFamily="Inter, sans-serif"
           >
             {name}
           </text>
           {height > 50 && (
             <text
               x={x + width / 2}
-              y={y + height / 2 + 12}
+              y={y + height / 2 + 13}
               textAnchor="middle"
               dominantBaseline="central"
               fill="#ffffff"
-              fontSize={width > 160 ? 13 : 11}
+              stroke="none"
+              strokeWidth={0}
+              fontSize={width > 160 ? 14 : 12}
               fontWeight="700"
-              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}
+              fontFamily="Inter, sans-serif"
             >
               {vlrFmt}
             </text>
           )}
-        </>
+        </g>
       )}
     </g>
   );
