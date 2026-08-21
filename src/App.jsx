@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   BarChart3, ShoppingCart, Truck, CreditCard, Receipt, 
   Landmark, Package, FileText, RefreshCw, Filter, Sparkles,
-  LogOut, ShieldCheck, Building2, User, Layers
+  LogOut, ShieldCheck, Building2, User, Layers, Users
 } from 'lucide-react';
 import PanoramaGeral from './views/PanoramaGeral';
 import Vendas from './views/Vendas';
@@ -13,6 +13,7 @@ import Tesouraria from './views/Tesouraria';
 import Estoques from './views/Estoques';
 import Fiscal from './views/Fiscal';
 import Login from './Login';
+import ModalGerenciarUsuarios from './components/ModalGerenciarUsuarios';
 import { APP_VERSION } from './config';
 
 const MODULOS = [
@@ -88,6 +89,7 @@ export default function App() {
   const [unidade, setUnidade] = useState('Todas');
   const [anoMes, setAnoMes] = useState('2026-06');
   const [atualizando, setAtualizando] = useState(false);
+  const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
 
   useEffect(() => {
     if (usuario) {
@@ -267,6 +269,32 @@ export default function App() {
             </span>
           </div>
 
+          {/* Botão Painel Master de Gestão de Usuários (Camada 1: Reset Administrativo) */}
+          {isMaster && (
+            <button
+              onClick={() => setModalUsuariosAberto(true)}
+              style={{
+                background: 'linear-gradient(135deg, rgba(121, 40, 202, 0.28) 0%, rgba(0, 210, 255, 0.22) 100%)',
+                border: '1px solid rgba(168, 85, 247, 0.55)',
+                color: '#e9d5ff',
+                padding: '8px 14px',
+                borderRadius: 10,
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                boxShadow: '0 0 14px rgba(168, 85, 247, 0.25)',
+                transition: 'all 0.2s ease'
+              }}
+              title="Gerenciar Usuários e Redefinir Senhas como Master"
+            >
+              <Users size={14} color="#c084fc" />
+              <span>Gerenciar Usuários</span>
+            </button>
+          )}
+
           {/* Botão de Logout */}
           <button 
             onClick={handleLogout}
@@ -340,6 +368,12 @@ export default function App() {
           <span style={{ color: '#10b981', fontWeight: 600 }}>⚡ Zero Impacto no Banco Oracle (Transações Read-Only)</span>
         </div>
       </footer>
+
+      {/* Modal Master de Gestão de Usuários (Camada 1) */}
+      <ModalGerenciarUsuarios
+        isOpen={modalUsuariosAberto}
+        onClose={() => setModalUsuariosAberto(false)}
+      />
     </div>
   );
 }

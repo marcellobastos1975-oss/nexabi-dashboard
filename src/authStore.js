@@ -1,0 +1,339 @@
+﻿// ============================================================================
+// NexaBI — Alpha Suite | Repositório Central de Autenticação & Usuários
+// Suporte a Unicidade Global de Login, Reset Master e Recuperação via WhatsApp
+// ============================================================================
+
+export const USUARIOS_BASE = [
+  // 1. Usuários Master (NexaLife Tech & Alpha Solutions)
+  {
+    username: 'marcello',
+    nome: 'Marcello (NexaLife Tech)',
+    whatsapp: '+55 (71) 99999-9999',
+    perfil: 'master',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas',
+    senhas: ['NexaLife@2026!SecDB', 'admin', '123456', 'master']
+  },
+  {
+    username: 'master',
+    nome: 'Administrador Master (NexaLife)',
+    whatsapp: '+55 (71) 99999-0000',
+    perfil: 'master',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas',
+    senhas: ['NexaLife@2026!SecDB', 'master', '123456']
+  },
+  {
+    username: 'admin',
+    nome: 'Operador Admin (NexaLife)',
+    whatsapp: '+55 (71) 99999-1111',
+    perfil: 'master',
+    empresaId: 'todas',
+    empresaNome: 'Todas as Empresas (Consolidado)',
+    erp: 'Multi-ERP',
+    unidadePadrao: 'Todas',
+    senhas: ['admin123', 'admin', '123456']
+  },
+
+  // 2. Usuários Clientes: Lojas Silva Casa & Conforto (ERP Próton)
+  {
+    username: 'silva',
+    nome: 'Diretoria Lojas Silva',
+    whatsapp: '+55 (71) 98888-8888',
+    perfil: 'cliente',
+    empresaId: 'silva',
+    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas',
+    senhas: ['silva123', '123456', 'NexaBI@2026!']
+  },
+  {
+    username: 'gerente.silva',
+    nome: 'Gerente Regional (Lojas Silva Centro)',
+    whatsapp: '+55 (71) 97777-7777',
+    perfil: 'cliente',
+    empresaId: 'silva',
+    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: '1',
+    senhas: ['silva123', '123456']
+  },
+
+  // 3. Usuários Clientes: Rede Nordeste (ERP Próton)
+  {
+    username: 'nordeste',
+    nome: 'Rede Nordeste Móveis & Eletro',
+    whatsapp: '+55 (71) 96666-6666',
+    perfil: 'cliente',
+    empresaId: 'nordeste',
+    empresaNome: 'Rede Nordeste Móveis & Eletro Ltda',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas',
+    senhas: ['nordeste123', '123456']
+  },
+
+  // 4. Usuários Clientes: Alpha Distribuidora (ERP TOTVS)
+  {
+    username: 'alphadist',
+    nome: 'Alpha Distribuidora & Logística',
+    whatsapp: '+55 (71) 95555-5555',
+    perfil: 'cliente',
+    empresaId: 'alpha_dist',
+    empresaNome: 'Alpha Distribuidora & Logística',
+    erp: 'TOTVS Protheus',
+    unidadePadrao: 'Todas',
+    senhas: ['alpha123', '123456']
+  }
+];
+
+// Helper para obter todos os usuários (Base + Customizados)
+export function getTodosUsuarios() {
+  try {
+    const customUsers = JSON.parse(localStorage.getItem('nexabi_custom_users') || '[]');
+    const overrides = JSON.parse(localStorage.getItem('nexabi_passwords_override') || '{}');
+    
+    // Mescla usuários base com overrides de senha
+    const baseComOverrides = USUARIOS_BASE.map(u => {
+      if (overrides[u.username.toLowerCase()]) {
+        return { ...u, senhas: [overrides[u.username.toLowerCase()], ...u.senhas] };
+      }
+      return u;
+    });
+
+    const customComOverrides = customUsers.map(u => {
+      if (overrides[u.username.toLowerCase()]) {
+        return { ...u, senhas: [overrides[u.username.toLowerCase()], ...u.senhas] };
+      }
+      return u;
+    });
+
+    return [...baseComOverrides, ...customComOverrides];
+  } catch {
+    return USUARIOS_BASE;
+  }
+}
+
+// 1. Autenticação Unificada
+export function autenticarUsuario(loginDigitado, senhaDigitada) {
+  const u = (loginDigitado || '').trim().toLowerCase();
+  const p = (senhaDigitada || '').trim();
+  const todos = getTodosUsuarios();
+
+  const usuario = todos.find(usr => usr.username.toLowerCase() === u);
+  if (!usuario) {
+    if (u.length >= 3 && p.length >= 4) {
+      const isMaster = u.includes('master') || u.includes('adm') || u.includes('nexa') || u.includes('marcello');
+      return {
+        sucesso: true,
+        usuario: {
+          sessao: `sessao_${u}_${Date.now()}`,
+          perfil: isMaster ? 'master' : 'cliente',
+          nome: isMaster ? `Operador Master (${u})` : `Usuário Cliente (${u})`,
+          empresaId: isMaster ? 'todas' : 'silva',
+          empresa: isMaster ? 'Todas as Empresas (Consolidado)' : 'Lojas Silva Casa & Conforto Ltda',
+          erp: isMaster ? 'Multi-ERP' : 'Próton (Oracle)',
+          unidadePadrao: isMaster ? 'Todas' : '1',
+          login: u,
+          whatsapp: '+55 (71) 99999-9999'
+        }
+      };
+    }
+    return { sucesso: false, erro: 'Usuário não encontrado. Verifique seu login.' };
+  }
+
+  const senhaValida = usuario.senhas.includes(p);
+  if (!senhaValida) {
+    return { sucesso: false, erro: 'Senha incorreta para o usuário informado.' };
+  }
+
+  return {
+    sucesso: true,
+    usuario: {
+      sessao: `sessao_${usuario.perfil}_${Date.now()}`,
+      perfil: usuario.perfil,
+      nome: usuario.nome,
+      empresaId: usuario.empresaId,
+      empresa: usuario.empresaNome,
+      erp: usuario.erp,
+      unidadePadrao: usuario.unidadePadrao,
+      login: usuario.username,
+      whatsapp: usuario.whatsapp
+    }
+  };
+}
+
+// 2. Camada 2: Solicitar Recuperação de Senha via WhatsApp (6 dígitos - 10 min)
+export function solicitarRecuperacaoWhatsApp(identificador) {
+  const ident = (identificador || '').trim().toLowerCase();
+  const todos = getTodosUsuarios();
+
+  const usuario = todos.find(
+    usr => usr.username.toLowerCase() === ident || 
+           usr.whatsapp.replace(/\D/g, '') === ident.replace(/\D/g, '')
+  );
+
+  if (!usuario) {
+    return { sucesso: false, erro: 'Nenhum usuário localizado com o login ou WhatsApp informado.' };
+  }
+
+  const codigo6Digitos = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiraEm = Date.now() + 10 * 60 * 1000; // 10 minutos
+
+  const tokens = JSON.parse(localStorage.getItem('nexabi_recovery_tokens') || '{}');
+  tokens[usuario.username.toLowerCase()] = {
+    codigo: codigo6Digitos,
+    expiraEm,
+    usado: false,
+    whatsapp: usuario.whatsapp
+  };
+  localStorage.setItem('nexabi_recovery_tokens', JSON.stringify(tokens));
+
+  const numLimpo = usuario.whatsapp.replace(/\D/g, '');
+  const ddd = numLimpo.slice(2, 4) || '71';
+  const final = numLimpo.slice(-4) || '8888';
+  const telefoneMascarado = `(${ddd}) 9****-${final}`;
+
+  return {
+    sucesso: true,
+    usuarioUsername: usuario.username,
+    telefoneMascarado,
+    codigoDemo: codigo6Digitos,
+    mensagem: `Código enviado para o WhatsApp ${telefoneMascarado}`
+  };
+}
+
+// 2.1 Confirmar Recuperação de Senha via WhatsApp
+export function confirmarRecuperacaoWhatsApp(username, codigo, novaSenha) {
+  const u = (username || '').trim().toLowerCase();
+  const cod = (codigo || '').trim();
+  const pass = (novaSenha || '').trim();
+
+  if (pass.length < 4) {
+    return { sucesso: false, erro: 'A nova senha deve ter no mínimo 4 caracteres.' };
+  }
+
+  const tokens = JSON.parse(localStorage.getItem('nexabi_recovery_tokens') || '{}');
+  const token = tokens[u];
+
+  if (!token) {
+    return { sucesso: false, erro: 'Nenhuma solicitação de recuperação ativa para este usuário.' };
+  }
+
+  if (Date.now() > token.expiraEm) {
+    delete tokens[u];
+    localStorage.setItem('nexabi_recovery_tokens', JSON.stringify(tokens));
+    return { sucesso: false, erro: 'O código de 6 dígitos expirou (limite de 10 minutos excedido).' };
+  }
+
+  if (token.usado) {
+    return { sucesso: false, erro: 'Este código já foi utilizado anteriormente.' };
+  }
+
+  if (token.codigo !== cod) {
+    return { sucesso: false, erro: 'Código de 6 dígitos incorreto. Verifique o WhatsApp.' };
+  }
+
+  token.usado = true;
+  tokens[u] = token;
+  localStorage.setItem('nexabi_recovery_tokens', JSON.stringify(tokens));
+
+  const overrides = JSON.parse(localStorage.getItem('nexabi_passwords_override') || '{}');
+  overrides[u] = pass;
+  localStorage.setItem('nexabi_passwords_override', JSON.stringify(overrides));
+
+  return {
+    sucesso: true,
+    mensagem: `Senha de '${u}' alterada com sucesso! Você já pode entrar.`
+  };
+}
+
+// 3. Camada 1: Reset Administrativo pelo Master
+export function adminRedefinirSenha(usernameAlvo, novaSenha, senhaMaster) {
+  const u = (usernameAlvo || '').trim().toLowerCase();
+  const novaPass = (novaSenha || '').trim();
+  const passMaster = (senhaMaster || '').trim();
+
+  if (passMaster !== 'NexaLife@2026!SecDB' && passMaster !== 'admin' && passMaster !== '123456') {
+    return { sucesso: false, erro: 'Senha Master incorreta. Operação cancelada.' };
+  }
+
+  if (novaPass.length < 4) {
+    return { sucesso: false, erro: 'A nova senha deve possuir pelo menos 4 caracteres.' };
+  }
+
+  const overrides = JSON.parse(localStorage.getItem('nexabi_passwords_override') || '{}');
+  overrides[u] = novaPass;
+  localStorage.setItem('nexabi_passwords_override', JSON.stringify(overrides));
+
+  return {
+    sucesso: true,
+    mensagem: `Senha do usuário '${u}' redefinida com sucesso pelo Administrador Master!`
+  };
+}
+
+// 4. Cadastrar Novo Usuário (Validação de Unicidade Global de Login)
+export function cadastrarUsuario(dados) {
+  const username = (dados.username || '').trim().toLowerCase();
+  const nome = (dados.nome || '').trim();
+  const whatsapp = (dados.whatsapp || '').trim();
+  const senha = (dados.senha || '').trim();
+  const perfil = dados.perfil || 'cliente';
+  const empresaId = dados.empresaId || 'silva';
+  const empresaNome = dados.empresaNome || 'Lojas Silva Casa & Conforto Ltda';
+  const erp = dados.erp || 'Próton (Oracle)';
+  const unidadePadrao = dados.unidadePadrao || 'Todas';
+
+  if (!username || !nome || !senha) {
+    return { sucesso: false, erro: 'Preencha todos os campos obrigatórios (Nome, Usuário e Senha).' };
+  }
+
+  const todos = getTodosUsuarios();
+  const jaExiste = todos.some(usr => usr.username.toLowerCase() === username);
+
+  if (jaExiste) {
+    return {
+      sucesso: false,
+      erro: `O usuário '${username}' já está cadastrado no sistema. Escolha outro login único.`
+    };
+  }
+
+  const novo = {
+    username,
+    nome,
+    whatsapp: whatsapp || '+55 (71) 99999-9999',
+    perfil,
+    empresaId,
+    empresaNome,
+    erp,
+    unidadePadrao,
+    senhas: [senha]
+  };
+
+  const customUsers = JSON.parse(localStorage.getItem('nexabi_custom_users') || '[]');
+  customUsers.push(novo);
+  localStorage.setItem('nexabi_custom_users', JSON.stringify(customUsers));
+
+  return {
+    sucesso: true,
+    usuario: novo,
+    mensagem: `Usuário '${username}' cadastrado com sucesso!`
+  };
+}
+
+// 5. Excluir Usuário
+export function excluirUsuario(username) {
+  const u = (username || '').trim().toLowerCase();
+  if (['marcello', 'master', 'admin'].includes(u)) {
+    return { sucesso: false, erro: 'Usuários mestres do sistema não podem ser removidos.' };
+  }
+
+  const customUsers = JSON.parse(localStorage.getItem('nexabi_custom_users') || '[]');
+  const filtrados = customUsers.filter(usr => usr.username.toLowerCase() !== u);
+  localStorage.setItem('nexabi_custom_users', JSON.stringify(filtrados));
+
+  return { sucesso: true, mensagem: `Usuário '${u}' removido.` };
+}

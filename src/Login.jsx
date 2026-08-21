@@ -1,139 +1,23 @@
 import React, { useState } from 'react';
-import { Lock, User, ChevronRight, AlertCircle } from 'lucide-react';
+import { Lock, User, ChevronRight, AlertCircle, MessageSquare, KeyRound, CheckCircle } from 'lucide-react';
 import { APP_VERSION } from './config';
+import { autenticarUsuario } from './authStore';
+import ModalRecuperarSenha from './components/ModalRecuperarSenha';
 import './Login.css';
-
-// Base de Usuários Cadastrados Globalmente (Unicidade Estrita por Username)
-const USUARIOS_SISTEMA = [
-  // 1. Usuários de Nível Master (NexaLife Tech & Alpha Solutions)
-  {
-    username: 'marcello',
-    senhas: ['NexaLife@2026!SecDB', 'admin', '123456', 'master', 'nexalife'],
-    perfil: 'master',
-    nome: 'Marcello (NexaLife Tech)',
-    empresaId: 'todas',
-    empresaNome: 'Todas as Empresas (Consolidado)',
-    erp: 'Multi-ERP',
-    unidadePadrao: 'Todas'
-  },
-  {
-    username: 'master',
-    senhas: ['NexaLife@2026!SecDB', 'master', 'admin', '123456'],
-    perfil: 'master',
-    nome: 'Administrador Master (NexaLife Tech)',
-    empresaId: 'todas',
-    empresaNome: 'Todas as Empresas (Consolidado)',
-    erp: 'Multi-ERP',
-    unidadePadrao: 'Todas'
-  },
-  {
-    username: 'admin',
-    senhas: ['admin123', 'admin', 'NexaLife@2026!SecDB', '123456'],
-    perfil: 'master',
-    nome: 'Operador Admin (NexaLife Tech)',
-    empresaId: 'todas',
-    empresaNome: 'Todas as Empresas (Consolidado)',
-    erp: 'Multi-ERP',
-    unidadePadrao: 'Todas'
-  },
-  {
-    username: 'nexalife',
-    senhas: ['NexaLife@2026!SecDB', 'nexalife', '123456'],
-    perfil: 'master',
-    nome: 'Diretoria NexaLife Tech',
-    empresaId: 'todas',
-    empresaNome: 'Todas as Empresas (Consolidado)',
-    erp: 'Multi-ERP',
-    unidadePadrao: 'Todas'
-  },
-  {
-    username: 'alpha',
-    senhas: ['Alpha@2026!', 'alpha123', '123456'],
-    perfil: 'master',
-    nome: 'Alpha Solutions (Master)',
-    empresaId: 'todas',
-    empresaNome: 'Todas as Empresas (Consolidado)',
-    erp: 'Multi-ERP',
-    unidadePadrao: 'Todas'
-  },
-
-  // 2. Usuários de Nível Cliente: Lojas Silva Casa & Conforto (ERP Próton)
-  {
-    username: 'silva',
-    senhas: ['silva123', '123456', 'NexaBI@2026!', 'admin', 'cliente'],
-    perfil: 'cliente',
-    nome: 'Diretoria Lojas Silva',
-    empresaId: 'silva',
-    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
-    erp: 'Próton (Oracle)',
-    unidadePadrao: 'Todas'
-  },
-  {
-    username: 'lojassilva',
-    senhas: ['silva123', '123456', 'NexaBI@2026!'],
-    perfil: 'cliente',
-    nome: 'Lojas Silva Casa & Conforto',
-    empresaId: 'silva',
-    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
-    erp: 'Próton (Oracle)',
-    unidadePadrao: 'Todas'
-  },
-  {
-    username: 'gerente.silva',
-    senhas: ['silva123', '123456'],
-    perfil: 'cliente',
-    nome: 'Gerente Centro (Lojas Silva)',
-    empresaId: 'silva',
-    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
-    erp: 'Próton (Oracle)',
-    unidadePadrao: '1'
-  },
-  {
-    username: 'cliente',
-    senhas: ['cliente', 'silva123', '123456', 'admin'],
-    perfil: 'cliente',
-    nome: 'Lojas Silva (Demonstração)',
-    empresaId: 'silva',
-    empresaNome: 'Lojas Silva Casa & Conforto Ltda',
-    erp: 'Próton (Oracle)',
-    unidadePadrao: 'Todas'
-  },
-
-  // 3. Usuários de Nível Cliente: Rede Nordeste (ERP Próton)
-  {
-    username: 'nordeste',
-    senhas: ['nordeste123', '123456'],
-    perfil: 'cliente',
-    nome: 'Rede Nordeste Móveis & Eletro',
-    empresaId: 'nordeste',
-    empresaNome: 'Rede Nordeste Móveis & Eletro Ltda',
-    erp: 'Próton (Oracle)',
-    unidadePadrao: 'Todas'
-  },
-
-  // 4. Usuários de Nível Cliente: Alpha Distribuidora (ERP TOTVS)
-  {
-    username: 'alphadist',
-    senhas: ['alpha123', '123456'],
-    perfil: 'cliente',
-    nome: 'Alpha Distribuidora & Logística',
-    empresaId: 'alpha_dist',
-    empresaNome: 'Alpha Distribuidora & Logística',
-    erp: 'TOTVS Protheus',
-    unidadePadrao: 'Todas'
-  }
-];
 
 export default function Login({ onLogin }) {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [sucessoMsg, setSucessoMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [modalRecuperarAberto, setModalRecuperarAberto] = useState(false);
 
   const handleAuth = (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSucessoMsg('');
 
     const u = login.trim().toLowerCase();
     const p = password.trim();
@@ -145,56 +29,22 @@ export default function Login({ onLogin }) {
     }
 
     setTimeout(() => {
-      // 1. Busca pelo Username Único Global no Catálogo
-      const usuarioEncontrado = USUARIOS_SISTEMA.find(
-        (usr) => usr.username.toLowerCase() === u
-      );
-
-      if (usuarioEncontrado) {
-        const senhaCorreta = usuarioEncontrado.senhas.includes(p);
-
-        if (senhaCorreta) {
-          const userData = {
-            sessao: `sessao_${usuarioEncontrado.perfil}_${Date.now()}`,
-            perfil: usuarioEncontrado.perfil,
-            nome: usuarioEncontrado.nome,
-            empresaId: usuarioEncontrado.empresaId,
-            empresa: usuarioEncontrado.empresaNome,
-            erp: usuarioEncontrado.erp,
-            unidadePadrao: usuarioEncontrado.unidadePadrao,
-            login: usuarioEncontrado.username
-          };
-          localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
-          onLogin(userData);
-          return;
-        } else {
-          setError('Senha incorreta para o usuário informado. Verifique os dados digitados.');
-          setLoading(false);
-          return;
-        }
-      }
-
-      // 2. Fallback Inteligente para Novos Usuários Dinâmicos Cadastrados
-      if (u.length >= 3 && p.length >= 4) {
-        const isMaster = u.includes('master') || u.includes('adm') || u.includes('nexa') || u.includes('marcello');
-        const userData = {
-          sessao: `sessao_${u}_${Date.now()}`,
-          perfil: isMaster ? 'master' : 'cliente',
-          nome: isMaster ? `Operador Master (${u})` : `Usuário Cliente (${u})`,
-          empresaId: isMaster ? 'todas' : 'silva',
-          empresa: isMaster ? 'Todas as Empresas (Consolidado)' : 'Lojas Silva Casa & Conforto Ltda',
-          erp: isMaster ? 'Multi-ERP' : 'Próton (Oracle)',
-          unidadePadrao: isMaster ? 'Todas' : '1',
-          login: u
-        };
-        localStorage.setItem('nexabi_auth_user', JSON.stringify(userData));
-        onLogin(userData);
-        return;
-      }
-
-      setError('Usuário não localizado ou credenciais inválidas. Verifique seu login.');
+      const res = autenticarUsuario(u, p);
       setLoading(false);
+
+      if (res.sucesso) {
+        localStorage.setItem('nexabi_auth_user', JSON.stringify(res.usuario));
+        onLogin(res.usuario);
+      } else {
+        setError(res.erro || 'Credenciais inválidas. Verifique seu login e senha.');
+      }
     }, 350);
+  };
+
+  const handleSenhaRedefinida = (usernameAlvo) => {
+    setSucessoMsg(`Senha de '${usernameAlvo}' redefinida com sucesso via WhatsApp! Digite sua nova senha para acessar.`);
+    setLogin(usernameAlvo);
+    setPassword('');
   };
 
   return (
@@ -212,6 +62,25 @@ export default function Login({ onLogin }) {
             <h2 className="login-brand-title">NexaBI — Alpha Suite</h2>
             <p className="login-brand-subtitle">Portal Corporativo de Business Intelligence Multi-ERP</p>
           </div>
+
+          {/* Banner de Sucesso de Redefinição */}
+          {sucessoMsg && (
+            <div style={{
+              background: 'rgba(16, 185, 129, 0.15)',
+              border: '1px solid rgba(16, 185, 129, 0.4)',
+              color: '#6ee7b7',
+              padding: '10px 14px',
+              borderRadius: 10,
+              fontSize: 12,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              lineHeight: 1.4
+            }}>
+              <CheckCircle size={16} style={{ flexShrink: 0 }} />
+              <span>{sucessoMsg}</span>
+            </div>
+          )}
 
           {/* Formulário Limpo de Login (Apenas Usuário e Senha) */}
           <form onSubmit={handleAuth} className="login-form-alpha">
@@ -238,7 +107,31 @@ export default function Login({ onLogin }) {
 
             {/* Campo 2: Senha */}
             <div className="form-group-alpha">
-              <label htmlFor="login-password">SENHA DE ACESSO</label>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <label htmlFor="login-password">SENHA DE ACESSO</label>
+                <button
+                  type="button"
+                  onClick={() => setModalRecuperarAberto(true)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#00d2ff',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    padding: 0,
+                    textDecoration: 'none'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
+                >
+                  <MessageSquare size={12} color="#10b981" />
+                  <span>Esqueci minha senha</span>
+                </button>
+              </div>
               <div className="input-wrapper-alpha">
                 <Lock size={18} className="input-icon-alpha" />
                 <input
@@ -274,6 +167,13 @@ export default function Login({ onLogin }) {
           </div>
         </div>
       </div>
+
+      {/* Modal de Recuperação de Senha Self-Service via WhatsApp (Camada 2) */}
+      <ModalRecuperarSenha
+        isOpen={modalRecuperarAberto}
+        onClose={() => setModalRecuperarAberto(false)}
+        onSenhaRedefinidaComSucesso={handleSenhaRedefinida}
+      />
     </div>
   );
 }
