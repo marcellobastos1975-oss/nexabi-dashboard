@@ -69,7 +69,7 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', padding: '16px 20px', maxWidth: 1600, margin: '0 auto' }}>
       {/* Header Executivo NexaLife Tech & Alpha Solutions */}
-      <header className="glass-card header-main" style={{ padding: '14px 20px', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+      <header className="glass-card header-main" style={{ padding: '16px 22px', marginBottom: 16, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <img 
             src="/nexalife_logo.png" 
@@ -77,7 +77,7 @@ export default function App() {
             className="header-logo-img"
             style={{ height: 87, objectFit: 'contain', filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.4))' }} 
           />
-          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.12)', paddingLeft: 16 }}>
+          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.14)', paddingLeft: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <h1 style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '0.5px', color: '#ffffff' }}>
                 NexaBI <span style={{ color: '#00d2ff' }}>— Alpha Suite</span>
@@ -94,7 +94,7 @@ export default function App() {
 
         {/* Controles, Filtros Globais e Perfil */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(15,23,42,0.8)', padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(5,16,36,0.85)', padding: '7px 14px', borderRadius: 10, border: '1px solid rgba(0,130,255,0.3)' }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
             <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ERP:</span>
             <strong style={{ fontSize: '11px', color: '#fff' }}>{usuario.erp || 'Próton (Oracle)'}</strong>
@@ -103,7 +103,7 @@ export default function App() {
           <select 
             value={unidade} 
             onChange={(e) => setUnidade(e.target.value)}
-            style={{ background: 'rgba(15,23,42,0.8)', border: '1px solid var(--border-color)', color: '#fff', padding: '7px 12px', borderRadius: 8, fontSize: '12px' }}
+            style={{ background: 'rgba(5,16,36,0.85)', border: '1px solid rgba(0,130,255,0.3)', color: '#fff', padding: '8px 14px', borderRadius: 10, fontSize: '12px', outline: 'none', cursor: 'pointer' }}
           >
             {isMaster ? (
               <>
@@ -124,7 +124,7 @@ export default function App() {
           <select 
             value={anoMes} 
             onChange={(e) => setAnoMes(e.target.value)}
-            style={{ background: 'rgba(15,23,42,0.8)', border: '1px solid var(--border-color)', color: '#fff', padding: '7px 12px', borderRadius: 8, fontSize: '12px' }}
+            style={{ background: 'rgba(5,16,36,0.85)', border: '1px solid rgba(0,130,255,0.3)', color: '#fff', padding: '8px 14px', borderRadius: 10, fontSize: '12px', outline: 'none', cursor: 'pointer' }}
           >
             <option value="2026-06">📅 Junho / 2026</option>
             <option value="2026-05">Maio / 2026</option>
@@ -133,7 +133,7 @@ export default function App() {
 
           <button 
             className="btn-primary" 
-            style={{ padding: '7px 14px', fontSize: '12px' }}
+            style={{ padding: '8px 16px', fontSize: '12px', borderRadius: 10 }}
             onClick={handleAtualizar}
             disabled={atualizando}
           >
@@ -147,12 +147,12 @@ export default function App() {
               display: 'flex', 
               alignItems: 'center', 
               gap: 6, 
-              padding: '6px 12px', 
-              borderRadius: 8, 
+              padding: '7px 14px', 
+              borderRadius: 10, 
               fontSize: '12px', 
               fontWeight: 700,
-              background: isMaster ? 'rgba(121, 40, 202, 0.18)' : 'rgba(0, 210, 255, 0.15)',
-              border: isMaster ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid rgba(0, 210, 255, 0.35)',
+              background: isMaster ? 'rgba(121, 40, 202, 0.22)' : 'rgba(0, 210, 255, 0.18)',
+              border: isMaster ? '1px solid rgba(168, 85, 247, 0.45)' : '1px solid rgba(0, 210, 255, 0.4)',
               color: isMaster ? '#d8b4fe' : '#38bdf8'
             }}
           >
@@ -165,10 +165,10 @@ export default function App() {
             onClick={handleLogout}
             style={{
               background: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
+              border: '1px solid rgba(239, 68, 68, 0.35)',
               color: '#fca5a5',
-              padding: '7px 12px',
-              borderRadius: 8,
+              padding: '8px 14px',
+              borderRadius: 10,
               fontSize: '12px',
               fontWeight: 600,
               cursor: 'pointer',

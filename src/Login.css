@@ -20,8 +20,8 @@
 }
 
 .login-card-alpha {
-  background: rgba(10, 21, 38, 0.94);
-  border: 1px solid rgba(0, 102, 255, 0.4);
+  background: linear-gradient(135deg, rgba(13, 40, 80, 0.96) 0%, rgba(7, 21, 44, 0.97) 50%, rgba(3, 10, 24, 0.98) 100%);
+  border: 1px solid rgba(0, 140, 255, 0.35);
   border-radius: 20px;
   padding: 42px 38px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 82, 204, 0.2);
