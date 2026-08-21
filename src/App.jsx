@@ -74,11 +74,11 @@ export default function App() {
             src="/nexalife_logo.png" 
             alt="NexaLife Tech Logo Oficial" 
             className="header-logo-img"
-            style={{ height: 58, objectFit: 'contain', filter: 'drop-shadow(0 4px 14px rgba(0, 210, 255, 0.35))' }} 
+            style={{ height: 87, objectFit: 'contain', filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.4))' }} 
           />
-          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.12)', paddingLeft: 14 }}>
+          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.12)', paddingLeft: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h1 style={{ fontSize: '19px', fontWeight: 800, letterSpacing: '0.5px', color: '#ffffff' }}>
+              <h1 style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '0.5px', color: '#ffffff' }}>
                 NexaBI <span style={{ color: '#00d2ff' }}>— Alpha Suite</span>
               </h1>
               <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: 12, background: 'rgba(0, 210, 255, 0.15)', color: '#00d2ff', fontWeight: 700, border: '1px solid rgba(0, 210, 255, 0.3)' }}>
@@ -217,15 +217,15 @@ export default function App() {
 
       {/* Rodapé Oficial com Logo Ampliada */}
       <footer style={{ marginTop: 36, textAlign: 'center', fontSize: '12px', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 10 }}>
           <img 
             src="/nexalife_logo.png" 
             alt="NexaLife Tech" 
-            style={{ height: 42, objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(0, 210, 255, 0.3))' }} 
+            style={{ height: 63, objectFit: 'contain', filter: 'drop-shadow(0 3px 12px rgba(0, 210, 255, 0.35))' }} 
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <strong style={{ color: '#ffffff' }}>NexaBI — Alpha Suite v1.2.0</strong>
+          <strong style={{ color: '#ffffff' }}>NexaBI — Alpha Suite v1.2.2</strong>
           <span>•</span>
           <span>Desenvolvido por <strong style={{ color: '#00d2ff' }}>NexaLife Tech</strong> &amp; <strong style={{ color: '#38bdf8' }}>Alpha Solutions</strong></span>
           <span>•</span>
