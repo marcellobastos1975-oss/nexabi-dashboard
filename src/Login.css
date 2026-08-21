@@ -3,32 +3,33 @@
   width: 100vw;
   background-color: #050a14;
   background-image: 
-    radial-gradient(at 80% 20%, rgba(0, 82, 204, 0.22) 0px, transparent 50%),
-    radial-gradient(at 10% 80%, rgba(0, 210, 255, 0.1) 0px, transparent 50%);
+    radial-gradient(at 50% 30%, rgba(0, 82, 204, 0.25) 0px, transparent 60%),
+    radial-gradient(at 50% 80%, rgba(0, 210, 255, 0.12) 0px, transparent 60%);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding: 40px 80px;
+  justify-content: center;
+  padding: 24px;
   box-sizing: border-box;
   overflow-x: hidden;
 }
 
 .login-panel-container {
   width: 100%;
-  max-width: 460px;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 .login-card-alpha {
   background: rgba(10, 21, 38, 0.94);
-  border: 1px solid rgba(0, 102, 255, 0.35);
-  border-radius: 18px;
-  padding: 38px 34px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 82, 204, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 102, 255, 0.4);
+  border-radius: 20px;
+  padding: 42px 38px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(0, 82, 204, 0.2);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .login-brand-header {
@@ -36,18 +37,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .login-brand-logo {
-  height: 52px;
+  height: 72px;
   object-fit: contain;
   margin-bottom: 14px;
-  filter: drop-shadow(0 4px 12px rgba(0, 210, 255, 0.35));
+  filter: drop-shadow(0 4px 18px rgba(0, 210, 255, 0.5));
+  transition: transform 0.3s ease;
+}
+
+.login-brand-logo:hover {
+  transform: scale(1.04);
 }
 
 .login-brand-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: 0.5px;
@@ -99,7 +105,7 @@
   width: 100%;
   padding: 13px 14px;
   background: #070d18;
-  border: 1px solid rgba(0, 102, 255, 0.4);
+  border: 1px solid rgba(0, 102, 255, 0.45);
   border-radius: 10px;
   color: #ffffff;
   font-size: 13px;
@@ -112,7 +118,7 @@
 
 .select-field-alpha:focus {
   border-color: #00d2ff;
-  box-shadow: 0 0 12px rgba(0, 210, 255, 0.3);
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.35);
 }
 
 .select-field-alpha option {
@@ -125,7 +131,7 @@
   width: 100%;
   padding: 13px 14px 13px 44px;
   background: #070d18;
-  border: 1px solid rgba(0, 102, 255, 0.4);
+  border: 1px solid rgba(0, 102, 255, 0.45);
   border-radius: 10px;
   color: #ffffff;
   font-size: 14px;
@@ -136,7 +142,7 @@
 
 .input-field-alpha:focus {
   border-color: #00d2ff;
-  box-shadow: 0 0 12px rgba(0, 210, 255, 0.3);
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.35);
   background: #0a1424;
 }
 
@@ -154,13 +160,13 @@
   justify-content: center;
   gap: 8px;
   margin-top: 6px;
-  box-shadow: 0 6px 20px rgba(0, 102, 255, 0.35);
+  box-shadow: 0 6px 22px rgba(0, 102, 255, 0.4);
   transition: all 0.2s ease;
 }
 
 .login-submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 210, 255, 0.45);
+  box-shadow: 0 8px 26px rgba(0, 210, 255, 0.5);
 }
 
 .login-submit-btn:disabled {
@@ -182,16 +188,24 @@
 .login-card-footer {
   text-align: center;
   font-size: 12px;
-  color: #64748b;
-  margin-top: 4px;
+  color: #94a3b8;
+  margin-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 14px;
 }
 
-@media (max-width: 900px) {
-  .login-screen-wrapper {
-    justify-content: center;
-    padding: 20px;
-  }
+.login-card-footer strong {
+  color: #00d2ff;
+}
+
+@media (max-width: 600px) {
   .login-card-alpha {
     padding: 30px 22px;
+  }
+  .login-brand-logo {
+    height: 60px;
+  }
+  .login-brand-title {
+    font-size: 20px;
   }
 }

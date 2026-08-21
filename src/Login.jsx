@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, User, ChevronRight, Smartphone } from 'lucide-react';
+import { Lock, User, ChevronRight } from 'lucide-react';
 import './Login.css';
 
 export default function Login({ onLogin }) {
@@ -18,7 +18,7 @@ export default function Login({ onLogin }) {
     const p = password.trim();
 
     setTimeout(() => {
-      // 1. Validação de Acesso Master
+      // 1. Validação de Acesso Master (NexaLife Tech)
       if (
         (empresa === 'master' || u === 'master' || u === 'admin' || u === 'nexalife' || u === 'marcello') &&
         (p === 'NexaLife@2026!SecDB' || p === 'admin' || p === 'master' || p === '123456' || p === 'nexalife')
@@ -37,9 +37,9 @@ export default function Login({ onLogin }) {
         return;
       }
 
-      // 2. Validação de Acesso Cliente (Lojas Silva / ERP Próton)
+      // 2. Validação de Acesso Cliente (Lojas Silva / Clientes Cadastrados)
       if (
-        (empresa === 'silva' || empresa === 'alpha' || u === 'cliente' || u === 'silva' || u === 'lojassilva' || u === 'proton') &&
+        (empresa === 'silva' || u === 'cliente' || u === 'silva' || u === 'lojassilva' || u === 'proton') &&
         (p === 'cliente' || p === 'silva123' || p === '123456' || p === 'proton' || p === 'NexaBI@2026!' || p === 'admin')
       ) {
         const userData = {
@@ -56,7 +56,7 @@ export default function Login({ onLogin }) {
         return;
       }
 
-      // 3. Fallback inteligente para novos usuários cadastrados
+      // 3. Fallback para novos usuários digitados
       if (u.length >= 3 && p.length >= 4) {
         const isMasterLike = empresa === 'master' || u.includes('master') || u.includes('adm') || u.includes('nexa');
         const userData = {
@@ -83,7 +83,7 @@ export default function Login({ onLogin }) {
       <div className="login-panel-container">
         <div className="login-card-alpha">
           
-          {/* Logo Oficial NexaLife */}
+          {/* Logo Ampliada NexaLife TECH */}
           <div className="login-brand-header">
             <img 
               src="/nexalife_logo.png" 
@@ -109,7 +109,6 @@ export default function Login({ onLogin }) {
                   <option value="">-- Selecione a Empresa para Login --</option>
                   <option value="master">👑 NexaLife Tech (Master / Todas as Empresas)</option>
                   <option value="silva">🏪 Lojas Silva Casa &amp; Conforto (Próton ERP)</option>
-                  <option value="alpha">🏢 Alpha Solutions (Parceiro Homologado)</option>
                 </select>
               </div>
             </div>
@@ -158,8 +157,9 @@ export default function Login({ onLogin }) {
             </button>
           </form>
 
+          {/* Rodapé com Versão Oficial */}
           <div className="login-card-footer">
-            Powered by NexaLife Tech &copy; 2026
+            Powered by NexaLife Tech &copy; 2026 • <strong>NexaBI — Alpha Suite v1.2.0</strong>
           </div>
         </div>
       </div>
