@@ -51,20 +51,52 @@ export default function Tesouraria() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
         {/* Donut */}
         <div className="glass-card" style={{ padding: 16 }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 8 }}>
             🍩 Composição do Capital de Giro
           </h3>
-          <div style={{ width: '100%', height: 220 }}>
+          <div style={{ width: '100%', height: 180 }}>
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={capitalGiroData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80}>
+                <Pie 
+                  data={capitalGiroData} 
+                  dataKey="value" 
+                  nameKey="name" 
+                  cx="50%" 
+                  cy="50%" 
+                  innerRadius={45} 
+                  outerRadius={75}
+                  paddingAngle={3}
+                  stroke="#070d18"
+                  strokeWidth={2}
+                >
                   {capitalGiroData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: '#0e192c', borderColor: 'rgba(0,210,255,0.3)', borderRadius: 8 }} />
+                <Tooltip 
+                  contentStyle={{ 
+                    background: 'rgba(14, 25, 44, 0.95)', 
+                    borderColor: 'rgba(0, 210, 255, 0.4)', 
+                    borderRadius: 8,
+                    color: '#ffffff',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+                  }} 
+                  itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                  labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
+                  formatter={(val, name) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mi`, name]}
+                />
               </PieChart>
             </ResponsiveContainer>
+          </div>
+          {/* Legenda em texto claro e sem bordas */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 8, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 8 }}>
+            {capitalGiroData.map(item => (
+              <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '11px' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
+                <span style={{ color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}:</span>
+                <strong style={{ color: '#ffffff', marginLeft: 'auto' }}>R$ {item.value} Mi</strong>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -105,7 +137,18 @@ export default function Tesouraria() {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="dia" stroke="var(--text-muted)" fontSize={11} />
               <YAxis stroke="var(--text-muted)" fontSize={11} />
-              <Tooltip contentStyle={{ background: '#0e192c', borderColor: 'rgba(0,210,255,0.3)', borderRadius: 8 }} />
+              <Tooltip 
+                contentStyle={{ 
+                  background: 'rgba(14, 25, 44, 0.95)', 
+                  borderColor: 'rgba(0, 210, 255, 0.4)', 
+                  borderRadius: 8, 
+                  color: '#ffffff',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+                }} 
+                itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
+                formatter={(val, name) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mil`, name]}
+              />
               <Bar dataKey="credito" fill="#ef4444" name="Crédito" radius={[4, 4, 0, 0]} />
               <Bar dataKey="debito" fill="#3b82f6" name="Débito" radius={[4, 4, 0, 0]} />
             </BarChart>

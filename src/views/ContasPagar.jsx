@@ -68,7 +68,12 @@ export default function ContasPagar() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="nome" stroke="var(--text-muted)" fontSize={9} />
                 <YAxis stroke="var(--text-muted)" fontSize={11} />
-                <Tooltip contentStyle={{ background: '#0e192c', borderColor: 'rgba(0,210,255,0.3)', borderRadius: 8 }} />
+                <Tooltip 
+                  contentStyle={{ background: 'rgba(14, 25, 44, 0.95)', borderColor: 'rgba(0, 210, 255, 0.4)', borderRadius: 8, color: '#ffffff', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} 
+                  itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                  labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
+                  formatter={(val) => [`R$ ${Number(val).toLocaleString('pt-BR')} Mil`, 'A Pagar']}
+                />
                 <Bar dataKey="valor" fill="#ef4444" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>

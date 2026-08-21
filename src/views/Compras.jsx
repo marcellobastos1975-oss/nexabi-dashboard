@@ -57,7 +57,12 @@ export default function Compras() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="fornecedor" stroke="var(--text-muted)" fontSize={10} />
                 <YAxis stroke="var(--text-muted)" fontSize={11} />
-                <Tooltip contentStyle={{ background: '#0e192c', borderColor: 'rgba(0,210,255,0.3)', borderRadius: 8 }} />
+                <Tooltip 
+                  contentStyle={{ background: 'rgba(14, 25, 44, 0.95)', borderColor: 'rgba(0, 210, 255, 0.4)', borderRadius: 8, color: '#ffffff', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} 
+                  itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                  labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
+                  formatter={(val) => [`${val} Dias`, 'Lead Time']}
+                />
                 <Line type="monotone" dataKey="dias" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981' }} />
               </LineChart>
             </ResponsiveContainer>

@@ -227,7 +227,9 @@ export default function PanoramaGeral() {
               <XAxis type="number" stroke="var(--text-muted)" fontSize={11} />
               <YAxis dataKey="mes" type="category" stroke="var(--text-muted)" fontSize={11} width={80} />
               <Tooltip 
-                contentStyle={{ background: '#0e192c', borderColor: 'rgba(0,210,255,0.3)', borderRadius: 8 }}
+                contentStyle={{ background: 'rgba(14, 25, 44, 0.95)', borderColor: 'rgba(0, 210, 255, 0.4)', borderRadius: 8, color: '#ffffff', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}
+                itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
                 formatter={(val) => [`R$ ${val.toLocaleString('pt-BR')} Mil`, 'Faturamento']}
               />
               <Bar dataKey="valor" fill="#00d2ff" radius={[0, 4, 4, 0]} />
