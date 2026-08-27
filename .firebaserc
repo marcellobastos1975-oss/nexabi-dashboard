@@ -1,0 +1,16 @@
+﻿{
+  "projects": {
+    "default": "nexalife-ecosystem",
+    "ecosystem": "nexalife-ecosystem",
+    "voxlegado": "voxlegado"
+  },
+  "targets": {
+    "nexalife-ecosystem": {
+      "hosting": {
+        "nexabi": [
+          "nexabi-suite"
+        ]
+      }
+    }
+  }
+}
