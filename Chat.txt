@@ -1,0 +1,80 @@
+================================================================================
+🤖 INSTRUÇÕES OBRIGATÓRIAS PARA NOVOS AGENTES DE IA (NEXABI SUITE)
+================================================================================
+Holding: NexaLife Tech & Alpha Solutions
+Ecossistema: NexaBI — Alpha Suite (Multi-ERP & Analytics Corporativo)
+Plataforma Online: https://bi.nexalifetech.com.br (Firebase: nexabi-suite.web.app)
+
+--------------------------------------------------------------------------------
+🚨 REGRA NÚMERO 1: LEITURA OBRIGATÓRIA ANTES DE QUALQUER AÇÃO
+--------------------------------------------------------------------------------
+Antes de propor ou executar qualquer alteração no código, comando ou resposta, 
+o agente DEVE obrigatoriamente ler o arquivo de documentação de estado na raiz:
+
+👉 "Projeto_estado.md"
+
+O arquivo "Projeto_estado.md" é a FONTE ÚNICA DA VERDADE do ecossistema. 
+Nele constam todas as diretrizes de governança, arquitetura técnica, 
+mapeamento de bancos, histórico completo de versões e padrões visuais.
+
+--------------------------------------------------------------------------------
+🗺️ MAPA DE ARQUIVOS E ONDE ENCONTRAR CADA INFORMAÇÃO
+--------------------------------------------------------------------------------
+1. DOCUMENTAÇÃO, DIRETRIZES & HISTÓRICO:
+   - "Projeto_estado.md" (Raiz e dentro de "Dashboard/") -> Diretrizes de engenharia, arquitetura multi-ERP, especificações dos 8 módulos analíticos, mapeamento Oracle/PostgreSQL e histórico de releases.
+
+2. CREDENCIAIS SENSÍVEIS E ACESSOS CLOUD:
+   - "Conexões.txt" (Raiz - Protegido localmente) -> URLs, tokens JWT, senhas de banco PostgreSQL/Supabase, API Keys, IDs de projetos Google Cloud/Firebase e Meta WhatsApp API.
+
+3. PAINEL ANALÍTICO WEB (FRONTEND):
+   - Pasta "Dashboard/" -> SPA React 18 + Vite + Recharts + Lucide Icons.
+   - "Dashboard/src/config.js" -> Definição oficial de versão (ex: APP_VERSION = 'v1.6.3 PROD').
+   - "Dashboard/src/App.jsx" -> Header executivo, seletor de empresas reais, filtros de período dinâmicos e sessões.
+   - "Dashboard/src/views/" -> 8 Módulos de BI (Panorama, Vendas, Compras, CR, CP, Tesouraria, Estoques, Fiscal).
+   - "Dashboard/src/components/" -> Modais de gestão de usuários, empresas/API Keys e cards de KPIs.
+
+4. AGENTE EXTRATOR LOCAL / SERVIDOR CLIENTE (DESKTOP):
+   - Pasta "SyncAgent/" -> Agente Python autônomo com interface gráfica Tkinter responsiva.
+   - "SyncAgent/NexaBI-SyncAgent.exe" -> Executável compilado portátil (--noconsole).
+   - "SyncAgent/sync_agent.py" & "oracle_queries.py" -> Extração Delta read-only no Oracle do ERP Próton.
+   - "SyncAgent/config.json" -> Configurações locais com criptografia AES-256 atrelada ao hardware.
+
+5. API REST BACKEND & REGRAS CLOUD:
+   - Pasta "Backend/" -> Microserviço FastAPI + Uvicorn + Supabase Client.
+
+6. BANCO DE DADOS & SCHEMAS ANALÍTICOS:
+   - Pasta "Database/" -> Tabelas ODS multi-tenant, Materialized Views, RPCs PostgreSQL e carga de testes.
+
+--------------------------------------------------------------------------------
+⚖️ AS 7 DIRETRIZES DE GOVERNANÇA INEGOCIÁVEIS (SIGA À RISCA)
+--------------------------------------------------------------------------------
+1. 🏷️ VERSIONAMENTO OBRIGATÓRIO A CADA ALTERAÇÃO:
+   - NUNCA altere código sem avançar a versão semântica (ex: v1.6.3 -> v1.6.4).
+   - Atualize obrigatoriamente: "Dashboard/src/config.js", "Dashboard/package.json" e o "Projeto_estado.md".
+
+2. 🚀 BUILD, DEPLOY E GIT PUSH EM TEMPO REAL:
+   - A cada alteração realizada, execute:
+     a) Build: npm run build (na pasta Dashboard)
+     b) Deploy: firebase deploy --only hosting:nexabi-suite --project nexalife-ecosystem
+     c) Git: git add . ; git commit -m "feat/fix/chore: ..." ; git push origin master
+
+3. 🏢 ISOLAMENTO MULTI-TENANT E SEGREGAÇÃO DE DEMO:
+   - Dados de clientes reais (ex: DESTAK PRIME) são segregados por "empresa_id".
+   - Clientes novos sem carga iniciam em Estado Zerado (R$ 0,00) com banner informativo.
+   - A empresa/usuário de teste "silva" (Lojas Silva Demonstração) é restrita ao sandbox e JAMAIS deve aparecer ou ser somada no Painel Master.
+
+4. 🔒 SEGURANÇA DE SESSÃO E BLINDAGEM DO MASTER:
+   - Sessão em sessionStorage (isolada por aba com destruição imediata ao fechar).
+   - Auto-logout por inatividade (30 minutos).
+   - O usuário "marcello" é o Master proprietário e é IMPOSSÍVEL de ser excluído ou rebaixado.
+
+5. 📱 MÁSCARAS INTELIGENTES EM TEMPO REAL:
+   - WhatsApp com digitação fluida formatando para (DD) 9XXXX-XXXX (com DDI +55 automático no envio).
+   - CNPJ formatado dinamicamente para XX.XXX.XXX/XXXX-XX.
+
+6. 📅 FILTRO TEMPORAL COM CÁLCULO DINÂMICO DE CALENDÁRIO:
+   - O período padrão deve sempre refletir o mês e ano reais do sistema operacional (new Date()).
+
+7. ⚡ ZERO-IMPACTO NO ERP DO CLIENTE:
+   - Extrações no Oracle exclusivamente via "SET TRANSACTION READ ONLY" e queries indexadas com hints.
+================================================================================
