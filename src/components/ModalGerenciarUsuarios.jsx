@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, Users, UserPlus, KeyRound, Trash2, ShieldCheck, 
   Building2, Phone, CheckCircle, AlertCircle, Search, Lock
@@ -8,6 +8,7 @@ import { getTodosUsuarios, cadastrarUsuario, adminRedefinirSenha, excluirUsuario
 export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [usuarios, setUsuarios] = useState([]);
   const [busca, setBusca] = useState('');
+  const [filtroEmpresa, setFiltroEmpresa] = useState('todas');
   const [modalNovoAberto, setModalNovoAberto] = useState(false);
   const [modalResetAberto, setModalResetAberto] = useState(false);
   const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
@@ -42,14 +43,25 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const usuariosFiltrados = usuarios.filter((u) => {
+  // Ordenação: Sempre coloca usuários Master no topo da lista
+  const usuariosOrdenados = [...usuarios].sort((a, b) => {
+    if (a.perfil === 'master' && b.perfil !== 'master') return -1;
+    if (a.perfil !== 'master' && b.perfil === 'master') return 1;
+    return a.nome.localeCompare(b.nome);
+  });
+
+  const usuariosFiltrados = usuariosOrdenados.filter((u) => {
     const termo = busca.toLowerCase();
-    return (
+    const bateBusca = (
       u.nome.toLowerCase().includes(termo) ||
       u.username.toLowerCase().includes(termo) ||
       (u.whatsapp && u.whatsapp.toLowerCase().includes(termo)) ||
       (u.empresaNome && u.empresaNome.toLowerCase().includes(termo))
     );
+    if (!bateBusca) return false;
+    if (filtroEmpresa === 'todas') return true;
+    if (filtroEmpresa === 'master') return u.perfil === 'master';
+    return u.empresaId === filtroEmpresa;
   });
 
   // 1. Cadastrar Novo Usuário
@@ -242,25 +254,50 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           </div>
         )}
 
-        {/* Barra de Busca */}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <Search size={16} style={{ position: 'absolute', left: 12, color: '#94a3b8' }} />
-          <input
-            type="text"
-            placeholder="Filtrar por nome, usuário, WhatsApp ou empresa..."
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
+        {/* Barra de Busca & Filtro por Empresa */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', flex: 1, minWidth: 260 }}>
+            <Search size={16} style={{ position: 'absolute', left: 12, color: '#94a3b8' }} />
+            <input
+              type="text"
+              placeholder="Filtrar por nome, usuário, WhatsApp ou empresa..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '9px 14px 9px 38px',
+                background: '#070d18',
+                border: '1px solid rgba(0, 130, 255, 0.35)',
+                borderRadius: 10,
+                color: '#fff',
+                fontSize: 13,
+                outline: 'none'
+              }}
+            />
+          </div>
+
+          <select
+            value={filtroEmpresa}
+            onChange={(e) => setFiltroEmpresa(e.target.value)}
             style={{
-              width: '100%',
-              padding: '9px 14px 9px 38px',
+              padding: '9px 14px',
               background: '#070d18',
-              border: '1px solid rgba(0, 130, 255, 0.35)',
+              border: '1px solid rgba(0, 210, 255, 0.4)',
               borderRadius: 10,
-              color: '#fff',
+              color: '#38bdf8',
               fontSize: 13,
-              outline: 'none'
+              fontWeight: 600,
+              outline: 'none',
+              cursor: 'pointer'
             }}
-          />
+            title="Filtrar tabela por Empresa / Perfil"
+          >
+            <option value="todas">🏢 Todas as Empresas</option>
+            <option value="master">👑 Apenas Usuários Master</option>
+            <option value="silva">🏪 Lojas Silva Casa &amp; Conforto</option>
+            <option value="nordeste">🏢 Rede Nordeste Móveis &amp; Eletro</option>
+            <option value="alpha_dist">🚚 Alpha Distribuidora</option>
+          </select>
         </div>
 
         {/* Tabela de Usuários */}
@@ -277,7 +314,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                 <th style={{ padding: '10px 14px', fontWeight: 700 }}>NOME</th>
                 <th style={{ padding: '10px 14px', fontWeight: 700 }}>USUÁRIO (LOGIN ÚNICO)</th>
                 <th style={{ padding: '10px 14px', fontWeight: 700 }}>WHATSAPP</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>PERFIL</th>
+                <th style={{ padding: '10px 14px', fontWeight: 700, textAlign: 'center' }}>PERFIL</th>
                 <th style={{ padding: '10px 14px', fontWeight: 700 }}>EMPRESA</th>
                 <th style={{ padding: '10px 14px', fontWeight: 700, textAlign: 'center' }}>AÇÕES</th>
               </tr>
@@ -290,17 +327,23 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                     <td style={{ padding: '10px 14px', fontWeight: 600, color: '#fff' }}>{u.nome}</td>
                     <td style={{ padding: '10px 14px', color: '#00d2ff', fontFamily: 'monospace', fontWeight: 700 }}>{u.username}</td>
                     <td style={{ padding: '10px 14px', color: '#cbd5e1' }}>{u.whatsapp || '-'}</td>
-                    <td style={{ padding: '10px 14px' }}>
+                    <td style={{ padding: '10px 14px', textAlign: 'center', whiteSpace: 'nowrap' }}>
                       <span style={{
-                        padding: '3px 8px',
-                        borderRadius: 10,
-                        fontSize: 10,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 6,
+                        padding: '4px 12px',
+                        borderRadius: 12,
+                        fontSize: 11,
                         fontWeight: 700,
-                        background: isUserMaster ? 'rgba(168, 85, 247, 0.2)' : 'rgba(0, 210, 255, 0.15)',
-                        border: isUserMaster ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid rgba(0, 210, 255, 0.3)',
+                        whiteSpace: 'nowrap',
+                        background: isUserMaster ? 'rgba(168, 85, 247, 0.22)' : 'rgba(0, 210, 255, 0.16)',
+                        border: isUserMaster ? '1px solid rgba(168, 85, 247, 0.5)' : '1px solid rgba(0, 210, 255, 0.35)',
                         color: isUserMaster ? '#d8b4fe' : '#38bdf8'
                       }}>
-                        {isUserMaster ? '👑 Master' : '🏪 Cliente'}
+                        <span>{isUserMaster ? '👑' : '🏪'}</span>
+                        <span>{isUserMaster ? 'Master' : 'Cliente'}</span>
                       </span>
                     </td>
                     <td style={{ padding: '10px 14px', color: '#94a3b8' }}>{u.empresaNome || 'Todas as Empresas'}</td>

@@ -59,6 +59,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
   });
 
   const handleCopiarToken = (token, id) => {
+    if (!token) return;
     navigator.clipboard.writeText(token);
     setCopiadoId(id);
     setTimeout(() => setCopiadoId(null), 2500);
@@ -86,7 +87,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
     setCarregando(false);
 
     if (res.sucesso) {
-      setMensagemSucesso(`✅ Empresa "${res.empresa.nome_fantasia}" cadastrada com sucesso! API Key gerada.`);
+      setMensagemSucesso(`Empresa '${res.empresa.nome_fantasia}' cadastrada com sucesso! API Key gerada.`);
       setModalNovoAberto(false);
       setRazaoSocial('');
       setNomeFantasia('');
@@ -98,214 +99,397 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
   };
 
   const handleExcluir = async (id, nome) => {
-    if (window.confirm(`Tem certeza que deseja excluir o cadastro da empresa "${nome}"?`)) {
+    if (window.confirm(`Tem certeza que deseja excluir o cadastro da empresa '${nome}'?`)) {
       await excluirEmpresa(id);
       recarregar();
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col bg-[#0b1728] border border-[#00d2ff]/40 rounded-2xl shadow-2xl overflow-hidden">
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backgroundColor: 'rgba(2, 6, 18, 0.85)',
+      backdropFilter: 'blur(10px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999,
+      padding: 16
+    }}>
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.98) 0%, rgba(7, 21, 44, 0.98) 50%, rgba(3, 10, 24, 0.99) 100%)',
+        border: '1px solid rgba(0, 210, 255, 0.45)',
+        borderRadius: 20,
+        width: '100%',
+        maxWidth: 960,
+        maxHeight: '90vh',
+        boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 210, 255, 0.2)',
+        padding: '26px 30px',
+        position: 'relative',
+        color: '#ffffff',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16
+      }}>
         
-        {/* Header Modal */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1e3a5f] bg-[#070d18]/60">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#0052cc] to-[#00d2ff] text-white shadow-lg">
-              <Building2 className="w-6 h-6" />
+        {/* Botão Fechar */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: 'none',
+            borderRadius: '50%',
+            width: 32,
+            height: 32,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#94a3b8',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+        >
+          <X size={18} />
+        </button>
+
+        {/* Cabeçalho */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+              width: 44,
+              height: 44,
+              borderRadius: 12,
+              background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 16px rgba(0, 210, 255, 0.35)'
+            }}>
+              <Building2 size={22} color="#ffffff" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                Gerenciamento de Clientes & Chaves de API (Multi-Tenant)
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#00d2ff]/10 text-[#00d2ff] border border-[#00d2ff]/30">
-                  Master Console
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, letterSpacing: '0.3px', color: '#fff' }}>
+                  Gerenciamento de Clientes &amp; Chaves de API
+                </h2>
+                <span style={{
+                  fontSize: 10,
+                  padding: '2px 8px',
+                  borderRadius: 10,
+                  background: 'rgba(0, 210, 255, 0.15)',
+                  border: '1px solid rgba(0, 210, 255, 0.4)',
+                  color: '#00d2ff',
+                  fontWeight: 700
+                }}>
+                  Multi-Tenant
                 </span>
-              </h2>
-              <p className="text-xs text-slate-400">
-                Cadastre novas empresas contratantes e gere Tokens exclusivos para autenticação do SyncAgent.
-              </p>
+              </div>
+              <span style={{ fontSize: 12, color: '#94a3b8' }}>
+                Cadastre empresas contratantes e gere Tokens de autenticação para o SyncAgent.
+              </span>
             </div>
           </div>
-          <button 
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+
+          <button
+            onClick={() => setModalNovoAberto(true)}
+            style={{
+              background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)',
+              border: 'none',
+              borderRadius: 10,
+              padding: '9px 16px',
+              color: '#fff',
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              boxShadow: '0 4px 16px rgba(0, 140, 255, 0.35)'
+            }}
           >
-            <X className="w-5 h-5" />
+            <Plus size={15} /> + Cadastrar Empresa
           </button>
         </div>
 
         {/* Feedback Messages */}
         {mensagemSucesso && (
-          <div className="mx-6 mt-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-2.5 text-emerald-400 text-sm">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+          <div style={{
+            background: 'rgba(16, 185, 129, 0.15)',
+            border: '1px solid rgba(16, 185, 129, 0.4)',
+            color: '#6ee7b7',
+            padding: '10px 14px',
+            borderRadius: 10,
+            fontSize: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8
+          }}>
+            <CheckCircle2 size={16} />
             <span>{mensagemSucesso}</span>
           </div>
         )}
+
         {erro && (
-          <div className="mx-6 mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-2.5 text-red-400 text-sm">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <div style={{
+            background: 'rgba(239, 68, 68, 0.15)',
+            border: '1px solid rgba(239, 68, 68, 0.4)',
+            color: '#fca5a5',
+            padding: '10px 14px',
+            borderRadius: 10,
+            fontSize: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8
+          }}>
+            <AlertCircle size={16} />
             <span>{erro}</span>
           </div>
         )}
 
-        {/* Barra de Ações & Busca */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4">
-          <div className="relative w-full sm:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text"
-              placeholder="Buscar por CNPJ, Razão Social..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-[#16253b] border border-[#1e3a5f] rounded-xl text-sm text-white placeholder-slate-400 focus:outline-none focus:border-[#00d2ff]"
-            />
-          </div>
-
-          <button 
-            onClick={() => setModalNovoAberto(true)}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#0052cc] to-[#00d2ff] text-white font-semibold rounded-xl text-sm shadow-lg hover:brightness-110 transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            Cadastrar Nova Empresa / Cliente
-          </button>
+        {/* Barra de Busca */}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <Search size={16} style={{ position: 'absolute', left: 12, color: '#94a3b8' }} />
+          <input
+            type="text"
+            placeholder="Buscar por CNPJ, Razão Social ou Nome Fantasia..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '9px 14px 9px 38px',
+              background: '#070d18',
+              border: '1px solid rgba(0, 130, 255, 0.35)',
+              borderRadius: 10,
+              color: '#fff',
+              fontSize: 13,
+              outline: 'none'
+            }}
+          />
         </div>
 
         {/* Lista de Empresas */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-3">
-          {empresasFiltradas.length === 0 ? (
-            <div className="text-center py-12 text-slate-400">
-              <Building2 className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p className="text-sm">Nenhuma empresa encontrada com os termos informados.</p>
-            </div>
-          ) : (
-            empresasFiltradas.map((emp) => (
-              <div 
-                key={emp.id || emp.cnpj}
-                className="p-4 bg-[#0d1b2a] border border-[#1e3a5f] hover:border-[#00d2ff]/50 rounded-xl transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
-              >
-                <div className="space-y-1 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-white text-base">{emp.nome_fantasia || emp.razao_social}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-md bg-[#16253b] text-[#38bdf8] border border-[#1e3a5f]">
-                      {emp.erp_tipo || 'PROTON'} ({emp.banco_tipo || 'ORACLE'})
-                    </span>
-                    <span className="text-xs px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                      ATIVO
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-300">
-                    <strong className="text-slate-400">Razão Social:</strong> {emp.razao_social}
-                  </p>
-                  <p className="text-xs text-slate-300">
-                    <strong className="text-slate-400">CNPJ:</strong> {emp.cnpj}
-                  </p>
-                </div>
+        <div style={{
+          overflowY: 'auto',
+          flex: 1,
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: 12,
+          background: 'rgba(5, 15, 34, 0.7)'
+        }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, textAlign: 'left' }}>
+            <thead>
+              <tr style={{ background: 'rgba(10, 25, 55, 0.95)', borderBottom: '1px solid rgba(0, 140, 255, 0.25)', color: '#94a3b8' }}>
+                <th style={{ padding: '10px 14px', fontWeight: 700 }}>EMPRESA / CLIENTE</th>
+                <th style={{ padding: '10px 14px', fontWeight: 700 }}>CNPJ</th>
+                <th style={{ padding: '10px 14px', fontWeight: 700 }}>ERP / BANCO</th>
+                <th style={{ padding: '10px 14px', fontWeight: 700 }}>API KEY / TOKEN</th>
+                <th style={{ padding: '10px 14px', fontWeight: 700, textAlign: 'center' }}>AÇÕES</th>
+              </tr>
+            </thead>
+            <tbody>
+              {empresasFiltradas.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
+                    Nenhuma empresa encontrada.
+                  </td>
+                </tr>
+              ) : (
+                empresasFiltradas.map((emp) => (
+                  <tr key={emp.id || emp.cnpj} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                    <td style={{ padding: '10px 14px' }}>
+                      <div style={{ fontWeight: 700, color: '#fff', fontSize: 13 }}>
+                        {emp.nome_fantasia || emp.razao_social}
+                      </div>
+                      <div style={{ fontSize: 11, color: '#94a3b8' }}>
+                        {emp.razao_social}
+                      </div>
+                    </td>
 
-                {/* Bloco da API Key */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                  <div className="px-3 py-2 bg-[#070d18] border border-[#1e3a5f] rounded-lg flex items-center gap-2 text-xs">
-                    <Key className="w-3.5 h-3.5 text-[#00d2ff]" />
-                    <span className="text-slate-300 font-mono">
-                      {emp.api_key ? `${emp.api_key.substring(0, 18)}...` : 'NÃO GERADO'}
-                    </span>
-                  </div>
+                    <td style={{ padding: '10px 14px', color: '#00d2ff', fontFamily: 'monospace', fontWeight: 600 }}>
+                      {emp.cnpj}
+                    </td>
 
-                  <button 
-                    onClick={() => handleCopiarToken(emp.api_key, emp.id || emp.cnpj)}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-[#16253b] hover:bg-[#1e3a5f] border border-[#1e3a5f] rounded-lg text-xs font-semibold text-[#00d2ff] transition-all cursor-pointer"
-                    title="Copiar Token para colar no SyncAgent"
-                  >
-                    {copiadoId === (emp.id || emp.cnpj) ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copiado!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Copiar Token</span>
-                      </>
-                    )}
-                  </button>
+                    <td style={{ padding: '10px 14px' }}>
+                      <span style={{
+                        padding: '3px 8px',
+                        borderRadius: 8,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        background: 'rgba(0, 210, 255, 0.15)',
+                        border: '1px solid rgba(0, 210, 255, 0.3)',
+                        color: '#38bdf8'
+                      }}>
+                        {emp.erp_tipo || 'PROTON'} ({emp.banco_tipo || 'ORACLE'})
+                      </span>
+                    </td>
 
-                  {emp.cnpj !== '00.000.000/0001-00' && (
-                    <button 
-                      onClick={() => handleExcluir(emp.id, emp.nome_fantasia || emp.razao_social)}
-                      className="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-red-500/10 transition-colors"
-                      title="Excluir Empresa"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
+                    <td style={{ padding: '10px 14px' }}>
+                      <div style={{
+                        background: '#070d18',
+                        padding: '4px 8px',
+                        borderRadius: 8,
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                        color: '#a7f3d0',
+                        maxWidth: 210,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        {emp.api_key || 'NÃO GERADO'}
+                      </div>
+                    </td>
+
+                    <td style={{ padding: '10px 14px', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                        <button
+                          onClick={() => handleCopiarToken(emp.api_key, emp.id || emp.cnpj)}
+                          style={{
+                            background: copiadoId === (emp.id || emp.cnpj) ? 'rgba(16, 185, 129, 0.25)' : 'rgba(0, 210, 255, 0.15)',
+                            border: copiadoId === (emp.id || emp.cnpj) ? '1px solid #10b981' : '1px solid rgba(0, 210, 255, 0.4)',
+                            color: copiadoId === (emp.id || emp.cnpj) ? '#6ee7b7' : '#00d2ff',
+                            padding: '6px 12px',
+                            borderRadius: 8,
+                            fontSize: 11,
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 5
+                          }}
+                          title="Copiar Token para o SyncAgent"
+                        >
+                          {copiadoId === (emp.id || emp.cnpj) ? (
+                            <>
+                              <Check size={13} />
+                              <span>Copiado!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={13} />
+                              <span>Copiar Token</span>
+                            </>
+                          )}
+                        </button>
+
+                        {emp.cnpj !== '00.000.000/0001-00' && (
+                          <button
+                            onClick={() => handleExcluir(emp.id, emp.nome_fantasia || emp.razao_social)}
+                            style={{
+                              background: 'rgba(239, 68, 68, 0.12)',
+                              border: '1px solid rgba(239, 68, 68, 0.35)',
+                              color: '#f87171',
+                              padding: '6px',
+                              borderRadius: 8,
+                              cursor: 'pointer'
+                            }}
+                            title="Excluir Empresa"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
 
         {/* Modal Interno: Cadastrar Nova Empresa */}
         {modalNovoAberto && (
-          <div className="absolute inset-0 bg-[#070d18]/95 backdrop-blur-md flex flex-col p-6 z-20 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-[#1e3a5f] mb-4">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Plus className="w-5 h-5 text-[#00d2ff]" />
-                Cadastrar Nova Empresa Cliente & Gerar Token de API
-              </h3>
-              <button 
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(3, 10, 24, 0.97)',
+            backdropFilter: 'blur(8px)',
+            borderRadius: 20,
+            padding: 30,
+            display: 'flex',
+            flexDirection: 'column',
+            zIndex: 10
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: 14, marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Plus size={20} color="#00d2ff" />
+                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: '#fff' }}>
+                  Cadastrar Nova Empresa Cliente &amp; Gerar Token
+                </h3>
+              </div>
+              <button
                 onClick={() => setModalNovoAberto(false)}
-                className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/5"
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
               >
-                <X className="w-5 h-5" />
+                <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSalvarNovaEmpresa} className="space-y-4 max-w-xl mx-auto w-full flex-1 overflow-y-auto">
+            <form onSubmit={handleSalvarNovaEmpresa} style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 540, margin: '0 auto', width: '100%' }}>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Razão Social *</label>
-                <input 
-                  type="text" 
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 5 }}>
+                  Razão Social *
+                </label>
+                <input
+                  type="text"
                   required
                   placeholder="Ex: COMERCIAL DE ALIMENTOS SILVA LTDA"
                   value={razaoSocial}
                   onChange={(e) => setRazaoSocial(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#16253b] border border-[#1e3a5f] rounded-xl text-sm text-white focus:outline-none focus:border-[#00d2ff]"
+                  style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Nome Fantasia</label>
-                <input 
-                  type="text" 
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 5 }}>
+                  Nome Fantasia
+                </label>
+                <input
+                  type="text"
                   placeholder="Ex: Supermercado Silva"
                   value={nomeFantasia}
                   onChange={(e) => setNomeFantasia(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#16253b] border border-[#1e3a5f] rounded-xl text-sm text-white focus:outline-none focus:border-[#00d2ff]"
+                  style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">CNPJ da Empresa *</label>
-                  <input 
-                    type="text" 
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 5 }}>
+                    CNPJ da Empresa *
+                  </label>
+                  <input
+                    type="text"
                     required
                     placeholder="Ex: 30.820.528/0001-78"
                     value={cnpj}
                     onChange={(e) => setCnpj(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#16253b] border border-[#1e3a5f] rounded-xl text-sm text-white focus:outline-none focus:border-[#00d2ff]"
+                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">ERP de Origem</label>
-                  <select 
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 5 }}>
+                    ERP de Origem
+                  </label>
+                  <select
                     value={erpTipo}
                     onChange={(e) => {
                       setErpTipo(e.target.value);
                       if (e.target.value === 'PROTON') setBancoTipo('ORACLE');
                       if (e.target.value === 'TOTVS_PROTHEUS') setBancoTipo('SQLSERVER');
                     }}
-                    className="w-full px-3 py-2 bg-[#16253b] border border-[#1e3a5f] rounded-xl text-sm text-white focus:outline-none focus:border-[#00d2ff]"
+                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                   >
                     <option value="PROTON">Próton ERP (Oracle)</option>
                     <option value="TOTVS_PROTHEUS">TOTVS Protheus (SQL Server)</option>
@@ -317,41 +501,40 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
                 </div>
               </div>
 
-              {/* Token de Ingestão Auto-Gerado */}
-              <div className="p-3.5 bg-[#070d18] border border-[#00d2ff]/30 rounded-xl space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-[#00d2ff] flex items-center gap-1.5">
-                    <Key className="w-3.5 h-3.5" />
-                    Token de Autenticação / API Key (Gerada Automaticamente)
+              {/* Token Auto-Gerado */}
+              <div style={{ background: '#070d18', padding: 14, borderRadius: 12, border: '1px solid rgba(0, 210, 255, 0.35)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#00d2ff', display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <Key size={13} /> Token API de Ingestão (Gerado Automaticamente)
                   </label>
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setTokenGerado(gerarApiKeySegura(cnpj))}
-                    className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1"
+                    style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3 }}
                   >
-                    <RefreshCw className="w-3 h-3" /> Gerar Novo
+                    <RefreshCw size={11} /> Gerar Novo
                   </button>
                 </div>
-                <div className="p-2 bg-[#030712] rounded-lg font-mono text-xs text-emerald-400 break-all border border-[#1e3a5f]">
+                <div style={{ background: '#020610', padding: 10, borderRadius: 8, fontFamily: 'monospace', fontSize: 12, color: '#34d399', wordBreak: 'break-all', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                   {tokenGerado}
                 </div>
-                <p className="text-[11px] text-slate-400">
-                  Este token será colado no campo <strong>API Key da Empresa</strong> no SyncAgent instalado no cliente.
-                </p>
+                <span style={{ fontSize: 10, color: '#94a3b8', display: 'block', marginTop: 4 }}>
+                  Este token será colado no campo <strong>API Key da Empresa</strong> no SyncAgent do cliente.
+                </span>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3">
-                <button 
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
+                <button
                   type="button"
                   onClick={() => setModalNovoAberto(false)}
-                  className="px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                  style={{ padding: '9px 16px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', borderRadius: 10, color: '#cbd5e1', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
                 >
                   Cancelar
                 </button>
-                <button 
+                <button
                   type="submit"
                   disabled={carregando}
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#0052cc] to-[#00d2ff] text-white font-semibold rounded-xl text-sm shadow-lg hover:brightness-110 transition-all disabled:opacity-50"
+                  style={{ padding: '9px 20px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 10, color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0, 140, 255, 0.4)' }}
                 >
                   {carregando ? 'Salvando...' : 'Salvar Empresa & Gerar Token'}
                 </button>
