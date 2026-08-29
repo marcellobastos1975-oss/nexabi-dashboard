@@ -78,7 +78,9 @@ const CATALOGO_EMPRESAS = {
 export default function App() {
   const [usuario, setUsuario] = useState(() => {
     try {
-      const salvo = localStorage.getItem('nexabi_auth_user');
+      // Limpeza de segurança de resíduos persistentes legados
+      localStorage.removeItem('nexabi_auth_user');
+      const salvo = sessionStorage.getItem('nexabi_auth_session');
       return salvo ? JSON.parse(salvo) : null;
     } catch {
       return null;
@@ -92,6 +94,30 @@ export default function App() {
   const [atualizando, setAtualizando] = useState(false);
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
+
+  // Monitor de Inatividade (Encerra a sessão se ficar 30 minutos inativo)
+  useEffect(() => {
+    if (!usuario) return;
+
+    let timeoutId;
+    const TEMPO_INATIVIDADE = 30 * 60 * 1000; // 30 minutos
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        handleLogout();
+      }, TEMPO_INATIVIDADE);
+    };
+
+    const eventos = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    eventos.forEach((evt) => window.addEventListener(evt, resetTimer));
+    resetTimer();
+
+    return () => {
+      clearTimeout(timeoutId);
+      eventos.forEach((evt) => window.removeEventListener(evt, resetTimer));
+    };
+  }, [usuario]);
 
   useEffect(() => {
     if (usuario) {
@@ -107,6 +133,7 @@ export default function App() {
   }, [usuario]);
 
   const handleLogout = () => {
+    sessionStorage.removeItem('nexabi_auth_session');
     localStorage.removeItem('nexabi_auth_user');
     setUsuario(null);
   };

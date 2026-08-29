@@ -33,7 +33,9 @@ export default function Login({ onLogin }) {
       setLoading(false);
 
       if (res.sucesso) {
-        localStorage.setItem('nexabi_auth_user', JSON.stringify(res.usuario));
+        // Sessão estrita e isolada por aba (destruída ao fechar a janela/aba)
+        localStorage.removeItem('nexabi_auth_user'); // Limpa resíduos legados
+        sessionStorage.setItem('nexabi_auth_session', JSON.stringify(res.usuario));
         onLogin(res.usuario);
       } else {
         setError(res.erro || 'Credenciais inválidas. Verifique seu login e senha.');
