@@ -50,6 +50,23 @@ Para garantir a máxima qualidade, segurança e conformidade do ecossistema Nexa
 * O `NexaBI-SyncAgent.exe` opera com conexões estritas de somente leitura (`SET TRANSACTION READ ONLY`), queries com hints otimizados (`FIRST_ROWS(100)`), delta por data de alteração e comunicação segura de saída (Outbound HTTPS TLS 1.3).
 * Credenciais de banco salvas localmente no `config.json` são criptografadas com chave militar **AES-256 vinculada ao hardware da máquina**.
 
+### 🧪 8. Diretriz de Teste Prévio Obrigatório Antes da Entrega (Zero Retrabalho & Eficiência Máxima)
+* **Regra Inegociável**: Toda e qualquer alteração realizada em qualquer componente do ecossistema NexaBI — seja no executável Desktop (NexaBI-SyncAgent.exe), no Dashboard Web (i.nexalifetech.com.br), nas regras/APIs da Nuvem Supabase ou na infraestrutura Firebase — **DEVE OBRIGATORIAMENTE ser testada, executada e validada de ponta a ponta em ambiente real antes de ser entregue ao usuário**.
+* **Checklist de Validação Pré-Entrega Obrigatório**:
+  1. **SyncAgent Desktop (NexaBI-SyncAgent.exe)**:
+     * Recompilar o executável como binário único 100% auto-contido.
+     * Executar o .exe gerado via teste de processo automatizado.
+     * Verificar que o processo inicializa em < 500ms, sem qualquer ModuleNotFoundError, Traceback ou erro de janela.
+     * Validar leitura/escrita blindada de config.json e state.json.
+  2. **Dashboard Web (i.nexalifetech.com.br)**:
+     * Executar 
+pm run build e confirmar compilação com zero erros.
+     * Validar rotas, autenticação, isolamento de perfil Master/Cliente e responsividade visual.
+     * Realizar deploy no Google Cloud Firebase Hosting e confirmar disponibilidade online (HTTP 200).
+  3. **Nuvem & Banco de Dados (Supabase)**:
+     * Validar integridade das tabelas ODS, índices, RLS e autenticação via REST API com TLS 1.3.
+* **Objetivo**: Assegurar que o usuário e os clientes finais recebam entregas 100% funcionais, seguras e validadas, eliminando qualquer desperdício de tempo ou falhas em ambiente de produção.
+
 ---
 
 ## 🗂️ Estrutura Geral do Projeto
