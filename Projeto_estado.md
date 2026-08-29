@@ -1,5 +1,5 @@
 # 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-08-29 — Dashboard Web v1.6.0 PROD & NexaBI SyncAgent v1.5.2 Standalone
+> **Última atualização:** 2026-08-29 — Dashboard Web v1.6.1 PROD & NexaBI SyncAgent v1.5.2 Standalone
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
@@ -8,11 +8,11 @@
 
 Para garantir a máxima qualidade, segurança e conformidade do ecossistema NexaBI, as seguintes diretrizes são **obrigatórias e aplicadas estritamente em todas as tarefas**:
 
-### 🏷️ 1. Diretriz de Versionamento Contínuo e Rastreável
-* Cada componente do ecossistema possui seu ciclo de versionamento semântico documentado:
-  * **Dashboard Web**: **`v1.6.0 PROD`** (Exibido no rodapé oficial do sistema e nas configurações de build).
+### 🏷️ 1. Diretriz de Versionamento Contínuo e Rastreável (OBRIGATÓRIO A CADA ALTERAÇÃO)
+* **Toda e qualquer alteração de código ou funcionalidade exige incremento imediato de versão**:
+  * **Dashboard Web**: **`v1.6.1 PROD`** (Exibido no rodapé oficial do sistema, `config.js` e `package.json`).
   * **SyncAgent Desktop**: **`v1.5.2`** (Exibido no título da janela gráfica e rodapé do executável).
-* Toda e qualquer nova funcionalidade, ajuste ergonômico ou correção avança o versionamento semestral/mensal com registro formal no Histórico de Versões.
+* Nenhuma alteração é liberada sem a atualização formal do número da versão e seu respectivo registro no Histórico de Versões.
 
 ### 🚀 2. Diretriz de Commit & Push Obrigatório no Git em Tempo Real
 * Nenhuma alteração é mantida apenas no ambiente local.
@@ -69,7 +69,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 │   ├── src\components\            → Componentes reutilizáveis (KPICard, LiquidityGauge, ModalEmpresas, ModalUsuarios)
 │   ├── src\maskUtils.js           → Utilitários de auto-máscaras em tempo real (WhatsApp, CNPJ)
 │   ├── src\App.jsx                → Header executivo, seletor de empresas reais, períodos interativos e navegação
-│   ├── src\config.js              → Configurações oficiais (APP_VERSION = 'v1.6.0 PROD')
+│   ├── src\config.js              → Configurações oficiais (APP_VERSION = 'v1.6.1 PROD')
 │   ├── src\index.css              → Tema Dark Navy Glassmorphism da NexaLife Tech
 │   └── dist\                      → Build compilado pronto para produção
 ├── Database\                      → Esquemas SQL, Materialized Views, RPCs e Seed
@@ -98,7 +98,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 | **PostgreSQL Host** | `db.fwlexdycmquuwfrfwokv.supabase.co` | Host direto (Portas 5432 / 6543) |
 | **Firebase Projeto Corporativo** | `NexaLife-Ecosystem` (`nexalife-ecosystem`) | **Projeto Cloud Exclusivo NexaLife** 🟢 |
 | **Domínio Corporativo Oficial** | `https://nexalifetech.com.br` / `www` | **Portal Institucional NexaLife TECH** 🟢 |
-| **Subdomínio NexaBI Oficial** | `https://bi.nexalifetech.com.br` | **Plataforma NexaBI — Alpha Suite (v1.6.0 PROD)** 📊 🟢 |
+| **Subdomínio NexaBI Oficial** | `https://bi.nexalifetech.com.br` | **Plataforma NexaBI — Alpha Suite (v1.6.1 PROD)** 📊 🟢 |
 | **Subdomínio Nexa-RPA Oficial** | `https://pdv.nexalifetech.com.br` | **Portal de Gestão & Automação PDVs (RPA)** 🤖 🟢 |
 | **Firebase Hosting (NexaBI)** | `https://nexabi-suite.web.app` | Endpoint Google Cloud NexaBI |
 | **Dashboard GitHub** | `https://github.com/marcellobastos1975-oss/nexabi-dashboard.git` | Código-fonte versionado |
@@ -110,6 +110,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| Dashboard Web | v1.6.1 PROD | 2026-08-29 | **v1.6.1 PROD (AUTO-VINCULAÇÃO E AUTO-REPARO DE USUÁRIOS DESTAK PRIME & CORREÇÃO DE FILTRO MULTI-TENANT)**: Incremento e fixação da versão `v1.6.1 PROD` no rodapé e `config.js`; Correção da inicialização do formulário de usuários para auto-selecionar a `DESTAK PRIME (30.820.528/0001-78)` como padrão imediato; Implementação de rotina de auto-reparo e saneamento de usuários legados que haviam ficado como `Empresa Cliente`, associando o usuário `dell` automaticamente à Destak Prime; Correção do filtro por empresa no cabeçalho da tabela de usuários para cruzar tanto por CNPJ quanto por Fantasia/Razão Social; Build, deploy no Firebase e sincronização GitHub. |
 | Dashboard Web | v1.6.0 PROD | 2026-08-29 | **v1.6.0 PROD (MULTI-TENANT DINÂMICO DE CLIENTES REAIS, ZERO-STATE INICIAL, MÁSCARAS INTELIGENTES & FILTROS TEMPORAIS INTERATIVOS)**: Versionamento formal independente do Web Dashboard (`v1.6.0 PROD`) exibido no rodapé do BI; Integração dinâmica do cadastro de usuários com o banco de empresas reais (`DESTAK PRIME 30.820.528/0001-78`); Isolamento estrito do Painel Master, removendo empresas fictícias do seletor e consolidando apenas clientes reais; Implementação de Estado Inicial Zerado (`R$ 0,00`) com banner de prontidão para empresas recém-cadastradas que aguardam a 1ª carga do SyncAgent; Implementação de máscaras inteligentes em tempo real para WhatsApp `(DD) 9XXXX-XXXX` e CNPJ `XX.XXX.XXX/XXXX-XX`; Adição de seletor dinâmico e interativo de períodos (`Hoje 24h`, `7 Dias`, `Mês Atual`, `Mês Anterior`, `90 Dias`, `Ano Atual` e `Personalizado De/Até`); Deploy no Firebase Hosting e sincronização GitHub. |
 | SyncAgent & Segurança Web | v1.5.2 | 2026-08-29 | **v1.5.2 (NEXABI SYNCAGENT STANDALONE EXECUTÁVEL, THICK MODE ORACLE 11G, CRIPTOGRAFIA AES-256, ISOLAMENTO ESTRITO DE SESSÃO & FAVICONS 3D N)**: Construção do executável autônomo portátil `NexaBI-SyncAgent.exe` em modo janela pura (`--noconsole`); Suporte híbrido Thin Mode (Oracle 12c+) e Thick Mode automático com resolução do erro DPY-3010 para servidores Oracle 11g R2; Implementação de segurança militar com criptografia AES-256 com chave atrelada ao hardware da máquina em `config.json`; Proteção visual com ocultação estrita permanente de senhas em tela; Interface gráfica responsiva com auto-dimensionamento inteligente e centralização dinâmica; Implementação de segurança estrita no Dashboard com isolamento de sessão por aba (`sessionStorage`), destruição imediata de credenciais ao fechar a janela/aba e auto-logout por 30min de inatividade; Criação do painel Master `ModalGerenciarEmpresas` para auto-geração e cópia de API Keys; Atualização do Favicon oficial 3D N no Web Dashboard (`bi.nexalifetech.com.br`) e deploy multi-cloud no Firebase Hosting. |
 | Infraestrutura & DNS | v1.5.1 | 2026-08-29 | **v1.5.1 (CONFIGURAÇÃO DE DOMÍNIOS E SUBDOMÍNIOS DNS NO REGISTRO.BR & DEPLOY NEXA-RPA NO GOOGLE CLOUD)**: Configuração de zona DNS no Registro.br com padronização RFC de CNAME exclusivo; Criação e deploy do Portal Institucional (`nexalifetech.com.br` / `www.nexalifetech.com.br`), vinculação do subdomínio analítico `bi.nexalifetech.com.br` ao NexaBI Suite e do subdomínio operacional `pdv.nexalifetech.com.br` ao painel do Robô Nexa-RPA (`https://nexa-rpa.web.app`) com tema Dark Navy Glassmorphism em produção. |
