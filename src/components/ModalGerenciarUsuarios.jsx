@@ -42,13 +42,27 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [erro, setErro] = useState('');
 
   const recarregarUsuarios = async () => {
-    setUsuarios(getTodosUsuarios());
     const listaEmp = await getTodasEmpresas();
     const reais = (listaEmp || []).filter(e => e.cnpj !== '00.000.000/0001-00');
     setEmpresasCadastradas(reais);
-    if (reais.length > 0 && !novaEmpresaId) {
-      setNovaEmpresaId(reais[0].cnpj || reais[0].id);
+    
+    if (reais.length > 0) {
+      const destak = reais[0];
+      setNovaEmpresaId(destak.cnpj || destak.id);
+      
+      // Auto-reparo de cadastros legados com "Empresa Cliente" ou empresaId incorreta
+      const listaUsers = getTodosUsuarios();
+      listaUsers.forEach(usr => {
+        if (usr.perfil === 'cliente' && (usr.empresaNome === 'Empresa Cliente' || !usr.empresaNome || usr.empresaId === 'silva')) {
+          editarUsuario(usr.username, {
+            empresaId: destak.cnpj,
+            empresaNome: destak.nome_fantasia || destak.razao_social,
+            erp: `${destak.erp_tipo || 'Próton'} (${destak.banco_tipo || 'Oracle'})`
+          });
+        }
+      });
     }
+    setUsuarios(getTodosUsuarios());
   };
 
   useEffect(() => {
@@ -81,7 +95,10 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     if (!bateBusca) return false;
     if (filtroEmpresa === 'todas') return true;
     if (filtroEmpresa === 'master') return u.perfil === 'master';
-    return u.empresaId === filtroEmpresa;
+    return (
+      u.empresaId === filtroEmpresa ||
+      (u.empresaNome && u.empresaNome.toLowerCase().includes('destak') && filtroEmpresa.includes('30.820.528'))
+    );
   });
 
   // 1. Cadastrar Novo Usuário
@@ -89,10 +106,11 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     e.preventDefault();
     setErro('');
 
-    const empObj = empresasCadastradas.find(emp => emp.cnpj === novaEmpresaId || emp.id === novaEmpresaId);
+    const targetEmpId = novaEmpresaId || (empresasCadastradas[0]?.cnpj || '30.820.528/0001-78');
+    const empObj = empresasCadastradas.find(emp => emp.cnpj === targetEmpId || emp.id === targetEmpId) || empresasCadastradas[0];
     const empresaNomeResolvido = novoPerfil === 'master' 
       ? 'Todas as Empresas (Consolidado)' 
-      : (empObj ? (empObj.nome_fantasia || empObj.razao_social) : 'Empresa Cliente');
+      : (empObj ? (empObj.nome_fantasia || empObj.razao_social) : 'DESTAK PRIME');
 
     const res = cadastrarUsuario({
       username: novoUsername,
@@ -100,14 +118,14 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
       whatsapp: novoWhatsapp,
       senha: novaSenha,
       perfil: novoPerfil,
-      empresaId: novoPerfil === 'master' ? 'todas' : (novaEmpresaId || (empresasCadastradas[0]?.cnpj || 'silva')),
+      empresaId: novoPerfil === 'master' ? 'todas' : (empObj ? empObj.cnpj : targetEmpId),
       empresaNome: empresaNomeResolvido,
       erp: novoPerfil === 'master' ? 'Multi-ERP' : (empObj ? `${empObj.erp_tipo || 'Próton'} (${empObj.banco_tipo || 'Oracle'})` : 'Próton (Oracle)'),
       unidadePadrao: novaUnidade
     });
 
     if (res.sucesso) {
-      setMensagemSucesso(`Usuário '${novoUsername}' cadastrado com sucesso com validação global!`);
+      setMensagemSucesso(`Usuário '${novoUsername}' cadastrado com sucesso para ${empresaNomeResolvido}!`);
       setModalNovoAberto(false);
       setNovoNome('');
       setNovoUsername('');
@@ -125,7 +143,8 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     setEditNome(u.nome || '');
     setEditWhatsapp(formatarWhatsApp(u.whatsapp || ''));
     setEditPerfil(u.perfil || 'cliente');
-    setEditEmpresaId(u.empresaId || (empresasCadastradas[0]?.cnpj || ''));
+    const targetEmpId = (u.empresaId && u.empresaId !== 'silva') ? u.empresaId : (empresasCadastradas[0]?.cnpj || '30.820.528/0001-78');
+    setEditEmpresaId(targetEmpId);
     setEditUnidade(u.unidadePadrao || 'Todas');
     setErro('');
     setModalEditarAberto(true);
@@ -136,16 +155,17 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     e.preventDefault();
     setErro('');
 
-    const empObj = empresasCadastradas.find(emp => emp.cnpj === editEmpresaId || emp.id === editEmpresaId);
+    const targetEmpId = editEmpresaId || (empresasCadastradas[0]?.cnpj || '30.820.528/0001-78');
+    const empObj = empresasCadastradas.find(emp => emp.cnpj === targetEmpId || emp.id === targetEmpId) || empresasCadastradas[0];
     const empresaNomeResolvido = editPerfil === 'master' 
       ? 'Todas as Empresas (Consolidado)' 
-      : (empObj ? (empObj.nome_fantasia || empObj.razao_social) : 'Empresa Cliente');
+      : (empObj ? (empObj.nome_fantasia || empObj.razao_social) : 'DESTAK PRIME');
 
     const res = editarUsuario(editUsername, {
       nome: editNome,
       whatsapp: editWhatsapp,
       perfil: editPerfil,
-      empresaId: editPerfil === 'master' ? 'todas' : editEmpresaId,
+      empresaId: editPerfil === 'master' ? 'todas' : (empObj ? empObj.cnpj : targetEmpId),
       empresaNome: empresaNomeResolvido,
       unidadePadrao: editUnidade
     });
@@ -298,7 +318,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
               setNovoWhatsapp('');
               setNovaSenha('');
               setNovoPerfil('cliente');
-              setNovaEmpresaId('silva');
+              setNovaEmpresaId(empresasCadastradas[0]?.cnpj || '30.820.528/0001-78');
               setErro('');
               setModalNovoAberto(true);
             }}
