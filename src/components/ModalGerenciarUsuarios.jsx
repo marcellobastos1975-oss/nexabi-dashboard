@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Users, UserPlus, KeyRound, Trash2, ShieldCheck, 
-  Building2, Phone, CheckCircle, AlertCircle, Search, Lock
+  Building2, Phone, CheckCircle, AlertCircle, Search, Lock, Edit3
 } from 'lucide-react';
-import { getTodosUsuarios, cadastrarUsuario, adminRedefinirSenha, excluirUsuario } from '../authStore';
+import { getTodosUsuarios, cadastrarUsuario, editarUsuario, adminRedefinirSenha, excluirUsuario } from '../authStore';
 
 export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [usuarios, setUsuarios] = useState([]);
   const [busca, setBusca] = useState('');
   const [filtroEmpresa, setFiltroEmpresa] = useState('todas');
   const [modalNovoAberto, setModalNovoAberto] = useState(false);
+  const [modalEditarAberto, setModalEditarAberto] = useState(false);
   const [modalResetAberto, setModalResetAberto] = useState(false);
   const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
 
@@ -21,6 +22,14 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [novoPerfil, setNovoPerfil] = useState('cliente');
   const [novaEmpresaId, setNovaEmpresaId] = useState('silva');
   const [novaUnidade, setNovaUnidade] = useState('Todas');
+
+  // Form Editar Usuário
+  const [editUsername, setEditUsername] = useState('');
+  const [editNome, setEditNome] = useState('');
+  const [editWhatsapp, setEditWhatsapp] = useState('');
+  const [editPerfil, setEditPerfil] = useState('cliente');
+  const [editEmpresaId, setEditEmpresaId] = useState('silva');
+  const [editUnidade, setEditUnidade] = useState('Todas');
 
   // Form Reset Master
   const [resetNovaSenha, setResetNovaSenha] = useState('');
@@ -45,6 +54,8 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
 
   // Ordenação: Sempre coloca usuários Master no topo da lista
   const usuariosOrdenados = [...usuarios].sort((a, b) => {
+    if (a.username.toLowerCase() === 'marcello') return -1;
+    if (b.username.toLowerCase() === 'marcello') return 1;
     if (a.perfil === 'master' && b.perfil !== 'master') return -1;
     if (a.perfil !== 'master' && b.perfil === 'master') return 1;
     return a.nome.localeCompare(b.nome);
@@ -94,7 +105,44 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     }
   };
 
-  // 2. Executar Reset Administrativo Master (Camada 1)
+  // 2. Abrir Edição de Usuário
+  const abrirEdicaoUsuario = (u) => {
+    setEditUsername(u.username);
+    setEditNome(u.nome || '');
+    setEditWhatsapp(u.whatsapp || '');
+    setEditPerfil(u.perfil || 'cliente');
+    setEditEmpresaId(u.empresaId || 'silva');
+    setEditUnidade(u.unidadePadrao || 'Todas');
+    setErro('');
+    setModalEditarAberto(true);
+  };
+
+  // 2.1 Salvar Edição de Usuário
+  const handleSalvarEdicao = (e) => {
+    e.preventDefault();
+    setErro('');
+
+    const empresaNomeResolvido = editPerfil === 'master' ? 'Todas as Empresas (Consolidado)' : (editEmpresaId === 'silva' ? 'Lojas Silva Casa & Conforto Ltda' : (editEmpresaId === 'nordeste' ? 'Rede Nordeste Móveis & Eletro' : 'Alpha Distribuidora & Logística'));
+
+    const res = editarUsuario(editUsername, {
+      nome: editNome,
+      whatsapp: editWhatsapp,
+      perfil: editPerfil,
+      empresaId: editPerfil === 'master' ? 'todas' : editEmpresaId,
+      empresaNome: empresaNomeResolvido,
+      unidadePadrao: editUnidade
+    });
+
+    if (res.sucesso) {
+      setMensagemSucesso(res.mensagem);
+      setModalEditarAberto(false);
+      recarregarUsuarios();
+    } else {
+      setErro(res.erro || 'Falha ao atualizar usuário.');
+    }
+  };
+
+  // 3. Executar Reset Administrativo Master (Camada 1)
   const handleExecutarReset = (e) => {
     e.preventDefault();
     setErro('');
@@ -114,7 +162,13 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     }
   };
 
+  // 4. Excluir Usuário (Proteção somente para marcello)
   const handleExcluir = (username) => {
+    if (username.toLowerCase() === 'marcello') {
+      alert("O usuário 'marcello' é o proprietário mestre da conta e não pode ser excluído.");
+      return;
+    }
+
     if (window.confirm(`Tem certeza que deseja excluir o usuário '${username}'?`)) {
       const res = excluirUsuario(username);
       if (res.sucesso) {
@@ -146,15 +200,16 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
         border: '1px solid rgba(0, 210, 255, 0.45)',
         borderRadius: 20,
         width: '100%',
-        maxWidth: 960,
+        maxWidth: 980,
         maxHeight: '90vh',
         boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 210, 255, 0.2)',
-        padding: '26px 30px',
+        padding: '24px 28px',
         position: 'relative',
         color: '#ffffff',
         display: 'flex',
         flexDirection: 'column',
-        gap: 16
+        gap: 14,
+        overflow: 'hidden'
       }}>
         {/* Botão Fechar */}
         <button
@@ -163,35 +218,55 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
             position: 'absolute',
             top: 20,
             right: 20,
-            background: 'transparent',
+            background: 'rgba(255, 255, 255, 0.05)',
             border: 'none',
+            borderRadius: '50%',
+            width: 32,
+            height: 32,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             color: '#94a3b8',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            zIndex: 5
           }}
         >
-          <X size={22} />
+          <X size={18} />
         </button>
 
-        {/* Header do Painel */}
+        {/* Cabeçalho */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{
-              width: 44,
-              height: 44,
+              width: 42,
+              height: 42,
               borderRadius: 12,
-              background: 'rgba(0, 210, 255, 0.15)',
-              border: '1px solid rgba(0, 210, 255, 0.4)',
+              background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#00d2ff'
+              boxShadow: '0 0 16px rgba(168, 85, 247, 0.35)'
             }}>
-              <Users size={22} />
+              <Users size={22} color="#ffffff" />
             </div>
             <div>
-              <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, fontFamily: 'Outfit, sans-serif' }}>
-                Gestão de Usuários &amp; Credenciais Multi-ERP
-              </h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, letterSpacing: '0.3px', color: '#fff' }}>
+                  Gestão de Usuários &amp; Credenciais Multi-ERP
+                </h2>
+                <span style={{
+                  fontSize: 10,
+                  padding: '2px 8px',
+                  borderRadius: 10,
+                  background: 'rgba(0, 210, 255, 0.15)',
+                  border: '1px solid rgba(0, 210, 255, 0.4)',
+                  color: '#00d2ff',
+                  fontWeight: 700
+                }}>
+                  Master
+                </span>
+              </div>
               <span style={{ fontSize: 12, color: '#94a3b8' }}>
                 Painel Administrativo Master (NexaLife Tech) • Unicidade Global de Login
               </span>
@@ -199,13 +274,13 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           </div>
 
           <button
-            onClick={() => { setModalNovoAberto(true); setErro(''); }}
+            onClick={() => setModalNovoAberto(true)}
             style={{
-              background: 'linear-gradient(90deg, #0052cc 0%, #00d2ff 100%)',
-              color: '#fff',
+              background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)',
               border: 'none',
-              padding: '9px 16px',
               borderRadius: 10,
+              padding: '9px 16px',
+              color: '#fff',
               fontSize: 12,
               fontWeight: 700,
               cursor: 'pointer',
@@ -322,6 +397,8 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
             <tbody>
               {usuariosFiltrados.map((u) => {
                 const isUserMaster = u.perfil === 'master';
+                const isMarcello = u.username.toLowerCase() === 'marcello';
+
                 return (
                   <tr key={u.username} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
                     <td style={{ padding: '10px 14px', fontWeight: 600, color: '#fff' }}>{u.nome}</td>
@@ -349,6 +426,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                     <td style={{ padding: '10px 14px', color: '#94a3b8' }}>{u.empresaNome || 'Todas as Empresas'}</td>
                     <td style={{ padding: '10px 14px', textAlign: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                        {/* Redefinir Senha */}
                         <button
                           onClick={() => {
                             setUsuarioSelecionado(u);
@@ -361,7 +439,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                             background: 'rgba(0, 210, 255, 0.12)',
                             border: '1px solid rgba(0, 210, 255, 0.35)',
                             color: '#00d2ff',
-                            padding: '5px 10px',
+                            padding: '5px 9px',
                             borderRadius: 6,
                             fontSize: 11,
                             fontWeight: 600,
@@ -370,12 +448,34 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                             alignItems: 'center',
                             gap: 4
                           }}
-                          title="Redefinir Senha deste Usuário como Master"
+                          title="Redefinir Senha deste Usuário"
                         >
                           <KeyRound size={12} /> Redefinir Senha
                         </button>
 
-                        {!['marcello', 'master', 'admin', 'silva'].includes(u.username) && (
+                        {/* Editar Usuário */}
+                        <button
+                          onClick={() => abrirEdicaoUsuario(u)}
+                          style={{
+                            background: 'rgba(168, 85, 247, 0.15)',
+                            border: '1px solid rgba(168, 85, 247, 0.4)',
+                            color: '#d8b4fe',
+                            padding: '5px 8px',
+                            borderRadius: 6,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 4
+                          }}
+                          title="Editar Dados do Usuário"
+                        >
+                          <Edit3 size={12} /> Editar
+                        </button>
+
+                        {/* Excluir Usuário (Todos permitidos, exceto marcello) */}
+                        {!isMarcello && (
                           <button
                             onClick={() => handleExcluir(u.username)}
                             style={{
@@ -404,17 +504,19 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
         {/* MODAL SECUNDÁRIO: CADASTRAR NOVO USUÁRIO */}
         {modalNovoAberto && (
           <div style={{
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(2, 6, 18, 0.88)',
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(2, 6, 18, 0.96)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 10000,
-            padding: 16
+            zIndex: 10,
+            padding: 16,
+            overflowY: 'auto'
           }}>
             <div style={{
               background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 100%)',
@@ -424,7 +526,9 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
               maxWidth: 480,
               padding: '24px 26px',
               position: 'relative',
-              color: '#ffffff'
+              color: '#ffffff',
+              maxHeight: '90%',
+              overflowY: 'auto'
             }}>
               <button
                 onClick={() => setModalNovoAberto(false)}
@@ -439,7 +543,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
 
               <form onSubmit={handleCadastrarNovo} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>NOME COMPLETO</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>NOME COMPLETO *</label>
                   <input
                     type="text"
                     placeholder="Ex: João da Silva"
@@ -451,24 +555,35 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                 </div>
 
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>USUÁRIO DE ACESSO (LOGIN ÚNICO NO BANCO)</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>LOGIN ÚNICO (USERNAME) *</label>
                   <input
                     type="text"
                     placeholder="Ex: joao.silva"
                     value={novoUsername}
-                    onChange={(e) => setNovoUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#00d2ff', fontSize: 13, fontWeight: 600 }}
+                    onChange={(e) => setNovoUsername(e.target.value)}
+                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
                     required
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>WHATSAPP (RECUPERAÇÃO SELF-SERVICE)</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>WHATSAPP (PARA RECUPERAÇÃO META API)</label>
                   <input
                     type="text"
-                    placeholder="Ex: +55 (71) 99999-8888"
+                    placeholder="Ex: +55 (71) 98888-8888"
                     value={novoWhatsapp}
                     onChange={(e) => setNovoWhatsapp(e.target.value)}
+                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>SENHA INICIAL *</label>
+                  <input
+                    type="password"
+                    placeholder="Mínimo 4 dígitos"
+                    value={novaSenha}
+                    onChange={(e) => setNovaSenha(e.target.value)}
                     style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
                     required
                   />
@@ -483,7 +598,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                       style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
                     >
                       <option value="cliente">🏪 Cliente</option>
-                      <option value="master">👑 Master (NexaLife)</option>
+                      <option value="master">👑 Master</option>
                     </select>
                   </div>
 
@@ -493,60 +608,163 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                       value={novaEmpresaId}
                       onChange={(e) => setNovaEmpresaId(e.target.value)}
                       disabled={novoPerfil === 'master'}
-                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13, opacity: novoPerfil === 'master' ? 0.5 : 1 }}
                     >
-                      <option value="silva">Lojas Silva Casa &amp; Conforto</option>
-                      <option value="nordeste">Rede Nordeste Móveis &amp; Eletro</option>
+                      <option value="silva">Lojas Silva</option>
+                      <option value="nordeste">Rede Nordeste</option>
+                      <option value="alpha_dist">Alpha Distribuidora</option>
                     </select>
                   </div>
                 </div>
 
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>SENHA INICIAL</label>
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    value={novaSenha}
-                    onChange={(e) => setNovaSenha(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
-                    required
-                  />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
+                  <button
+                    type="button"
+                    onClick={() => setModalNovoAberto(false)}
+                    style={{ padding: '8px 14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, color: '#fff', cursor: 'pointer' }}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 8, color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    Salvar Usuário
+                  </button>
                 </div>
-
-                <button
-                  type="submit"
-                  style={{
-                    background: 'linear-gradient(90deg, #0052cc 0%, #00d2ff 100%)',
-                    color: '#fff',
-                    border: 'none',
-                    height: 42,
-                    borderRadius: 8,
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    marginTop: 6
-                  }}
-                >
-                  Salvar e Criar Usuário
-                </button>
               </form>
             </div>
           </div>
         )}
 
-        {/* MODAL SECUNDÁRIO: RESET MASTER DE SENHA (CAMADA 1) */}
-        {modalResetAberto && usuarioSelecionado && (
+        {/* MODAL SECUNDÁRIO: EDITAR USUÁRIO */}
+        {modalEditarAberto && (
           <div style={{
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(2, 6, 18, 0.88)',
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(2, 6, 18, 0.96)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 10000,
-            padding: 16
+            zIndex: 10,
+            padding: 16,
+            overflowY: 'auto'
+          }}>
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 100%)',
+              border: '1px solid rgba(168, 85, 247, 0.5)',
+              borderRadius: 16,
+              width: '100%',
+              maxWidth: 480,
+              padding: '24px 26px',
+              position: 'relative',
+              color: '#ffffff',
+              maxHeight: '90%',
+              overflowY: 'auto'
+            }}>
+              <button
+                onClick={() => setModalEditarAberto(false)}
+                style={{ position: 'absolute', top: 16, right: 16, background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+              >
+                <X size={18} />
+              </button>
+
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 14px 0', fontFamily: 'Outfit, sans-serif', color: '#e9d5ff' }}>
+                ✏️ Editar Dados do Usuário: <span style={{ color: '#00d2ff', fontFamily: 'monospace' }}>{editUsername}</span>
+              </h3>
+
+              <form onSubmit={handleSalvarEdicao} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>NOME COMPLETO *</label>
+                  <input
+                    type="text"
+                    value={editNome}
+                    onChange={(e) => setEditNome(e.target.value)}
+                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>WHATSAPP (RECUPERAÇÃO META API)</label>
+                  <input
+                    type="text"
+                    value={editWhatsapp}
+                    onChange={(e) => setEditWhatsapp(e.target.value)}
+                    placeholder="Ex: +55 (71) 98888-8888"
+                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>PERFIL</label>
+                    <select
+                      value={editPerfil}
+                      onChange={(e) => setEditPerfil(e.target.value)}
+                      disabled={editUsername.toLowerCase() === 'marcello'}
+                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    >
+                      <option value="cliente">🏪 Cliente</option>
+                      <option value="master">👑 Master</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>EMPRESA</label>
+                    <select
+                      value={editEmpresaId}
+                      onChange={(e) => setEditEmpresaId(e.target.value)}
+                      disabled={editPerfil === 'master'}
+                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13, opacity: editPerfil === 'master' ? 0.5 : 1 }}
+                    >
+                      <option value="silva">Lojas Silva</option>
+                      <option value="nordeste">Rede Nordeste</option>
+                      <option value="alpha_dist">Alpha Distribuidora</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
+                  <button
+                    type="button"
+                    onClick={() => setModalEditarAberto(false)}
+                    style={{ padding: '8px 14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, color: '#fff', cursor: 'pointer' }}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)', border: 'none', borderRadius: 8, color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    Salvar Alterações
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL SECUNDÁRIO: RESET MASTER DE SENHA */}
+        {modalResetAberto && usuarioSelecionado && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(2, 6, 18, 0.96)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+            padding: 16,
+            overflowY: 'auto'
           }}>
             <div style={{
               background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 100%)',
@@ -565,74 +783,58 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                 <X size={18} />
               </button>
 
-              <div style={{ textAlign: 'center', marginBottom: 14 }}>
-                <div style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: '50%',
-                  background: 'rgba(0, 210, 255, 0.15)',
-                  border: '1px solid rgba(0, 210, 255, 0.4)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 8px auto',
-                  color: '#00d2ff'
-                }}>
-                  <KeyRound size={22} />
-                </div>
-                <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>
-                  Reset Administrativo Master
-                </h3>
-                <span style={{ fontSize: 12, color: '#94a3b8' }}>
-                  Usuário Alvo: <strong style={{ color: '#00d2ff' }}>{usuarioSelecionado.username}</strong> ({usuarioSelecionado.nome})
-                </span>
-              </div>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px 0', fontFamily: 'Outfit, sans-serif' }}>
+                🔑 Redefinir Senha como Master
+              </h3>
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: '0 0 16px 0' }}>
+                Redefinindo credenciais para: <strong style={{ color: '#00d2ff' }}>{usuarioSelecionado.nome} ({usuarioSelecionado.username})</strong>
+              </p>
 
               <form onSubmit={handleExecutarReset} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>DIGITE A NOVA SENHA DO USUÁRIO</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>NOVA SENHA DO USUÁRIO *</label>
                   <input
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="Mínimo 4 caracteres"
                     value={resetNovaSenha}
                     onChange={(e) => setResetNovaSenha(e.target.value)}
                     style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
-                    autoFocus
                     required
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>SUA SENHA MASTER (MARCELLO / NEXALIFE)</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>SUA SENHA MASTER PARA AUTORIZAR *</label>
                   <input
                     type="password"
-                    placeholder="Confirme com sua senha master"
+                    placeholder="Digite a Senha Master"
                     value={resetSenhaMaster}
                     onChange={(e) => setResetSenhaMaster(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(168, 85, 247, 0.5)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
                     required
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  style={{
-                    background: 'linear-gradient(90deg, #10b981 0%, #00d2ff 100%)',
-                    color: '#fff',
-                    border: 'none',
-                    height: 42,
-                    borderRadius: 8,
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    marginTop: 6
-                  }}
-                >
-                  Salvar Nova Senha do Usuário
-                </button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
+                  <button
+                    type="button"
+                    onClick={() => setModalResetAberto(false)}
+                    style={{ padding: '8px 14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, color: '#fff', cursor: 'pointer' }}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 8, color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    Confirmar Redefinição
+                  </button>
+                </div>
               </form>
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

@@ -133,6 +133,52 @@ export async function cadastrarEmpresa({ razao_social, nome_fantasia, cnpj, erp_
   return { sucesso: true, empresa: nova, api_key: token };
 }
 
+export async function atualizarEmpresa(id, dados) {
+  const dadosAtualizados = {
+    razao_social: (dados.razao_social || '').trim().toUpperCase(),
+    nome_fantasia: (dados.nome_fantasia || dados.razao_social || '').trim(),
+    cnpj: (dados.cnpj || '').trim(),
+    erp_tipo: dados.erp_tipo || 'PROTON',
+    banco_tipo: dados.banco_tipo || 'ORACLE',
+    atualizado_em: new Date().toISOString()
+  };
+
+  if (dados.api_key) {
+    dadosAtualizados.api_key = dados.api_key;
+  }
+
+  // 1. Tenta atualizar no Supabase
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/empresas?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(dadosAtualizados)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const salva = data && data[0] ? data[0] : { id, ...dadosAtualizados };
+      const listaAtual = await getTodasEmpresas();
+      const atualizada = listaAtual.map(e => e.id === id ? { ...e, ...salva } : e);
+      localStorage.setItem(EMPRESAS_CACHE_KEY, JSON.stringify(atualizada));
+      return { sucesso: true, empresa: salva };
+    }
+  } catch (err) {
+    console.warn('Erro ao atualizar no Supabase:', err);
+  }
+
+  // Fallback local
+  const listaAtual = await getTodasEmpresas();
+  const atualizada = listaAtual.map(e => e.id === id ? { ...e, ...dadosAtualizados } : e);
+  localStorage.setItem(EMPRESAS_CACHE_KEY, JSON.stringify(atualizada));
+  return { sucesso: true, empresa: { id, ...dadosAtualizados } };
+}
+
 export async function excluirEmpresa(id) {
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/empresas?id=eq.${id}`, {

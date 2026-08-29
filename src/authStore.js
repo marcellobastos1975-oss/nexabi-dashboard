@@ -90,26 +90,40 @@ export const USUARIOS_BASE = [
   }
 ];
 
-// Helper para obter todos os usuários (Base + Customizados)
+// Helper para obter todos os usuários (Base + Customizados - Excluídos + Edições)
 export function getTodosUsuarios() {
   try {
     const customUsers = JSON.parse(localStorage.getItem('nexabi_custom_users') || '[]');
     const overrides = JSON.parse(localStorage.getItem('nexabi_passwords_override') || '{}');
+    const deletedUsers = JSON.parse(localStorage.getItem('nexabi_deleted_users') || '[]');
+    const userEdits = JSON.parse(localStorage.getItem('nexabi_user_edits') || '{}');
     
-    // Mescla usuários base com overrides de senha
-    const baseComOverrides = USUARIOS_BASE.map(u => {
-      if (overrides[u.username.toLowerCase()]) {
-        return { ...u, senhas: [overrides[u.username.toLowerCase()], ...u.senhas] };
-      }
-      return u;
-    });
+    // Mescla usuários base com overrides de senha e edições
+    const baseComOverrides = USUARIOS_BASE
+      .filter(u => !deletedUsers.includes(u.username.toLowerCase()))
+      .map(u => {
+        let user = { ...u };
+        if (userEdits[u.username.toLowerCase()]) {
+          user = { ...user, ...userEdits[u.username.toLowerCase()] };
+        }
+        if (overrides[u.username.toLowerCase()]) {
+          user.senhas = [overrides[u.username.toLowerCase()], ...user.senhas];
+        }
+        return user;
+      });
 
-    const customComOverrides = customUsers.map(u => {
-      if (overrides[u.username.toLowerCase()]) {
-        return { ...u, senhas: [overrides[u.username.toLowerCase()], ...u.senhas] };
-      }
-      return u;
-    });
+    const customComOverrides = customUsers
+      .filter(u => !deletedUsers.includes(u.username.toLowerCase()))
+      .map(u => {
+        let user = { ...u };
+        if (userEdits[u.username.toLowerCase()]) {
+          user = { ...user, ...userEdits[u.username.toLowerCase()] };
+        }
+        if (overrides[u.username.toLowerCase()]) {
+          user.senhas = [overrides[u.username.toLowerCase()], ...user.senhas];
+        }
+        return user;
+      });
 
     return [...baseComOverrides, ...customComOverrides];
   } catch {
@@ -359,16 +373,53 @@ export function cadastrarUsuario(dados) {
   };
 }
 
-// 5. Excluir Usuário
-export function excluirUsuario(username) {
-  const u = (username || '').trim().toLowerCase();
-  if (['marcello', 'master', 'admin'].includes(u)) {
-    return { sucesso: false, erro: 'Usuários mestres do sistema não podem ser removidos.' };
+// 4.1 Editar Usuário Existente
+export function editarUsuario(usernameOriginal, novosDados) {
+  const u = (usernameOriginal || '').trim().toLowerCase();
+  const todos = getTodosUsuarios();
+  const existente = todos.find(usr => usr.username.toLowerCase() === u);
+
+  if (!existente) {
+    return { sucesso: false, erro: `Usuário '${u}' não encontrado.` };
   }
 
+  const edits = JSON.parse(localStorage.getItem('nexabi_user_edits') || '{}');
+  edits[u] = {
+    ...(edits[u] || {}),
+    nome: novosDados.nome || existente.nome,
+    whatsapp: novosDados.whatsapp !== undefined ? novosDados.whatsapp : existente.whatsapp,
+    perfil: u === 'marcello' ? 'master' : (novosDados.perfil || existente.perfil),
+    empresaId: novosDados.empresaId || existente.empresaId,
+    empresaNome: novosDados.empresaNome || existente.empresaNome,
+    erp: novosDados.erp || existente.erp,
+    unidadePadrao: novosDados.unidadePadrao || existente.unidadePadrao
+  };
+  localStorage.setItem('nexabi_user_edits', JSON.stringify(edits));
+
+  return {
+    sucesso: true,
+    mensagem: `Dados do usuário '${u}' atualizados com sucesso!`
+  };
+}
+
+// 5. Excluir Usuário (Proteção exclusiva para marcello)
+export function excluirUsuario(username) {
+  const u = (username || '').trim().toLowerCase();
+  if (u === 'marcello') {
+    return { sucesso: false, erro: "O usuário mestre principal 'marcello' está protegido contra exclusão." };
+  }
+
+  // 1. Remove de customUsers
   const customUsers = JSON.parse(localStorage.getItem('nexabi_custom_users') || '[]');
   const filtrados = customUsers.filter(usr => usr.username.toLowerCase() !== u);
   localStorage.setItem('nexabi_custom_users', JSON.stringify(filtrados));
 
-  return { sucesso: true, mensagem: `Usuário '${u}' removido.` };
+  // 2. Marca como excluído para ocultar da base padrão
+  const deletedUsers = JSON.parse(localStorage.getItem('nexabi_deleted_users') || '[]');
+  if (!deletedUsers.includes(u)) {
+    deletedUsers.push(u);
+    localStorage.setItem('nexabi_deleted_users', JSON.stringify(deletedUsers));
+  }
+
+  return { sucesso: true, mensagem: `Usuário '${u}' excluído com sucesso.` };
 }
