@@ -158,12 +158,21 @@ export default function App() {
 
   const isMaster = usuario.perfil === 'master';
 
-  // Obter a configuração da empresa atual
-  const dadosEmpresaAtual = CATALOGO_EMPRESAS[clienteSelecionado] || CATALOGO_EMPRESAS.silva;
+  // Obter a configuração da empresa atual (Clientes Reais ou Consolidado)
+  const empresaRealEncontrada = empresasCadastradas.find(e => e.cnpj === clienteSelecionado || e.id === clienteSelecionado);
+  const dadosEmpresaAtual = empresaRealEncontrada ? {
+    id: empresaRealEncontrada.id,
+    nome: empresaRealEncontrada.nome_fantasia || empresaRealEncontrada.razao_social,
+    erp: `${empresaRealEncontrada.erp_tipo || 'Próton'} (${empresaRealEncontrada.banco_tipo || 'Oracle'})`,
+    unidades: [
+      { id: 'Todas', label: `🏢 Todas as Unidades (${empresaRealEncontrada.nome_fantasia || empresaRealEncontrada.razao_social})` },
+      { id: '1', label: '01 - Matriz Principal' }
+    ]
+  } : (CATALOGO_EMPRESAS[clienteSelecionado] || CATALOGO_EMPRESAS.todas);
+
   const listaUnidades = dadosEmpresaAtual.unidades || [
     { id: 'Todas', label: 'Todas as Filiais Autorizadas' },
-    { id: '1', label: '01 - Matriz Centro' },
-    { id: '2', label: '02 - Filial Shopping' }
+    { id: '1', label: '01 - Matriz Principal' }
   ];
 
   const handleMudancaClienteMaster = (novoClienteId) => {
@@ -209,7 +218,7 @@ export default function App() {
             </strong>
           </div>
 
-          {/* FILTRO 1 (EXCLUSIVO MASTER): SELEÇÃO DE CLIENTE / EMPRESA */}
+          {/* FILTRO 1 (EXCLUSIVO MASTER): SELEÇÃO EXCLUSIVA DE CLIENTES REAIS */}
           {isMaster && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <select 
@@ -227,9 +236,9 @@ export default function App() {
                   cursor: 'pointer',
                   boxShadow: '0 0 10px rgba(0, 210, 255, 0.15)'
                 }}
-                title="Filtro Master: Selecione o Cliente ou Visão Consolidada"
+                title="Filtro Master: Clientes Reais Homologados (Consolidado ou Individual)"
               >
-                <option value="todas">🏢 Todas as Empresas (Consolidado)</option>
+                <option value="todas">🏢 Todas as Empresas Reais (Consolidado)</option>
                 {empresasCadastradas
                   .filter(e => e.cnpj !== '00.000.000/0001-00')
                   .map(e => (
@@ -238,7 +247,6 @@ export default function App() {
                     </option>
                   ))
                 }
-                <option value="silva">🏪 Lojas Silva (Demonstração)</option>
               </select>
             </div>
           )}
