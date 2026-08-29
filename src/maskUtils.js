@@ -3,16 +3,17 @@
 // ============================================================================
 
 /**
- * Aplica máscara inteligente para WhatsApp/Celular do Brasil (+55 (XX) 9XXXX-XXXX)
- * Suporta digitação normal de apenas números, colagem e formata em tempo real.
+ * Formata telefone brasileiro: (DD) 9XXXX-XXXX ou (DD) XXXX-XXXX
+ * Permite digitação natural de apenas números (Ex: 71991954406 -> (71) 99195-4406)
+ * Suporta backspace, substituição e colagem sem travar nem duplicar 55.
  */
 export function formatarWhatsApp(valor) {
   if (!valor) return '';
   
-  // Extrai apenas os números
+  // Extrai apenas dígitos
   let nums = valor.replace(/\D/g, '');
 
-  // Se o usuário colou com 55 na frente e tem 12 ou 13 dígitos
+  // Se o usuário colou com o DDI 55 na frente (ex: 5571991954406)
   if (nums.startsWith('55') && nums.length >= 12) {
     nums = nums.slice(2);
   }
@@ -21,10 +22,10 @@ export function formatarWhatsApp(valor) {
   nums = nums.slice(0, 11);
 
   if (nums.length === 0) return '';
-  if (nums.length <= 2) return `+55 (${nums}`;
-  if (nums.length <= 6) return `+55 (${nums.slice(0, 2)}) ${nums.slice(2)}`;
-  if (nums.length <= 10) return `+55 (${nums.slice(0, 2)}) ${nums.slice(2, 6)}-${nums.slice(6)}`;
-  return `+55 (${nums.slice(0, 2)}) ${nums.slice(2, 7)}-${nums.slice(7, 11)}`;
+  if (nums.length <= 2) return `(${nums}`;
+  if (nums.length <= 6) return `(${nums.slice(0, 2)}) ${nums.slice(2)}`;
+  if (nums.length <= 10) return `(${nums.slice(0, 2)}) ${nums.slice(2, 6)}-${nums.slice(6)}`;
+  return `(${nums.slice(0, 2)}) ${nums.slice(2, 7)}-${nums.slice(7, 11)}`;
 }
 
 /**

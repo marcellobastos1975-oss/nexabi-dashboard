@@ -15,6 +15,7 @@ import Fiscal from './views/Fiscal';
 import Login from './Login';
 import ModalGerenciarUsuarios from './components/ModalGerenciarUsuarios';
 import ModalGerenciarEmpresas from './components/ModalGerenciarEmpresas';
+import { getTodasEmpresas } from './empresaStore';
 import { APP_VERSION } from './config';
 
 const MODULOS = [
@@ -94,6 +95,11 @@ export default function App() {
   const [atualizando, setAtualizando] = useState(false);
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
+  const [empresasCadastradas, setEmpresasCadastradas] = useState([]);
+
+  useEffect(() => {
+    getTodasEmpresas().then(setEmpresasCadastradas);
+  }, [modalEmpresasAberto]);
 
   // Monitor de Inatividade (Encerra a sessão se ficar 30 minutos inativo)
   useEffect(() => {
@@ -224,9 +230,15 @@ export default function App() {
                 title="Filtro Master: Selecione o Cliente ou Visão Consolidada"
               >
                 <option value="todas">🏢 Todas as Empresas (Consolidado)</option>
-                <option value="silva">🏪 Lojas Silva Casa &amp; Conforto</option>
-                <option value="nordeste">🏢 Rede Nordeste Móveis &amp; Eletro</option>
-                <option value="alpha_dist">🚚 Alpha Distribuidora &amp; Logística</option>
+                {empresasCadastradas
+                  .filter(e => e.cnpj !== '00.000.000/0001-00')
+                  .map(e => (
+                    <option key={e.id || e.cnpj} value={e.cnpj}>
+                      🏪 {e.nome_fantasia || e.razao_social} ({e.cnpj})
+                    </option>
+                  ))
+                }
+                <option value="silva">🏪 Lojas Silva (Demonstração)</option>
               </select>
             </div>
           )}
