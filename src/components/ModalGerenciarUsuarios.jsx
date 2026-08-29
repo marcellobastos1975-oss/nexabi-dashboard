@@ -4,6 +4,7 @@ import {
   Building2, Phone, CheckCircle, AlertCircle, Search, Lock, Edit3
 } from 'lucide-react';
 import { getTodosUsuarios, cadastrarUsuario, editarUsuario, adminRedefinirSenha, excluirUsuario } from '../authStore';
+import { formatarWhatsApp } from '../maskUtils';
 
 export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [usuarios, setUsuarios] = useState([]);
@@ -52,7 +53,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  // Ordenação: Sempre coloca usuários Master no topo da lista
+  // Ordenação: Sempre coloca o usuário marcello em 1º lugar e os demais Master no topo
   const usuariosOrdenados = [...usuarios].sort((a, b) => {
     if (a.username.toLowerCase() === 'marcello') return -1;
     if (b.username.toLowerCase() === 'marcello') return 1;
@@ -109,7 +110,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const abrirEdicaoUsuario = (u) => {
     setEditUsername(u.username);
     setEditNome(u.nome || '');
-    setEditWhatsapp(u.whatsapp || '');
+    setEditWhatsapp(formatarWhatsApp(u.whatsapp || ''));
     setEditPerfil(u.perfil || 'cliente');
     setEditEmpresaId(u.empresaId || 'silva');
     setEditUnidade(u.unidadePadrao || 'Todas');
@@ -162,7 +163,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     }
   };
 
-  // 4. Excluir Usuário (Proteção somente para marcello)
+  // 4. Excluir Usuário (Proteção exclusiva para marcello)
   const handleExcluir = (username) => {
     if (username.toLowerCase() === 'marcello') {
       alert("O usuário 'marcello' é o proprietário mestre da conta e não pode ser excluído.");
@@ -193,17 +194,18 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 9999,
-      padding: 16
+      padding: '20px'
     }}>
       <div style={{
         background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.98) 0%, rgba(7, 21, 44, 0.98) 50%, rgba(3, 10, 24, 0.99) 100%)',
         border: '1px solid rgba(0, 210, 255, 0.45)',
         borderRadius: 20,
-        width: '100%',
-        maxWidth: 980,
-        maxHeight: '90vh',
+        width: '94vw',
+        maxWidth: 1080,
+        height: '88vh',
+        maxHeight: 840,
         boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 210, 255, 0.2)',
-        padding: '24px 28px',
+        padding: '26px 30px',
         position: 'relative',
         color: '#ffffff',
         display: 'flex',
@@ -239,8 +241,8 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{
-              width: 42,
-              height: 42,
+              width: 44,
+              height: 44,
               borderRadius: 12,
               background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)',
               display: 'flex',
@@ -274,12 +276,21 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           </div>
 
           <button
-            onClick={() => setModalNovoAberto(true)}
+            onClick={() => {
+              setNovoNome('');
+              setNovoUsername('');
+              setNovoWhatsapp('');
+              setNovaSenha('');
+              setNovoPerfil('cliente');
+              setNovaEmpresaId('silva');
+              setErro('');
+              setModalNovoAberto(true);
+            }}
             style={{
               background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)',
               border: 'none',
               borderRadius: 10,
-              padding: '9px 16px',
+              padding: '9px 18px',
               color: '#fff',
               fontSize: 12,
               fontWeight: 700,
@@ -340,7 +351,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
               onChange={(e) => setBusca(e.target.value)}
               style={{
                 width: '100%',
-                padding: '9px 14px 9px 38px',
+                padding: '10px 14px 10px 38px',
                 background: '#070d18',
                 border: '1px solid rgba(0, 130, 255, 0.35)',
                 borderRadius: 10,
@@ -355,7 +366,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
             value={filtroEmpresa}
             onChange={(e) => setFiltroEmpresa(e.target.value)}
             style={{
-              padding: '9px 14px',
+              padding: '10px 14px',
               background: '#070d18',
               border: '1px solid rgba(0, 210, 255, 0.4)',
               borderRadius: 10,
@@ -386,12 +397,12 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'rgba(10, 25, 55, 0.95)', borderBottom: '1px solid rgba(0, 140, 255, 0.25)', color: '#94a3b8' }}>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>NOME</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>USUÁRIO (LOGIN ÚNICO)</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>WHATSAPP</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700, textAlign: 'center' }}>PERFIL</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>EMPRESA</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700, textAlign: 'center' }}>AÇÕES</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>NOME</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>USUÁRIO (LOGIN ÚNICO)</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>WHATSAPP</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700, textAlign: 'center' }}>PERFIL</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>EMPRESA</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700, textAlign: 'center' }}>AÇÕES</th>
               </tr>
             </thead>
             <tbody>
@@ -401,10 +412,10 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
 
                 return (
                   <tr key={u.username} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                    <td style={{ padding: '10px 14px', fontWeight: 600, color: '#fff' }}>{u.nome}</td>
-                    <td style={{ padding: '10px 14px', color: '#00d2ff', fontFamily: 'monospace', fontWeight: 700 }}>{u.username}</td>
-                    <td style={{ padding: '10px 14px', color: '#cbd5e1' }}>{u.whatsapp || '-'}</td>
-                    <td style={{ padding: '10px 14px', textAlign: 'center', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '12px 14px', fontWeight: 600, color: '#fff' }}>{u.nome}</td>
+                    <td style={{ padding: '12px 14px', color: '#00d2ff', fontFamily: 'monospace', fontWeight: 700 }}>{u.username}</td>
+                    <td style={{ padding: '12px 14px', color: '#cbd5e1', fontFamily: 'monospace' }}>{u.whatsapp || '-'}</td>
+                    <td style={{ padding: '12px 14px', textAlign: 'center', whiteSpace: 'nowrap' }}>
                       <span style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -423,8 +434,8 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                         <span>{isUserMaster ? 'Master' : 'Cliente'}</span>
                       </span>
                     </td>
-                    <td style={{ padding: '10px 14px', color: '#94a3b8' }}>{u.empresaNome || 'Todas as Empresas'}</td>
-                    <td style={{ padding: '10px 14px', textAlign: 'center' }}>
+                    <td style={{ padding: '12px 14px', color: '#94a3b8' }}>{u.empresaNome || 'Todas as Empresas'}</td>
+                    <td style={{ padding: '12px 14px', textAlign: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                         {/* Redefinir Senha */}
                         <button
@@ -439,8 +450,8 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                             background: 'rgba(0, 210, 255, 0.12)',
                             border: '1px solid rgba(0, 210, 255, 0.35)',
                             color: '#00d2ff',
-                            padding: '5px 9px',
-                            borderRadius: 6,
+                            padding: '6px 10px',
+                            borderRadius: 8,
                             fontSize: 11,
                             fontWeight: 600,
                             cursor: 'pointer',
@@ -460,8 +471,8 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                             background: 'rgba(168, 85, 247, 0.15)',
                             border: '1px solid rgba(168, 85, 247, 0.4)',
                             color: '#d8b4fe',
-                            padding: '5px 8px',
-                            borderRadius: 6,
+                            padding: '6px 10px',
+                            borderRadius: 8,
                             fontSize: 11,
                             fontWeight: 600,
                             cursor: 'pointer',
@@ -481,15 +492,14 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                             style={{
                               background: 'rgba(239, 68, 68, 0.12)',
                               border: '1px solid rgba(239, 68, 68, 0.35)',
-                              color: '#fca5a5',
-                              padding: '5px 8px',
-                              borderRadius: 6,
-                              fontSize: 11,
+                              color: '#f87171',
+                              padding: '6px 8px',
+                              borderRadius: 8,
                               cursor: 'pointer'
                             }}
                             title="Excluir Usuário"
                           >
-                            <Trash2 size={12} />
+                            <Trash2 size={14} />
                           </button>
                         )}
                       </div>
@@ -501,101 +511,113 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           </table>
         </div>
 
-        {/* MODAL SECUNDÁRIO: CADASTRAR NOVO USUÁRIO */}
+        {/* MODAL SOBREPOSTO PROPORCIONAL: CADASTRAR NOVO USUÁRIO */}
         {modalNovoAberto && (
           <div style={{
-            position: 'absolute',
+            position: 'fixed',
             top: 0,
             left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(2, 6, 18, 0.96)',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(2, 6, 18, 0.92)',
             backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 10,
-            padding: 16,
-            overflowY: 'auto'
+            zIndex: 10000,
+            padding: '20px'
           }}>
             <div style={{
-              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 100%)',
-              border: '1px solid rgba(0, 210, 255, 0.5)',
-              borderRadius: 16,
-              width: '100%',
-              maxWidth: 480,
-              padding: '24px 26px',
+              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 50%, rgba(3, 10, 24, 0.99) 100%)',
+              border: '1px solid rgba(0, 210, 255, 0.55)',
+              borderRadius: 20,
+              width: '92vw',
+              maxWidth: 620,
+              maxHeight: '90vh',
+              boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 210, 255, 0.25)',
+              padding: '28px 32px',
               position: 'relative',
               color: '#ffffff',
-              maxHeight: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
               overflowY: 'auto'
             }}>
-              <button
-                onClick={() => setModalNovoAberto(false)}
-                style={{ position: 'absolute', top: 16, right: 16, background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
-              >
-                <X size={18} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <UserPlus size={22} color="#00d2ff" />
+                  <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.3px' }}>
+                    Cadastrar Novo Usuário (Unicidade Global)
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setModalNovoAberto(false)}
+                  style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
 
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 14px 0', fontFamily: 'Outfit, sans-serif' }}>
-                ➕ Cadastrar Novo Usuário (Unicidade Global)
-              </h3>
-
-              <form onSubmit={handleCadastrarNovo} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <form onSubmit={handleCadastrarNovo} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>NOME COMPLETO *</label>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>NOME COMPLETO *</label>
                   <input
                     type="text"
                     placeholder="Ex: João da Silva"
                     value={novoNome}
                     onChange={(e) => setNovoNome(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                     required
                   />
                 </div>
 
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>LOGIN ÚNICO (USERNAME) *</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: joao.silva"
-                    value={novoUsername}
-                    onChange={(e) => setNovoUsername(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>WHATSAPP (PARA RECUPERAÇÃO META API)</label>
-                  <input
-                    type="text"
-                    placeholder="Ex: +55 (71) 98888-8888"
-                    value={novoWhatsapp}
-                    onChange={(e) => setNovoWhatsapp(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>SENHA INICIAL *</label>
-                  <input
-                    type="password"
-                    placeholder="Mínimo 4 dígitos"
-                    value={novaSenha}
-                    onChange={(e) => setNovaSenha(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
-                    required
-                  />
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                   <div>
-                    <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>PERFIL</label>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>LOGIN ÚNICO (USERNAME) *</label>
+                    <input
+                      type="text"
+                      placeholder="Ex: joao.silva"
+                      value={novoUsername}
+                      onChange={(e) => setNovoUsername(e.target.value)}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>SENHA INICIAL *</label>
+                    <input
+                      type="password"
+                      placeholder="Mínimo 4 dígitos"
+                      value={novaSenha}
+                      onChange={(e) => setNovaSenha(e.target.value)}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>WHATSAPP (MÁSCARA AUTOMÁTICA)</label>
+                  <input
+                    type="text"
+                    placeholder="Digite apenas o DDD e número (Ex: 71991954406)"
+                    value={novoWhatsapp}
+                    onChange={(e) => setNovoWhatsapp(formatarWhatsApp(e.target.value))}
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', fontFamily: 'monospace' }}
+                  />
+                  <span style={{ fontSize: 10, color: '#94a3b8', marginTop: 3, display: 'block' }}>
+                    Formata automaticamente para o padrão internacional Meta WhatsApp (+55).
+                  </span>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>PERFIL</label>
                     <select
                       value={novoPerfil}
                       onChange={(e) => setNovoPerfil(e.target.value)}
-                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
                     >
                       <option value="cliente">🏪 Cliente</option>
                       <option value="master">👑 Master</option>
@@ -603,12 +625,12 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>EMPRESA</label>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>EMPRESA</label>
                     <select
                       value={novaEmpresaId}
                       onChange={(e) => setNovaEmpresaId(e.target.value)}
                       disabled={novoPerfil === 'master'}
-                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13, opacity: novoPerfil === 'master' ? 0.5 : 1 }}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', opacity: novoPerfil === 'master' ? 0.5 : 1, cursor: 'pointer' }}
                     >
                       <option value="silva">Lojas Silva</option>
                       <option value="nordeste">Rede Nordeste</option>
@@ -617,17 +639,17 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                   <button
                     type="button"
                     onClick={() => setModalNovoAberto(false)}
-                    style={{ padding: '8px 14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, color: '#fff', cursor: 'pointer' }}
+                    style={{ padding: '10px 20px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', borderRadius: 10, color: '#cbd5e1', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 8, color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+                    style={{ padding: '10px 24px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 10, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0, 140, 255, 0.4)' }}
                   >
                     Salvar Usuário
                   </button>
@@ -637,77 +659,87 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           </div>
         )}
 
-        {/* MODAL SECUNDÁRIO: EDITAR USUÁRIO */}
+        {/* MODAL SOBREPOSTO PROPORCIONAL: EDITAR USUÁRIO */}
         {modalEditarAberto && (
           <div style={{
-            position: 'absolute',
+            position: 'fixed',
             top: 0,
             left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(2, 6, 18, 0.96)',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(2, 6, 18, 0.92)',
             backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 10,
-            padding: 16,
-            overflowY: 'auto'
+            zIndex: 10000,
+            padding: '20px'
           }}>
             <div style={{
-              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 100%)',
-              border: '1px solid rgba(168, 85, 247, 0.5)',
-              borderRadius: 16,
-              width: '100%',
-              maxWidth: 480,
-              padding: '24px 26px',
+              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 50%, rgba(3, 10, 24, 0.99) 100%)',
+              border: '1px solid rgba(168, 85, 247, 0.55)',
+              borderRadius: 20,
+              width: '92vw',
+              maxWidth: 620,
+              maxHeight: '90vh',
+              boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(168, 85, 247, 0.25)',
+              padding: '28px 32px',
               position: 'relative',
               color: '#ffffff',
-              maxHeight: '90%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
               overflowY: 'auto'
             }}>
-              <button
-                onClick={() => setModalEditarAberto(false)}
-                style={{ position: 'absolute', top: 16, right: 16, background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
-              >
-                <X size={18} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Edit3 size={22} color="#d8b4fe" />
+                  <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: '#e9d5ff', letterSpacing: '0.3px' }}>
+                    Editar Dados do Usuário: <span style={{ color: '#00d2ff', fontFamily: 'monospace' }}>{editUsername}</span>
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setModalEditarAberto(false)}
+                  style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
 
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 14px 0', fontFamily: 'Outfit, sans-serif', color: '#e9d5ff' }}>
-                ✏️ Editar Dados do Usuário: <span style={{ color: '#00d2ff', fontFamily: 'monospace' }}>{editUsername}</span>
-              </h3>
-
-              <form onSubmit={handleSalvarEdicao} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <form onSubmit={handleSalvarEdicao} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>NOME COMPLETO *</label>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>NOME COMPLETO *</label>
                   <input
                     type="text"
                     value={editNome}
                     onChange={(e) => setEditNome(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                     required
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>WHATSAPP (RECUPERAÇÃO META API)</label>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>WHATSAPP (MÁSCARA AUTOMÁTICA)</label>
                   <input
                     type="text"
                     value={editWhatsapp}
-                    onChange={(e) => setEditWhatsapp(e.target.value)}
-                    placeholder="Ex: +55 (71) 98888-8888"
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    onChange={(e) => setEditWhatsapp(formatarWhatsApp(e.target.value))}
+                    placeholder="Digite apenas o DDD e número (Ex: 71991954406)"
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', fontFamily: 'monospace' }}
                   />
+                  <span style={{ fontSize: 10, color: '#94a3b8', marginTop: 3, display: 'block' }}>
+                    Digite os números normalmente; a máscara internacional (+55) é aplicada em tempo real.
+                  </span>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                   <div>
-                    <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>PERFIL</label>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>PERFIL</label>
                     <select
                       value={editPerfil}
                       onChange={(e) => setEditPerfil(e.target.value)}
                       disabled={editUsername.toLowerCase() === 'marcello'}
-                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
                     >
                       <option value="cliente">🏪 Cliente</option>
                       <option value="master">👑 Master</option>
@@ -715,12 +747,12 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                   </div>
 
                   <div>
-                    <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>EMPRESA</label>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>EMPRESA</label>
                     <select
                       value={editEmpresaId}
                       onChange={(e) => setEditEmpresaId(e.target.value)}
                       disabled={editPerfil === 'master'}
-                      style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13, opacity: editPerfil === 'master' ? 0.5 : 1 }}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', opacity: editPerfil === 'master' ? 0.5 : 1, cursor: 'pointer' }}
                     >
                       <option value="silva">Lojas Silva</option>
                       <option value="nordeste">Rede Nordeste</option>
@@ -729,17 +761,17 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                   <button
                     type="button"
                     onClick={() => setModalEditarAberto(false)}
-                    style={{ padding: '8px 14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, color: '#fff', cursor: 'pointer' }}
+                    style={{ padding: '10px 20px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', borderRadius: 10, color: '#cbd5e1', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)', border: 'none', borderRadius: 8, color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+                    style={{ padding: '10px 24px', background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)', border: 'none', borderRadius: 10, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(168, 85, 247, 0.4)' }}
                   >
                     Salvar Alterações
                   </button>
@@ -749,83 +781,93 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           </div>
         )}
 
-        {/* MODAL SECUNDÁRIO: RESET MASTER DE SENHA */}
+        {/* MODAL SOBREPOSTO: RESET MASTER DE SENHA */}
         {modalResetAberto && usuarioSelecionado && (
           <div style={{
-            position: 'absolute',
+            position: 'fixed',
             top: 0,
             left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(2, 6, 18, 0.96)',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(2, 6, 18, 0.92)',
             backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 10,
-            padding: 16,
-            overflowY: 'auto'
+            zIndex: 10000,
+            padding: '20px'
           }}>
             <div style={{
-              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 100%)',
-              border: '1px solid rgba(0, 210, 255, 0.5)',
-              borderRadius: 16,
-              width: '100%',
-              maxWidth: 440,
-              padding: '24px 26px',
+              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 50%, rgba(3, 10, 24, 0.99) 100%)',
+              border: '1px solid rgba(0, 210, 255, 0.55)',
+              borderRadius: 20,
+              width: '92vw',
+              maxWidth: 480,
+              maxHeight: '90vh',
+              boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 210, 255, 0.25)',
+              padding: '28px 32px',
               position: 'relative',
-              color: '#ffffff'
+              color: '#ffffff',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+              overflowY: 'auto'
             }}>
-              <button
-                onClick={() => setModalResetAberto(false)}
-                style={{ position: 'absolute', top: 16, right: 16, background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
-              >
-                <X size={18} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <KeyRound size={22} color="#00d2ff" />
+                  <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.3px' }}>
+                    Redefinir Senha como Master
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setModalResetAberto(false)}
+                  style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
 
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px 0', fontFamily: 'Outfit, sans-serif' }}>
-                🔑 Redefinir Senha como Master
-              </h3>
-              <p style={{ fontSize: 12, color: '#94a3b8', margin: '0 0 16px 0' }}>
+              <p style={{ fontSize: 12, color: '#94a3b8', margin: '0 0 4px 0' }}>
                 Redefinindo credenciais para: <strong style={{ color: '#00d2ff' }}>{usuarioSelecionado.nome} ({usuarioSelecionado.username})</strong>
               </p>
 
-              <form onSubmit={handleExecutarReset} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <form onSubmit={handleExecutarReset} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>NOVA SENHA DO USUÁRIO *</label>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>NOVA SENHA DO USUÁRIO *</label>
                   <input
                     type="password"
                     placeholder="Mínimo 4 caracteres"
                     value={resetNovaSenha}
                     onChange={(e) => setResetNovaSenha(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                     required
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#cbd5e1' }}>SUA SENHA MASTER PARA AUTORIZAR *</label>
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>SUA SENHA MASTER PARA AUTORIZAR *</label>
                   <input
                     type="password"
                     placeholder="Digite a Senha Master"
                     value={resetSenhaMaster}
                     onChange={(e) => setResetSenhaMaster(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 8, color: '#fff', fontSize: 13 }}
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                     required
                   />
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                   <button
                     type="button"
                     onClick={() => setModalResetAberto(false)}
-                    style={{ padding: '8px 14px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, color: '#fff', cursor: 'pointer' }}
+                    style={{ padding: '10px 20px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', borderRadius: 10, color: '#cbd5e1', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 8, color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+                    style={{ padding: '10px 24px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 10, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0, 140, 255, 0.4)' }}
                   >
                     Confirmar Redefinição
                   </button>

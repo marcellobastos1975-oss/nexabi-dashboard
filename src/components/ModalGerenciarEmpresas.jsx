@@ -4,6 +4,7 @@ import {
   Trash2, Search, Database, Layers, CheckCircle2, AlertCircle, RefreshCw, Edit3
 } from 'lucide-react';
 import { getTodasEmpresas, cadastrarEmpresa, atualizarEmpresa, excluirEmpresa, gerarApiKeySegura } from '../empresaStore';
+import { formatarCNPJ } from '../maskUtils';
 
 export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
   const [empresas, setEmpresas] = useState([]);
@@ -57,7 +58,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
     setEmpresaEditando(emp);
     setRazaoSocial(emp.razao_social || '');
     setNomeFantasia(emp.nome_fantasia || '');
-    setCnpj(emp.cnpj || '');
+    setCnpj(formatarCNPJ(emp.cnpj || ''));
     setErpTipo(emp.erp_tipo || 'PROTON');
     setBancoTipo(emp.banco_tipo || 'ORACLE');
     setTokenGerado(emp.api_key || gerarApiKeySegura(emp.cnpj));
@@ -66,9 +67,10 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
   };
 
   const handleCnpjChange = (val) => {
-    setCnpj(val);
+    const formatado = formatarCNPJ(val);
+    setCnpj(formatado);
     if (!empresaEditando) {
-      setTokenGerado(gerarApiKeySegura(val));
+      setTokenGerado(gerarApiKeySegura(formatado));
     }
   };
 
@@ -161,17 +163,18 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 9999,
-      padding: 16
+      padding: '20px'
     }}>
       <div style={{
         background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.98) 0%, rgba(7, 21, 44, 0.98) 50%, rgba(3, 10, 24, 0.99) 100%)',
         border: '1px solid rgba(0, 210, 255, 0.45)',
         borderRadius: 20,
-        width: '100%',
-        maxWidth: 960,
-        maxHeight: '90vh',
+        width: '94vw',
+        maxWidth: 1080,
+        height: '88vh',
+        maxHeight: 840,
         boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 210, 255, 0.2)',
-        padding: '24px 28px',
+        padding: '26px 30px',
         position: 'relative',
         color: '#ffffff',
         display: 'flex',
@@ -208,8 +211,8 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div style={{
-              width: 42,
-              height: 42,
+              width: 44,
+              height: 44,
               borderRadius: 12,
               background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)',
               display: 'flex',
@@ -248,7 +251,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
               background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)',
               border: 'none',
               borderRadius: 10,
-              padding: '9px 16px',
+              padding: '9px 18px',
               color: '#fff',
               fontSize: 12,
               fontWeight: 700,
@@ -308,7 +311,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
             onChange={(e) => setBusca(e.target.value)}
             style={{
               width: '100%',
-              padding: '9px 14px 9px 38px',
+              padding: '10px 14px 10px 38px',
               background: '#070d18',
               border: '1px solid rgba(0, 130, 255, 0.35)',
               borderRadius: 10,
@@ -330,11 +333,11 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'rgba(10, 25, 55, 0.95)', borderBottom: '1px solid rgba(0, 140, 255, 0.25)', color: '#94a3b8' }}>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>EMPRESA / CLIENTE</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>CNPJ</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>ERP / BANCO</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700 }}>API KEY / TOKEN</th>
-                <th style={{ padding: '10px 14px', fontWeight: 700, textAlign: 'center' }}>AÇÕES</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>EMPRESA / CLIENTE</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>CNPJ</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>ERP / BANCO</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700 }}>API KEY / TOKEN</th>
+                <th style={{ padding: '12px 14px', fontWeight: 700, textAlign: 'center' }}>AÇÕES</th>
               </tr>
             </thead>
             <tbody>
@@ -347,7 +350,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
               ) : (
                 empresasFiltradas.map((emp) => (
                   <tr key={emp.id || emp.cnpj} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                    <td style={{ padding: '10px 14px' }}>
+                    <td style={{ padding: '12px 14px' }}>
                       <div style={{ fontWeight: 700, color: '#fff', fontSize: 13 }}>
                         {emp.nome_fantasia || emp.razao_social}
                       </div>
@@ -356,13 +359,13 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
                       </div>
                     </td>
 
-                    <td style={{ padding: '10px 14px', color: '#00d2ff', fontFamily: 'monospace', fontWeight: 600 }}>
+                    <td style={{ padding: '12px 14px', color: '#00d2ff', fontFamily: 'monospace', fontWeight: 600 }}>
                       {emp.cnpj}
                     </td>
 
-                    <td style={{ padding: '10px 14px' }}>
+                    <td style={{ padding: '12px 14px' }}>
                       <span style={{
-                        padding: '3px 8px',
+                        padding: '4px 8px',
                         borderRadius: 8,
                         fontSize: 10,
                         fontWeight: 700,
@@ -374,16 +377,16 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
                       </span>
                     </td>
 
-                    <td style={{ padding: '10px 14px' }}>
+                    <td style={{ padding: '12px 14px' }}>
                       <div style={{
                         background: '#070d18',
-                        padding: '4px 8px',
+                        padding: '5px 8px',
                         borderRadius: 8,
                         border: '1px solid rgba(255, 255, 255, 0.1)',
                         fontFamily: 'monospace',
                         fontSize: 11,
                         color: '#a7f3d0',
-                        maxWidth: 180,
+                        maxWidth: 200,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap'
@@ -392,7 +395,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
                       </div>
                     </td>
 
-                    <td style={{ padding: '10px 14px', textAlign: 'center' }}>
+                    <td style={{ padding: '12px 14px', textAlign: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                         {/* Botão Copiar Token */}
                         <button
@@ -432,7 +435,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
                             background: 'rgba(168, 85, 247, 0.15)',
                             border: '1px solid rgba(168, 85, 247, 0.4)',
                             color: '#d8b4fe',
-                            padding: '6px 9px',
+                            padding: '6px 10px',
                             borderRadius: 8,
                             fontSize: 11,
                             fontWeight: 600,
@@ -455,7 +458,7 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
                               background: 'rgba(239, 68, 68, 0.12)',
                               border: '1px solid rgba(239, 68, 68, 0.35)',
                               color: '#f87171',
-                              padding: '6px',
+                              padding: '6px 8px',
                               borderRadius: 8,
                               cursor: 'pointer'
                             }}
@@ -473,146 +476,162 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
           </table>
         </div>
 
-        {/* Modal Sub-View: Cadastrar / Editar Empresa (Com Scroll Garantido e Botões Visíveis) */}
+        {/* MODAL SOBREPOSTO PROPORCIONAL: CADASTRAR / EDITAR EMPRESA */}
         {modalFormAberto && (
           <div style={{
-            position: 'absolute',
+            position: 'fixed',
             top: 0,
             left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(3, 10, 24, 0.98)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: 20,
-            padding: '24px 28px',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(2, 6, 18, 0.92)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
-            flexDirection: 'column',
-            zIndex: 20,
-            overflowY: 'auto'
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10000,
+            padding: '20px'
           }}>
-            {/* Header do Form */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: 12, marginBottom: 14, flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                {empresaEditando ? <Edit3 size={20} color="#d8b4fe" /> : <Plus size={20} color="#00d2ff" />}
-                <h3 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: '#fff' }}>
-                  {empresaEditando ? `Editar Dados: ${empresaEditando.nome_fantasia || empresaEditando.razao_social}` : 'Cadastrar Nova Empresa Cliente & Gerar Token'}
-                </h3>
-              </div>
-              <button
-                onClick={() => setModalFormAberto(false)}
-                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Form Fields com Scroll */}
-            <form onSubmit={handleSalvarFormulario} style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 560, margin: '0 auto', width: '100%', flex: 1 }}>
-              <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 4 }}>
-                  Razão Social *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ex: COMERCIAL DE ALIMENTOS SILVA LTDA"
-                  value={razaoSocial}
-                  onChange={(e) => setRazaoSocial(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 4 }}>
-                  Nome Fantasia
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ex: Supermercado Silva"
-                  value={nomeFantasia}
-                  onChange={(e) => setNomeFantasia(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
-                />
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 50%, rgba(3, 10, 24, 0.99) 100%)',
+              border: '1px solid rgba(0, 210, 255, 0.55)',
+              borderRadius: 20,
+              width: '92vw',
+              maxWidth: 680,
+              maxHeight: '90vh',
+              boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 210, 255, 0.25)',
+              padding: '28px 32px',
+              position: 'relative',
+              color: '#ffffff',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+              overflowY: 'auto'
+            }}>
+              {/* Header do Form */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  {empresaEditando ? <Edit3 size={22} color="#d8b4fe" /> : <Plus size={22} color="#00d2ff" />}
+                  <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '0.3px' }}>
+                    {empresaEditando ? `Editar Empresa: ${empresaEditando.nome_fantasia || empresaEditando.razao_social}` : 'Cadastrar Nova Empresa Cliente & Gerar Token'}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setModalFormAberto(false)}
+                  style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
+                >
+                  <X size={20} />
+                </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              {/* Form Fields */}
+              <form onSubmit={handleSalvarFormulario} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 4 }}>
-                    CNPJ da Empresa *
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                    RAZÃO SOCIAL *
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="Ex: 30.820.528/0001-78"
-                    value={cnpj}
-                    onChange={(e) => handleCnpjChange(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
+                    placeholder="Ex: COMERCIAL DE ALIMENTOS SILVA LTDA"
+                    value={razaoSocial}
+                    onChange={(e) => setRazaoSocial(e.target.value)}
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 4 }}>
-                    ERP de Origem
+                  <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                    NOME FANTASIA
                   </label>
-                  <select
-                    value={erpTipo}
-                    onChange={(e) => {
-                      setErpTipo(e.target.value);
-                      if (e.target.value === 'PROTON') setBancoTipo('ORACLE');
-                      if (e.target.value === 'TOTVS_PROTHEUS') setBancoTipo('SQLSERVER');
-                    }}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
-                  >
-                    <option value="PROTON">Próton ERP (Oracle)</option>
-                    <option value="TOTVS_PROTHEUS">TOTVS Protheus (SQL Server)</option>
-                    <option value="SENIOR">Senior Sapiens (Oracle)</option>
-                    <option value="SAP">SAP Business One (HANA/SQL)</option>
-                    <option value="LINX">Linx ERP (SQL Server)</option>
-                    <option value="OUTROS">Outro ERP / Custom</option>
-                  </select>
+                  <input
+                    type="text"
+                    placeholder="Ex: Supermercado Silva"
+                    value={nomeFantasia}
+                    onChange={(e) => setNomeFantasia(e.target.value)}
+                    style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none' }}
+                  />
                 </div>
-              </div>
 
-              {/* Token Auto-Gerado */}
-              <div style={{ background: '#070d18', padding: 12, borderRadius: 12, border: '1px solid rgba(0, 210, 255, 0.35)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: '#00d2ff', display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <Key size={13} /> Token API de Ingestão (SyncAgent)
-                  </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                      CNPJ DA EMPRESA (MÁSCARA AUTOMÁTICA) *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ex: 30.820.528/0001-78"
+                      value={cnpj}
+                      onChange={(e) => handleCnpjChange(e.target.value)}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', fontFamily: 'monospace' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#cbd5e1', marginBottom: 6 }}>
+                      ERP DE ORIGEM
+                    </label>
+                    <select
+                      value={erpTipo}
+                      onChange={(e) => {
+                        setErpTipo(e.target.value);
+                        if (e.target.value === 'PROTON') setBancoTipo('ORACLE');
+                        if (e.target.value === 'TOTVS_PROTHEUS') setBancoTipo('SQLSERVER');
+                      }}
+                      style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0, 130, 255, 0.35)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', cursor: 'pointer' }}
+                    >
+                      <option value="PROTON">Próton ERP (Oracle)</option>
+                      <option value="TOTVS_PROTHEUS">TOTVS Protheus (SQL Server)</option>
+                      <option value="SENIOR">Senior Sapiens (Oracle)</option>
+                      <option value="SAP">SAP Business One (HANA/SQL)</option>
+                      <option value="LINX">Linx ERP (SQL Server)</option>
+                      <option value="OUTROS">Outro ERP / Custom</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Token Auto-Gerado */}
+                <div style={{ background: '#070d18', padding: 14, borderRadius: 12, border: '1px solid rgba(0, 210, 255, 0.35)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <label style={{ fontSize: 11, fontWeight: 700, color: '#00d2ff', display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <Key size={14} /> Token API de Ingestão (SyncAgent)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setTokenGerado(gerarApiKeySegura(cnpj))}
+                      style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+                    >
+                      <RefreshCw size={12} /> Gerar Novo Token
+                    </button>
+                  </div>
+                  <div style={{ background: '#020610', padding: 10, borderRadius: 8, fontFamily: 'monospace', fontSize: 12, color: '#34d399', wordBreak: 'break-all', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    {tokenGerado}
+                  </div>
+                  <span style={{ fontSize: 11, color: '#94a3b8', display: 'block', marginTop: 4 }}>
+                    Chave utilizada no campo <strong>API Key da Empresa</strong> no SyncAgent instalado no servidor do cliente.
+                  </span>
+                </div>
+
+                {/* Botões Inferiores */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                   <button
                     type="button"
-                    onClick={() => setTokenGerado(gerarApiKeySegura(cnpj))}
-                    style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3 }}
+                    onClick={() => setModalFormAberto(false)}
+                    style={{ padding: '10px 20px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', borderRadius: 10, color: '#cbd5e1', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
                   >
-                    <RefreshCw size={11} /> Gerar Novo
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={carregando}
+                    style={{ padding: '10px 24px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 10, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0, 140, 255, 0.4)' }}
+                  >
+                    {carregando ? 'Salvando...' : (empresaEditando ? 'Salvar Alterações' : 'Salvar Empresa & Gerar Token')}
                   </button>
                 </div>
-                <div style={{ background: '#020610', padding: 8, borderRadius: 8, fontFamily: 'monospace', fontSize: 11, color: '#34d399', wordBreak: 'break-all', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  {tokenGerado}
-                </div>
-                <span style={{ fontSize: 10, color: '#94a3b8', display: 'block', marginTop: 3 }}>
-                  Chave utilizada no campo <strong>API Key da Empresa</strong> no SyncAgent instalado no servidor do cliente.
-                </span>
-              </div>
-
-              {/* Botões Inferiores Fixos e Visíveis */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10, paddingBottom: 6 }}>
-                <button
-                  type="button"
-                  onClick={() => setModalFormAberto(false)}
-                  style={{ padding: '9px 16px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', borderRadius: 10, color: '#cbd5e1', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={carregando}
-                  style={{ padding: '9px 20px', background: 'linear-gradient(135deg, #0052cc 0%, #00d2ff 100%)', border: 'none', borderRadius: 10, color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(0, 140, 255, 0.4)' }}
-                >
-                  {carregando ? 'Salvando...' : (empresaEditando ? 'Salvar Alterações' : 'Salvar Empresa & Gerar Token')}
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         )}
 
