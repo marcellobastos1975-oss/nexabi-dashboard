@@ -50,10 +50,24 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
       const destak = reais[0];
       setNovaEmpresaId(destak.cnpj || destak.id);
       
-      // Auto-reparo de cadastros legados com "Empresa Cliente" ou empresaId incorreta
+      // 1. Garante que o usuário silva pertença estritamente à empresa de Demonstração
+      editarUsuario('silva', {
+        empresaId: 'silva',
+        empresaNome: 'Lojas Silva (Demonstração)',
+        erp: 'Próton (Oracle)'
+      });
+
+      // 2. Garante que o usuário dell pertença formalmente à DESTAK PRIME
+      editarUsuario('dell', {
+        empresaId: destak.cnpj,
+        empresaNome: destak.nome_fantasia || destak.razao_social,
+        erp: `${destak.erp_tipo || 'Próton'} (${destak.banco_tipo || 'Oracle'})`
+      });
+
+      // 3. Auto-reparo de cadastros customizados sem vínculo
       const listaUsers = getTodosUsuarios();
       listaUsers.forEach(usr => {
-        if (usr.perfil === 'cliente' && (usr.empresaNome === 'Empresa Cliente' || !usr.empresaNome || usr.empresaId === 'silva')) {
+        if (usr.username.toLowerCase() !== 'silva' && usr.perfil === 'cliente' && (usr.empresaNome === 'Empresa Cliente' || !usr.empresaNome)) {
           editarUsuario(usr.username, {
             empresaId: destak.cnpj,
             empresaNome: destak.nome_fantasia || destak.razao_social,
