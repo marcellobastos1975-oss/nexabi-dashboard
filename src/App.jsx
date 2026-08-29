@@ -88,12 +88,26 @@ export default function App() {
     }
   });
 
+  const agora = new Date();
+  const nomeMesAtual = agora.toLocaleDateString('pt-BR', { month: 'long' });
+  const mesAtualFormatado = nomeMesAtual.charAt(0).toUpperCase() + nomeMesAtual.slice(1);
+  const anoAtual = agora.getFullYear();
+
+  const dataMesAnterior = new Date(agora.getFullYear(), agora.getMonth() - 1, 1);
+  const nomeMesAnterior = dataMesAnterior.toLocaleDateString('pt-BR', { month: 'long' });
+  const mesAnteriorFormatado = nomeMesAnterior.charAt(0).toUpperCase() + nomeMesAnterior.slice(1);
+  const anoMesAnterior = dataMesAnterior.getFullYear();
+
+  const anoStr = agora.getFullYear();
+  const mesStr = String(agora.getMonth() + 1).padStart(2, '0');
+  const diaStr = String(agora.getDate()).padStart(2, '0');
+
   const [moduloAtivo, setModuloAtivo] = useState('panorama');
   const [clienteSelecionado, setClienteSelecionado] = useState('todas');
   const [unidade, setUnidade] = useState('Todas');
   const [periodoPreset, setPeriodoPreset] = useState('mes_atual');
-  const [dataInicio, setDataInicio] = useState('2026-06-01');
-  const [dataFim, setDataFim] = useState('2026-06-30');
+  const [dataInicio, setDataInicio] = useState(`${anoStr}-${mesStr}-01`);
+  const [dataFim, setDataFim] = useState(`${anoStr}-${mesStr}-${diaStr}`);
   const [atualizando, setAtualizando] = useState(false);
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
@@ -103,12 +117,12 @@ export default function App() {
     switch (periodoPreset) {
       case 'hoje': return 'Hoje (Últimas 24h)';
       case '7d': return 'Últimos 7 Dias';
-      case 'mes_atual': return 'Mês Atual (Junho/2026)';
-      case 'mes_ant': return 'Mês Anterior (Maio/2026)';
+      case 'mes_atual': return `Mês Atual (${mesAtualFormatado}/${anoAtual})`;
+      case 'mes_ant': return `Mês Anterior (${mesAnteriorFormatado}/${anoMesAnterior})`;
       case '90d': return 'Últimos 90 Dias (Trimestre)';
-      case 'ano': return 'Ano Atual (2026)';
+      case 'ano': return `Ano Atual (${anoAtual})`;
       case 'custom': return `${dataInicio} até ${dataFim}`;
-      default: return 'Junho/2026';
+      default: return `${mesAtualFormatado}/${anoAtual}`;
     }
   };
 
@@ -298,10 +312,10 @@ export default function App() {
             >
               <option value="hoje">⚡ Hoje (Últimas 24h)</option>
               <option value="7d">📅 Últimos 7 Dias</option>
-              <option value="mes_atual">📅 Mês Atual (Junho/2026)</option>
-              <option value="mes_ant">📅 Mês Anterior (Maio/2026)</option>
+              <option value="mes_atual">📅 Mês Atual ({mesAtualFormatado}/{anoAtual})</option>
+              <option value="mes_ant">📅 Mês Anterior ({mesAnteriorFormatado}/{anoMesAnterior})</option>
               <option value="90d">📅 Últimos 90 Dias (Trimestre)</option>
-              <option value="ano">📅 Ano Atual (2026)</option>
+              <option value="ano">📅 Ano Atual ({anoAtual})</option>
               <option value="custom">📆 Período Personalizado...</option>
             </select>
 
