@@ -14,6 +14,7 @@ import Estoques from './views/Estoques';
 import Fiscal from './views/Fiscal';
 import Login from './Login';
 import ModalGerenciarUsuarios from './components/ModalGerenciarUsuarios';
+import ModalGerenciarEmpresas from './components/ModalGerenciarEmpresas';
 import { APP_VERSION } from './config';
 
 const MODULOS = [
@@ -90,6 +91,7 @@ export default function App() {
   const [anoMes, setAnoMes] = useState('2026-06');
   const [atualizando, setAtualizando] = useState(false);
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
+  const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
 
   useEffect(() => {
     if (usuario) {
@@ -269,6 +271,32 @@ export default function App() {
             </span>
           </div>
 
+          {/* Botão Painel Master de Gestão de Empresas & Chaves de API */}
+          {isMaster && (
+            <button
+              onClick={() => setModalEmpresasAberto(true)}
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 82, 204, 0.32) 0%, rgba(0, 210, 255, 0.22) 100%)',
+                border: '1px solid rgba(0, 210, 255, 0.55)',
+                color: '#38bdf8',
+                padding: '8px 14px',
+                borderRadius: 10,
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                boxShadow: '0 0 14px rgba(0, 210, 255, 0.22)',
+                transition: 'all 0.2s ease'
+              }}
+              title="Cadastrar Empresas e Gerar API Keys para o SyncAgent"
+            >
+              <Building2 size={14} color="#00d2ff" />
+              <span>Clientes &amp; API Keys</span>
+            </button>
+          )}
+
           {/* Botão Painel Master de Gestão de Usuários (Camada 1: Reset Administrativo) */}
           {isMaster && (
             <button
@@ -373,6 +401,12 @@ export default function App() {
       <ModalGerenciarUsuarios
         isOpen={modalUsuariosAberto}
         onClose={() => setModalUsuariosAberto(false)}
+      />
+
+      {/* Modal Master de Gestão de Empresas & Chaves de Ingestão (API Keys) */}
+      <ModalGerenciarEmpresas
+        isOpen={modalEmpresasAberto}
+        onClose={() => setModalEmpresasAberto(false)}
       />
     </div>
   );
