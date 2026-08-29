@@ -4,10 +4,12 @@ import {
   Building2, Phone, CheckCircle, AlertCircle, Search, Lock, Edit3
 } from 'lucide-react';
 import { getTodosUsuarios, cadastrarUsuario, editarUsuario, adminRedefinirSenha, excluirUsuario } from '../authStore';
+import { getTodasEmpresas } from '../empresaStore';
 import { formatarWhatsApp } from '../maskUtils';
 
 export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [usuarios, setUsuarios] = useState([]);
+  const [empresasCadastradas, setEmpresasCadastradas] = useState([]);
   const [busca, setBusca] = useState('');
   const [filtroEmpresa, setFiltroEmpresa] = useState('todas');
   const [modalNovoAberto, setModalNovoAberto] = useState(false);
@@ -21,7 +23,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [novoWhatsapp, setNovoWhatsapp] = useState('');
   const [novaSenha, setNovaSenha] = useState('');
   const [novoPerfil, setNovoPerfil] = useState('cliente');
-  const [novaEmpresaId, setNovaEmpresaId] = useState('silva');
+  const [novaEmpresaId, setNovaEmpresaId] = useState('');
   const [novaUnidade, setNovaUnidade] = useState('Todas');
 
   // Form Editar Usuário
@@ -39,8 +41,14 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [mensagemSucesso, setMensagemSucesso] = useState('');
   const [erro, setErro] = useState('');
 
-  const recarregarUsuarios = () => {
+  const recarregarUsuarios = async () => {
     setUsuarios(getTodosUsuarios());
+    const listaEmp = await getTodasEmpresas();
+    const reais = (listaEmp || []).filter(e => e.cnpj !== '00.000.000/0001-00');
+    setEmpresasCadastradas(reais);
+    if (reais.length > 0 && !novaEmpresaId) {
+      setNovaEmpresaId(reais[0].cnpj || reais[0].id);
+    }
   };
 
   useEffect(() => {
@@ -81,15 +89,20 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     e.preventDefault();
     setErro('');
 
+    const empObj = empresasCadastradas.find(emp => emp.cnpj === novaEmpresaId || emp.id === novaEmpresaId);
+    const empresaNomeResolvido = novoPerfil === 'master' 
+      ? 'Todas as Empresas (Consolidado)' 
+      : (empObj ? (empObj.nome_fantasia || empObj.razao_social) : 'Empresa Cliente');
+
     const res = cadastrarUsuario({
       username: novoUsername,
       nome: novoNome,
       whatsapp: novoWhatsapp,
       senha: novaSenha,
       perfil: novoPerfil,
-      empresaId: novoPerfil === 'master' ? 'todas' : novaEmpresaId,
-      empresaNome: novoPerfil === 'master' ? 'Todas as Empresas (Consolidado)' : (novaEmpresaId === 'silva' ? 'Lojas Silva Casa & Conforto Ltda' : 'Rede Nordeste Móveis & Eletro'),
-      erp: novoPerfil === 'master' ? 'Multi-ERP' : 'Próton (Oracle)',
+      empresaId: novoPerfil === 'master' ? 'todas' : (novaEmpresaId || (empresasCadastradas[0]?.cnpj || 'silva')),
+      empresaNome: empresaNomeResolvido,
+      erp: novoPerfil === 'master' ? 'Multi-ERP' : (empObj ? `${empObj.erp_tipo || 'Próton'} (${empObj.banco_tipo || 'Oracle'})` : 'Próton (Oracle)'),
       unidadePadrao: novaUnidade
     });
 
@@ -112,7 +125,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     setEditNome(u.nome || '');
     setEditWhatsapp(formatarWhatsApp(u.whatsapp || ''));
     setEditPerfil(u.perfil || 'cliente');
-    setEditEmpresaId(u.empresaId || 'silva');
+    setEditEmpresaId(u.empresaId || (empresasCadastradas[0]?.cnpj || ''));
     setEditUnidade(u.unidadePadrao || 'Todas');
     setErro('');
     setModalEditarAberto(true);
@@ -123,7 +136,10 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     e.preventDefault();
     setErro('');
 
-    const empresaNomeResolvido = editPerfil === 'master' ? 'Todas as Empresas (Consolidado)' : (editEmpresaId === 'silva' ? 'Lojas Silva Casa & Conforto Ltda' : (editEmpresaId === 'nordeste' ? 'Rede Nordeste Móveis & Eletro' : 'Alpha Distribuidora & Logística'));
+    const empObj = empresasCadastradas.find(emp => emp.cnpj === editEmpresaId || emp.id === editEmpresaId);
+    const empresaNomeResolvido = editPerfil === 'master' 
+      ? 'Todas as Empresas (Consolidado)' 
+      : (empObj ? (empObj.nome_fantasia || empObj.razao_social) : 'Empresa Cliente');
 
     const res = editarUsuario(editUsername, {
       nome: editNome,
@@ -380,9 +396,11 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
           >
             <option value="todas">🏢 Todas as Empresas</option>
             <option value="master">👑 Apenas Usuários Master</option>
-            <option value="silva">🏪 Lojas Silva Casa &amp; Conforto</option>
-            <option value="nordeste">🏢 Rede Nordeste Móveis &amp; Eletro</option>
-            <option value="alpha_dist">🚚 Alpha Distribuidora</option>
+            {empresasCadastradas.map((emp) => (
+              <option key={emp.id || emp.cnpj} value={emp.cnpj}>
+                🏪 {emp.nome_fantasia || emp.razao_social}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -632,9 +650,11 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                       disabled={novoPerfil === 'master'}
                       style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', opacity: novoPerfil === 'master' ? 0.5 : 1, cursor: 'pointer' }}
                     >
-                      <option value="silva">Lojas Silva</option>
-                      <option value="nordeste">Rede Nordeste</option>
-                      <option value="alpha_dist">Alpha Distribuidora</option>
+                      {empresasCadastradas.map((emp) => (
+                        <option key={emp.id || emp.cnpj} value={emp.cnpj}>
+                          {emp.nome_fantasia || emp.razao_social} ({emp.cnpj})
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -754,9 +774,11 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
                       disabled={editPerfil === 'master'}
                       style={{ width: '100%', padding: '11px 14px', background: '#070d18', border: '1px solid rgba(0,130,255,0.4)', borderRadius: 10, color: '#fff', fontSize: 13, outline: 'none', opacity: editPerfil === 'master' ? 0.5 : 1, cursor: 'pointer' }}
                     >
-                      <option value="silva">Lojas Silva</option>
-                      <option value="nordeste">Rede Nordeste</option>
-                      <option value="alpha_dist">Alpha Distribuidora</option>
+                      {empresasCadastradas.map((emp) => (
+                        <option key={emp.id || emp.cnpj} value={emp.cnpj}>
+                          {emp.nome_fantasia || emp.razao_social} ({emp.cnpj})
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

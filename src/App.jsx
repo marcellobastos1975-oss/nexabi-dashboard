@@ -91,11 +91,26 @@ export default function App() {
   const [moduloAtivo, setModuloAtivo] = useState('panorama');
   const [clienteSelecionado, setClienteSelecionado] = useState('todas');
   const [unidade, setUnidade] = useState('Todas');
-  const [anoMes, setAnoMes] = useState('2026-06');
+  const [periodoPreset, setPeriodoPreset] = useState('mes_atual');
+  const [dataInicio, setDataInicio] = useState('2026-06-01');
+  const [dataFim, setDataFim] = useState('2026-06-30');
   const [atualizando, setAtualizando] = useState(false);
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
   const [empresasCadastradas, setEmpresasCadastradas] = useState([]);
+
+  const getPeriodoDescricao = () => {
+    switch (periodoPreset) {
+      case 'hoje': return 'Hoje (Últimas 24h)';
+      case '7d': return 'Últimos 7 Dias';
+      case 'mes_atual': return 'Mês Atual (Junho/2026)';
+      case 'mes_ant': return 'Mês Anterior (Maio/2026)';
+      case '90d': return 'Últimos 90 Dias (Trimestre)';
+      case 'ano': return 'Ano Atual (2026)';
+      case 'custom': return `${dataInicio} até ${dataFim}`;
+      default: return 'Junho/2026';
+    }
+  };
 
   useEffect(() => {
     getTodasEmpresas().then(setEmpresasCadastradas);
@@ -274,16 +289,41 @@ export default function App() {
             ))}
           </select>
 
-          {/* FILTRO DE PERÍODO / DATA */}
-          <select 
-            value={anoMes} 
-            onChange={(e) => setAnoMes(e.target.value)}
-            style={{ background: 'rgba(5,16,36,0.85)', border: '1px solid rgba(0,130,255,0.3)', color: '#fff', padding: '8px 14px', borderRadius: 10, fontSize: '12px', outline: 'none', cursor: 'pointer' }}
-          >
-            <option value="2026-06">📅 Junho / 2026</option>
-            <option value="2026-05">Maio / 2026</option>
-            <option value="2026-04">Abril / 2026</option>
-          </select>
+          {/* FILTRO DE PERÍODO / DATA INTERATIVO */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+            <select 
+              value={periodoPreset} 
+              onChange={(e) => setPeriodoPreset(e.target.value)}
+              style={{ background: 'rgba(5,16,36,0.85)', border: '1px solid rgba(0,130,255,0.3)', color: '#fff', padding: '8px 14px', borderRadius: 10, fontSize: '12px', outline: 'none', cursor: 'pointer' }}
+            >
+              <option value="hoje">⚡ Hoje (Últimas 24h)</option>
+              <option value="7d">📅 Últimos 7 Dias</option>
+              <option value="mes_atual">📅 Mês Atual (Junho/2026)</option>
+              <option value="mes_ant">📅 Mês Anterior (Maio/2026)</option>
+              <option value="90d">📅 Últimos 90 Dias (Trimestre)</option>
+              <option value="ano">📅 Ano Atual (2026)</option>
+              <option value="custom">📆 Período Personalizado...</option>
+            </select>
+
+            {periodoPreset === 'custom' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(5,16,36,0.95)', padding: '4px 8px', borderRadius: 10, border: '1px solid rgba(0,210,255,0.4)' }}>
+                <span style={{ fontSize: 11, color: '#94a3b8' }}>De:</span>
+                <input 
+                  type="date" 
+                  value={dataInicio} 
+                  onChange={(e) => setDataInicio(e.target.value)} 
+                  style={{ background: '#070d18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none' }}
+                />
+                <span style={{ fontSize: 11, color: '#94a3b8' }}>Até:</span>
+                <input 
+                  type="date" 
+                  value={dataFim} 
+                  onChange={(e) => setDataFim(e.target.value)} 
+                  style={{ background: '#070d18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none' }}
+                />
+              </div>
+            )}
+          </div>
 
           {/* Botão de Atualização Rápida */}
           <button 
@@ -416,7 +456,13 @@ export default function App() {
 
       {/* Conteúdo do Módulo Ativo */}
       <main>
-        {moduloAtivo === 'panorama' && <PanoramaGeral />}
+        {moduloAtivo === 'panorama' && (
+          <PanoramaGeral 
+            isRealEmptyTenant={isMaster ? (clienteSelecionado !== 'silva') : (usuario.empresaId !== 'silva')}
+            nomeEmpresa={dadosEmpresaAtual.nome} 
+            periodoDesc={getPeriodoDescricao()} 
+          />
+        )}
         {moduloAtivo === 'vendas' && <Vendas />}
         {moduloAtivo === 'compras' && <Compras />}
         {moduloAtivo === 'cr' && <ContasReceber />}
