@@ -1,5 +1,5 @@
 ﻿# 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-08-29 — Dashboard Web v1.6.3 PROD & NexaBI SyncAgent v1.5.7 PROD Standalone
+> **Última atualização:** 2026-08-29 — Dashboard Web v1.6.3 PROD & NexaBI SyncAgent v1.5.8 PROD Standalone
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
@@ -132,6 +132,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| SyncAgent Desktop | v1.5.8 PROD | 2026-08-29 | **v1.5.8 PROD (ASSISTENTE INTERATIVO DE MAPEAMENTO DE TABELAS & STATUS DO ERP)**: Implementação do Mapeador de Tabelas e Regras de Negócio pelo Implantador; Introspecção dinâmica de tabelas e contagem agrupada de status diretamente no Oracle (SELECT status, COUNT(*)...); Suporte a Tabela Ativa + Tabela Histórica com UNION ALL para Vendas, CR e CP; Blindagem AES-256 no config.json; Teste isolado pré-entrega aprovado. |
 | SyncAgent Desktop | v1.5.7 PROD | 2026-08-29 | **v1.5.7 PROD (ÍCONE OFICIAL N EMBARCADO & MOTOR RESILIENTE DE 5 CAMADAS PARA UNIDADES ORACLE)**: Embarque nativo do ícone oficial N na barra de títulos, modais e barra de tarefas do Windows (eliminando o ícone padrão da pena azul); Implementação do motor de busca em 5 camadas com auto-introspecção de colunas, leitura direta das transações de vendas/CR e fallback automático das 23 unidades Destak Prime com logs de diagnóstico detalhados; Validação isolada pré-entrega aprovada. |
 | SyncAgent Desktop | v1.5.6 PROD | 2026-08-29 | **v1.5.6 PROD (EMPACOTAMENTO COMPLETO DE DEPENDÊNCIAS CYTHON/ORACLEDB & GETPASS, TESTE ISOLADO APROVADO)**: Inclusão explícita de getpass, socket, ssl, decimal, struct, hashlib, hmac e secrets requeridos dinamicamente pela extensão C do oracledb (base_impl.pyx); Validação e execução automatizada em diretório 100% isolado (sem arquivos .py) simulando o servidor de produção do cliente; Executável homologado com inicialização instantânea. |
 | SyncAgent Desktop | v1.5.5 PROD | 2026-08-29 | **v1.5.5 PROD (GERENCIADOR DE SERVIÇO WINDOWS AUTO-START NO BOOT, VALIDAÇÃO DE SENHA MASTER & BLINDAGEM CONTRA EXCLUSÃO)**: Implementação de gerenciador de Serviço do Windows integrado na interface para execução 24/7 no boot do servidor (sem necessidade de usuário conectado via RDP); Modal de autenticação e validação de segurança com perfil Master (marcello/master/admin) para desinstalação de serviços, parada de sincronização e encerramento de aplicação; Blindagem nativa de arquivos no Windows com atributo ReadOnly + Hidden e auto-cura via backup espelhado (.bak) para config.json e state.json; Correção definitiva de empacotamento PyInstaller incluindo 100% dos módulos internos (sync_engine, service_manager, auth_master, oracle_queries, security); Recompilação do executável portátil NexaBI-SyncAgent.exe. |
