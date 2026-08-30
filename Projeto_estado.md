@@ -132,6 +132,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| SyncAgent Desktop | v1.7.5 PROD | 2026-08-30 | **v1.7.5 PROD (DYNAMIC SCHEMA INTROSPECTION & NOT NULL FIX)**: 1) Corrigido envio de data_hora_emissao no Supabase; 2) Implementado motor de autodescoberta dinâmica de colunas do Próton em tempo de execução para Vendas, CR, CP e Estoques; 3) Testes em ambiente isolado aprovados. |
 | SyncAgent Desktop | v1.7.4 PROD | 2026-08-30 | **v1.7.4 PROD (RESILIENT DIRECT STREAMING)**: 1) Substituídas todas as queries com JOINs frágeis por consultas diretas às tabelas do Próton (tped_pedido_venda, tped_historico_venda, trec_aberto, tpag_aberto, tmer_estoque); 2) Ingestão validada por lotes com streaming progressivo no Supabase. |
 | SyncAgent Desktop | v1.7.3 PROD | 2026-08-30 | **v1.7.3 PROD (RESILIENT STREAMING & LIVE BATCH LOGS)**: 1) Extração direta ultra resiliente de vendas, contas a receber, contas a pagar e estoques; 2) Logs em tempo real na console por lote de 1.000 registros; 3) Integração direta do botão do modal com a carga Supabase. |
 | SyncAgent Desktop | v1.7.2 PROD | 2026-08-30 | **v1.7.2 PROD (REAL SUPABASE STREAMING PIPELINE)**: 1) Implementado pipeline de extração e ingestão em lotes de 1.000 registros para bi_vendas, bi_contas_receber, bi_contas_pagar e bi_estoques no Supabase; 2) Gravação de bi_sync_logs em tempo real. |
