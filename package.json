@@ -1,11 +1,13 @@
 {
   "name": "nexabi-alpha-proton-dashboard",
   "private": true,
-  "version": "1.6.3",
+  "version": "2.2.2",
   "type": "module",
   "scripts": {
+    "prebuild": "node copy_og.cjs",
     "dev": "vite",
     "build": "vite build",
+    "deploy": "firebase deploy --only hosting --project nexalife-ecosystem --non-interactive",
     "preview": "vite preview"
   },
   "dependencies": {

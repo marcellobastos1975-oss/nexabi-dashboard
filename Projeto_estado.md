@@ -1,5 +1,5 @@
-﻿# 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-08-29 — Dashboard Web v1.6.3 PROD & NexaBI SyncAgent v1.6.0 PROD Standalone
+# 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
+> **Última atualização:** 2026-08-30 — Dashboard Web v2.2.2 PROD & NexaBI SyncAgent v1.7.5 PROD
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
@@ -132,6 +132,8 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| Dashboard Web | v2.2.2 PROD | 2026-08-30 | **v2.2.2 PROD (BRANDING SOCIAL OPEN GRAPH & WHATSAPP PREVIEW COMPLETO)**: 1) Criação e provisionamento de banner Open Graph de alta fidelidade (1200x630) `og-image.png` e `og-preview.png` com logo 3D N neon e estética premium glassmorphism dark navy; 2) Configuração completa de metatags Open Graph e Twitter Cards no `<head>` do `index.html` para preview rico em compartilhamentos no WhatsApp, Telegram, LinkedIn e redes sociais; 3) Versionamento formal `v2.2.2 PROD` e deploy homologado no Google Cloud Firebase Hosting. |
+| Dashboard Web | v2.2.1 PROD | 2026-08-30 | **v2.2.1 PROD (DRAWER IA OVERLAY & VERSION GOVERNANCE)**: 1) Correção definitiva do z-index e posicionamento do Drawer da IA; 2) Versionamento formalizado em todos os componentes e rodapé; 3) Deploy efetuado no Firebase Hosting. |
 | Dashboard Web | v2.2.0 PROD | 2026-08-30 | **v2.2.0 PROD (UNIFICAÇÃO TOTAL, TOOLTIPS EXPLICATIVOS & BOTÃO IA LIBERADO)**: 1) Valores de Vendas e Visão Geral 100% unificados e sincronizados via Supabase com filtro de período (R$ 26,74 Mi no mês / R$ 216,70 Mi no ano); 2) Adicionadas legendas e explicações de negócio (hover no desktop e tap no celular) em todos os cards; 3) Botão do Assistente IA visível para todos os perfis; 4) Deploy no Firebase Hosting realizado. |
 | Dashboard Web | v2.1.2 PROD | 2026-08-30 | **v2.1.2 PROD (REAL SUPABASE AGGREGATION & LIVE METRICS)**: 1) Integrado serviço dashboardDataService.js com consultas ao vivo no Supabase; 2) Exibição das métricas reais ingeridas do Próton (R$ 216,70 Mi em vendas, R$ 321,55 Mi em CR, R$ 720,40 Mi em CP); 3) Build Vite gerado com sucesso. |
 | SyncAgent Desktop | v1.7.5 PROD | 2026-08-30 | **v1.7.5 PROD (DYNAMIC SCHEMA INTROSPECTION & NOT NULL FIX)**: 1) Corrigido envio de data_hora_emissao no Supabase; 2) Implementado motor de autodescoberta dinâmica de colunas do Próton em tempo de execução para Vendas, CR, CP e Estoques; 3) Testes em ambiente isolado aprovados. |
