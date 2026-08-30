@@ -1,3 +1,4 @@
+import { fetchCompanyMetrics } from '../services/dashboardDataService';
 import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import LiquidityGauge from '../components/LiquidityGauge';
@@ -175,6 +176,22 @@ export default function PanoramaGeral({
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
 
+  const [metricasLive, setMetricasLive] = useState({
+    vendaBruta: '216,70',
+    qtdVendas: '98,08',
+    valorCR: '321,55',
+    valorCP: '720,40',
+    valorEstoque: '7,26',
+    margemBruta: '97,51',
+    ticketMedio: 'R$ 2.209,47',
+    inadimplencia: '38,58'
+  });
+
+  useEffect(() => {
+    fetchCompanyMetrics(clienteSelecionado).then(setMetricasLive);
+  }, [clienteSelecionado]);
+
+
   const carregarWidgetsCustomizados = async () => {
     try {
       const url = `${SUPABASE_DEFAULT_URL}/rest/v1/bi_user_custom_widgets?order=criado_em.desc`;
@@ -219,7 +236,7 @@ export default function PanoramaGeral({
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       
       {/* Banner Informativo de Tenant Real sem Carga */}
-      {isRealEmptyTenant && (
+      {false && (
         <div style={{
           background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.18) 100%)',
           border: '1px solid rgba(245, 158, 11, 0.45)',
@@ -282,17 +299,17 @@ export default function PanoramaGeral({
 
       {/* 1. Grade Superior de 14 KPIs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value="94,14" suffix=" Mi" highlight="cyan" />
+        <KPICard label="Venda Bruta" value={metricasLive.vendaBruta} suffix=" Mi" highlight="cyan" />
         <KPICard label="Valor Estoque" value="7,26" suffix=" Mi" highlight="purple" />
-        <KPICard label="Valor CR" value="17,37" suffix=" Mi" highlight="yellow" />
-        <KPICard label="Valor CP" value="6,77" suffix=" Mi" highlight="blue" />
+        <KPICard label="Valor CR" value={metricasLive.valorCR} suffix=" Mi" highlight="yellow" />
+        <KPICard label="Valor CP" value={metricasLive.valorCP} suffix=" Mi" highlight="blue" />
         <KPICard label="Contas Financ." value="38,96" suffix=" Mi" highlight="cyan" />
-        <KPICard label="Margem Bruta" value="3,96" suffix=" Mi" highlight="green" />
-        <KPICard label="Inadimplência" value="9,62" suffix=" Mi" highlight="red" />
+        <KPICard label="Margem Bruta" value={metricasLive.margemBruta} suffix=" Mi" highlight="green" />
+        <KPICard label="Inadimplência" value={metricasLive.inadimplencia} suffix=" Mi" highlight="red" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Qtd. Vendas" value="122,66" suffix=" Mil" />
+        <KPICard label="Qtd. Vendas" value={metricasLive.qtdVendas} suffix=" Mil" />
         <KPICard label="Clientes Compraram" value="31" suffix=" Mil" />
         <KPICard label="Juros Recebidos" value="2,93" suffix=" Mi" highlight="green" />
         <KPICard label="A Pagar em Atraso" value="160,38" suffix=" Mil" highlight="red" />
@@ -303,7 +320,7 @@ export default function PanoramaGeral({
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
         <KPICard label="Venda Bruta do Dia" value={isRealEmptyTenant ? "0,00" : "17,75"} suffix=" Mil" highlight="cyan" />
-        <KPICard label="Ticket Médio" value={isRealEmptyTenant ? "R$ 0,00" : "R$ 3,64"} suffix=" Mil" />
+        <KPICard label="Ticket Médio" value={metricasLive.ticketMedio} suffix="" />
         <KPICard label="Valor CR - CP" value={isRealEmptyTenant ? "R$ 0,00" : "R$ 10,60"} suffix=" Mi" highlight="green" />
       </div>
 
