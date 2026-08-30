@@ -15,6 +15,7 @@ import Fiscal from './views/Fiscal';
 import Login from './Login';
 import ModalGerenciarUsuarios from './components/ModalGerenciarUsuarios';
 import ModalGerenciarEmpresas from './components/ModalGerenciarEmpresas';
+import AIAssistantDrawer from './components/AIAssistantDrawer';
 import { getTodasEmpresas } from './empresaStore';
 import { APP_VERSION } from './config';
 
@@ -111,6 +112,7 @@ export default function App() {
   const [atualizando, setAtualizando] = useState(false);
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
+  const [drawerAIAberto, setDrawerAIAberto] = useState(false);
   const [empresasCadastradas, setEmpresasCadastradas] = useState([]);
 
   const getPeriodoDescricao = () => {
@@ -514,6 +516,12 @@ export default function App() {
       <ModalGerenciarEmpresas
         isOpen={modalEmpresasAberto}
         onClose={() => setModalEmpresasAberto(false)}
+      />
+      {/* Drawer de Inteligência Artificial Generative BI */}
+      <AIAssistantDrawer 
+        isOpen={drawerAIAberto} 
+        onClose={() => setDrawerAIAberto(false)}
+        empresaId={clienteSelecionado}
       />
     </div>
   );

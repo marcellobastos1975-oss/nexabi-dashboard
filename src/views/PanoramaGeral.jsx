@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import LiquidityGauge from '../components/LiquidityGauge';
+import DynamicCardRenderer from '../components/DynamicCardRenderer';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   Treemap, Cell 
 } from 'recharts';
 import { Database, AlertCircle, Sparkles } from 'lucide-react';
+import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
 
 const historicoVendas12mDemo = [
   { mes: '2025-jul', valor: 1391.91 },
@@ -100,10 +102,10 @@ const CustomTreemapContent = (props) => {
                 y={y + height / 2 + 15}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fill="#ffffff"
+                fill="#f1f5f9"
                 stroke="none"
                 strokeWidth={0}
-                fontSize={10}
+                fontSize={11}
                 fontWeight="700"
                 fontFamily="Inter, sans-serif"
               >
@@ -120,10 +122,10 @@ const CustomTreemapContent = (props) => {
               stroke="none"
               strokeWidth={0}
               fontSize={10}
-              fontWeight="700"
+              fontWeight="600"
               fontFamily="Inter, sans-serif"
             >
-              {name}
+              {words[0]}
             </text>
           )}
         </g>
@@ -131,29 +133,29 @@ const CustomTreemapContent = (props) => {
         <g stroke="none" fill="#ffffff" style={{ pointerEvents: 'none' }}>
           <text
             x={x + width / 2}
-            y={y + height / 2 - (height > 50 ? 11 : 0)}
+            y={y + height / 2 - (height > 45 ? 10 : 0)}
             textAnchor="middle"
             dominantBaseline="central"
             fill="#ffffff"
             stroke="none"
             strokeWidth={0}
-            fontSize={width > 160 ? 16 : 13}
-            fontWeight="600"
+            fontSize={12}
+            fontWeight="700"
             fontFamily="Inter, sans-serif"
           >
             {name}
           </text>
-          {height > 50 && (
+          {height > 45 && (
             <text
               x={x + width / 2}
-              y={y + height / 2 + 13}
+              y={y + height / 2 + 12}
               textAnchor="middle"
               dominantBaseline="central"
-              fill="#ffffff"
+              fill="#f1f5f9"
               stroke="none"
               strokeWidth={0}
-              fontSize={width > 160 ? 14 : 12}
-              fontWeight="700"
+              fontSize={11}
+              fontWeight="600"
               fontFamily="Inter, sans-serif"
             >
               {vlrFmt}
@@ -165,7 +167,51 @@ const CustomTreemapContent = (props) => {
   );
 };
 
-export default function PanoramaGeral({ isRealEmptyTenant = false, nomeEmpresa = 'DESTAK PRIME', periodoDesc = 'Mês Atual' }) {
+export default function PanoramaGeral({ 
+  isRealEmptyTenant = false, 
+  nomeEmpresa = 'DESTAK PRIME', 
+  periodoDesc = 'Mês Atual', 
+  clienteSelecionado = 'todas' 
+}) {
+  const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
+
+  const carregarWidgetsCustomizados = async () => {
+    try {
+      const url = `${SUPABASE_DEFAULT_URL}/rest/v1/bi_user_custom_widgets?order=criado_em.desc`;
+      const resp = await fetch(url, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+      if (resp.ok) {
+        const dados = await resp.json();
+        setWidgetsCustomizados(dados || []);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar widgets da IA:', err);
+    }
+  };
+
+  useEffect(() => {
+    carregarWidgetsCustomizados();
+  }, [clienteSelecionado]);
+
+  const removerWidget = async (id) => {
+    try {
+      await fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/bi_user_custom_widgets?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+      setWidgetsCustomizados(prev => prev.filter(w => w.id !== id));
+    } catch (err) {
+      console.error('Erro ao remover widget:', err);
+    }
+  };
+
   const treemapData = isRealEmptyTenant ? treemapDataZero : treemapDataDemo;
   const historicoVendas12m = isRealEmptyTenant ? [] : historicoVendas12mDemo;
 
@@ -177,26 +223,49 @@ export default function PanoramaGeral({ isRealEmptyTenant = false, nomeEmpresa =
         <div style={{
           background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.18) 100%)',
           border: '1px solid rgba(245, 158, 11, 0.45)',
-          borderRadius: 14,
+          borderRadius: 12,
           padding: '16px 20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 12,
-          color: '#fef3c7'
+          gap: 16,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#f59e0b', boxShadow: '0 0 12px #f59e0b' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{
+              background: 'rgba(245, 158, 11, 0.25)',
+              padding: 10,
+              borderRadius: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#f59e0b'
+            }}>
+              <Database size={24} />
+            </div>
             <div>
-              <strong style={{ fontSize: 14, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Database size={16} /> Base Oficial: {nomeEmpresa} • Aguardando Carga de Dados
-              </strong>
-              <p style={{ margin: '3px 0 0 0', fontSize: 12, color: '#cbd5e1' }}>
-                Ambiente 100% isolado e configurado. Todos os indicadores iniciam em <strong>R$ 0,00</strong> até a primeira ingestão via <strong>NexaBI-SyncAgent</strong>.
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h4 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#fef3c7' }}>
+                  Tenant em Produção: {nomeEmpresa}
+                </h4>
+                <span style={{
+                  background: '#f59e0b',
+                  color: '#000000',
+                  fontSize: 10,
+                  fontWeight: 800,
+                  padding: '2px 6px',
+                  borderRadius: 4,
+                  textTransform: 'uppercase'
+                }}>
+                  Aguardando Sync
+                </span>
+              </div>
+              <p style={{ margin: '4px 0 0 0', fontSize: 12, color: '#e2e8f0', lineHeight: 1.4 }}>
+                O ambiente seguro multi-tenant foi provisionado. Os cards abaixo refletirão os números reais assim que o <strong>SyncAgent</strong> concluir a primeira sincronização delta.
               </p>
             </div>
           </div>
+
           <div style={{
             background: 'rgba(245, 158, 11, 0.2)',
             border: '1px solid rgba(245, 158, 11, 0.4)',
@@ -298,6 +367,33 @@ export default function PanoramaGeral({ isRealEmptyTenant = false, nomeEmpresa =
           )}
         </div>
       </div>
+
+      {/* 4. Cards Personalizados & Insights Gerados por IA */}
+      {widgetsCustomizados.length > 0 && (
+        <div className="glass-card" style={{ padding: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Sparkles size={16} className="text-cyan-400" />
+              💡 Meus Cards &amp; Insights Personalizados da IA (Fixados no Painel)
+            </h3>
+            <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+              {widgetsCustomizados.length} card(s) configurado(s)
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 14 }}>
+            {widgetsCustomizados.map(w => (
+              <DynamicCardRenderer 
+                key={w.id} 
+                widget={w} 
+                isFixado={true} 
+                onRemover={() => removerWidget(w.id)} 
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
