@@ -27,7 +27,6 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
     setRespostaIA(null);
     setFixadoSucesso(false);
 
-    // Motor de Inferência Semântica Analítica (Client-Side & Edge)
     setTimeout(() => {
       let widgetGerado = null;
 
@@ -38,7 +37,7 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
           dimensao: 'cliente_nome',
           metrica: 'sum(valor_liquido)',
           config_json: {
-            subtitulo: 'Curva ABC de Clientes (Mês Atual)',
+            subtitulo: 'Curva ABC de Clientes (Mês Atual - Próton)',
             is_moeda: true,
             explicacao_ia: 'Os 10 principais clientes representam 64% do faturamento líquido total.',
             dados: [
@@ -138,7 +137,7 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
 
       setRespostaIA(widgetGerado);
       setCarregando(false);
-    }, 600);
+    }, 500);
   };
 
   const fixarNoPainel = async (w) => {
@@ -174,37 +173,80 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end animate-in fade-in duration-200">
-      <div className="w-full max-w-xl bg-[#070d18] border-l border-cyan-900/60 h-full flex flex-col shadow-2xl">
+    <div 
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        zIndex: 99999
+      }}
+      onClick={onClose}
+    >
+      <div 
+        style={{
+          width: '100%',
+          maxWidth: '560px',
+          height: '100%',
+          background: 'linear-gradient(180deg, #0b1728 0%, #070d18 100%)',
+          borderLeft: '1px solid rgba(0, 210, 255, 0.4)',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '-10px 0 40px rgba(0,0,0,0.8)',
+          position: 'relative'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header do Drawer */}
-        <div className="p-4 bg-[#0b1728] border-b border-cyan-900/40 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg text-white shadow-lg shadow-cyan-500/20">
-              <Sparkles size={18} />
+        <div style={{ padding: '16px 20px', background: '#08111e', borderBottom: '1px solid rgba(0, 210, 255, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)', padding: 8, borderRadius: 10, color: '#fff' }}>
+              <Sparkles size={20} />
             </div>
             <div>
-              <h3 className="font-extrabold text-slate-100 text-base">Assistente IA de Negócios (Generative BI)</h3>
-              <p className="text-xs text-cyan-400">Solicite qualquer análise em linguagem natural e gere cards na hora</p>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#ffffff' }}>
+                Assistente IA de Negócios (Generative BI)
+              </h3>
+              <p style={{ margin: 0, fontSize: '11px', color: '#38bdf8' }}>
+                Faça perguntas em linguagem natural e crie cards para o seu painel
+              </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-all">
-            <X size={20} />
+          <button 
+            onClick={onClose} 
+            style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <X size={18} />
           </button>
         </div>
 
         {/* Corpo com Scroll */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {/* Sugestões Rápidas */}
           <div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-2">
-              <HelpCircle size={13} /> Sugestões de Perguntas Rápidas:
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              <HelpCircle size={14} color="#00d2ff" /> Sugestões de Perguntas Rápidas:
             </span>
-            <div className="flex flex-wrap gap-1.5">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {SUGESTOES_PROMPTS.map((sug, idx) => (
                 <button
                   key={idx}
                   onClick={() => { setPrompt(sug); processarPerguntaIA(sug); }}
-                  className="text-xs px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-cyan-950 text-slate-300 hover:text-cyan-300 border border-slate-800 hover:border-cyan-800 transition-all text-left"
+                  style={{
+                    fontSize: '11px',
+                    padding: '6px 12px',
+                    borderRadius: 20,
+                    background: 'rgba(15, 23, 42, 0.8)',
+                    color: '#cbd5e1',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'left'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#00d2ff'; e.currentTarget.style.color = '#00d2ff'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'; e.currentTarget.style.color = '#cbd5e1'; }}
                 >
                   ⚡ {sug}
                 </button>
@@ -214,17 +256,20 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
 
           {/* Área de Resposta da IA */}
           {carregando && (
-            <div className="p-8 text-center bg-[#0b1728]/50 rounded-xl border border-slate-800 flex flex-col items-center justify-center gap-3">
-              <RefreshCw className="animate-spin text-cyan-400" size={24} />
-              <p className="text-xs text-slate-300 font-medium">Consultando o Catálogo Semântico e gerando seu card analítico...</p>
+            <div style={{ padding: 32, textAlign: 'center', background: 'rgba(11, 23, 40, 0.6)', borderRadius: 12, border: '1px solid rgba(0, 210, 255, 0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+              <RefreshCw className="spin" size={26} color="#00d2ff" />
+              <p style={{ margin: 0, fontSize: '13px', color: '#e2e8f0', fontWeight: 600 }}>
+                Consultando o Catálogo Semântico e gerando seu card analítico...
+              </p>
             </div>
           )}
 
           {respostaIA && !carregando && (
-            <div className="space-y-3 animate-in slide-in-from-bottom-2 duration-300">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
-                  <CheckCircle2 size={14} /> Card Analítico Gerado pela IA com Sucesso:
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <CheckCircle2 size={16} color="#10b981" />
+                <span style={{ fontSize: '13px', fontWeight: 800, color: '#10b981' }}>
+                  Card Analítico Gerado pela IA com Sucesso:
                 </span>
               </div>
 
@@ -236,8 +281,8 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
               />
 
               {fixadoSucesso && (
-                <div className="p-3 bg-emerald-950/60 border border-emerald-800 rounded-xl text-xs text-emerald-300 font-bold flex items-center gap-2">
-                  <CheckCircle2 size={16} />
+                <div style={{ padding: 12, background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', borderRadius: 10, fontSize: '12px', color: '#6ee7b7', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <CheckCircle2 size={18} />
                   Card fixado com sucesso no seu Panorama Geral!
                 </div>
               )}
@@ -246,21 +291,42 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
         </div>
 
         {/* Input Bar Inferior */}
-        <div className="p-4 bg-[#0b1728] border-t border-slate-800">
-          <form onSubmit={(e) => { e.preventDefault(); processarPerguntaIA(); }} className="flex items-center gap-2">
+        <div style={{ padding: '16px 20px', background: '#08111e', borderTop: '1px solid rgba(0, 210, 255, 0.25)' }}>
+          <form onSubmit={(e) => { e.preventDefault(); processarPerguntaIA(); }} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <input
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Ex: Top 10 clientes que mais compraram este mês..."
-              className="flex-1 bg-[#16253b] border border-slate-700 focus:border-cyan-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-all"
+              style={{
+                flex: 1,
+                background: '#16253b',
+                border: '1px solid rgba(0, 210, 255, 0.3)',
+                borderRadius: 10,
+                padding: '10px 14px',
+                fontSize: '13px',
+                color: '#fff',
+                outline: 'none'
+              }}
             />
             <button
               type="submit"
               disabled={carregando || !prompt.trim()}
-              className="p-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 text-white rounded-xl font-bold shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center"
+              style={{
+                padding: '10px 16px',
+                background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)',
+                border: 'none',
+                color: '#fff',
+                borderRadius: 10,
+                fontWeight: 700,
+                cursor: 'pointer',
+                opacity: (carregando || !prompt.trim()) ? 0.5 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
             >
-              <Send size={18} />
+              <Send size={16} />
             </button>
           </form>
         </div>
