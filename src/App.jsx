@@ -352,6 +352,31 @@ export default function App() {
             {atualizando ? 'Atualizando...' : 'Atualizar'}
           </button>
 
+          
+          {/* Botão Oficial do Assistente IA (Disponível para Master e Clientes) */}
+          <button
+            onClick={() => setDrawerAIAberto(true)}
+            style={{
+              background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)',
+              border: '1px solid rgba(0, 210, 255, 0.6)',
+              color: '#ffffff',
+              padding: '8px 16px',
+              borderRadius: 10,
+              fontSize: '12px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              boxShadow: '0 0 16px rgba(0, 210, 255, 0.35)',
+              transition: 'all 0.2s ease'
+            }}
+            title="Abrir Assistente de Inteligência Artificial NexaBI"
+          >
+            <Sparkles size={15} color="#ffffff" />
+            <span>🤖 Assistente IA</span>
+          </button>
+
           {/* Badge de Identificação do Usuário e Perfil */}
           <div 
             style={{ 
@@ -477,9 +502,11 @@ export default function App() {
             isRealEmptyTenant={false}
             nomeEmpresa={dadosEmpresaAtual.nome} 
             periodoDesc={getPeriodoDescricao()} 
+            clienteSelecionado={clienteSelecionado}
+            periodoPreset={periodoPreset}
           />
         )}
-        {moduloAtivo === 'vendas' && <Vendas />}
+        {moduloAtivo === 'vendas' && <Vendas clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
         {moduloAtivo === 'compras' && <Compras />}
         {moduloAtivo === 'cr' && <ContasReceber />}
         {moduloAtivo === 'cp' && <ContasPagar />}

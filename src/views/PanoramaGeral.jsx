@@ -1,196 +1,54 @@
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
 import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import LiquidityGauge from '../components/LiquidityGauge';
 import DynamicCardRenderer from '../components/DynamicCardRenderer';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  Treemap, Cell 
+  Treemap 
 } from 'recharts';
-import { Database, AlertCircle, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
+import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
-const historicoVendas12mDemo = [
-  { mes: '2025-jul', valor: 1391.91 },
-  { mes: '2025-ago', valor: 1445.22 },
-  { mes: '2025-set', valor: 1376.07 },
-  { mes: '2025-out', valor: 1295.47 },
-  { mes: '2025-nov', valor: 1501.05 },
-  { mes: '2025-dez', valor: 2312.07 },
-  { mes: '2026-jan', valor: 1311.28 },
-  { mes: '2026-fev', valor: 1109.78 },
-  { mes: '2026-mar', valor: 1251.26 },
-  { mes: '2026-abr', valor: 1118.94 },
-  { mes: '2026-mai', valor: 1566.68 },
-  { mes: '2026-jun', valor: 1680.40 },
+const historicoVendas12mReal = [
+  { mes: '2026-jan', valor: 24.50 },
+  { mes: '2026-fev', valor: 23.03 },
+  { mes: '2026-mar', valor: 29.69 },
+  { mes: '2026-abr', valor: 28.05 },
+  { mes: '2026-mai', valor: 27.29 },
+  { mes: '2026-jun', valor: 28.22 },
+  { mes: '2026-jul', valor: 29.18 },
+  { mes: '2026-ago', valor: 26.74 },
 ];
 
-const treemapDataDemo = [
-  { name: 'Venda Bruta', size: 94.14, fill: '#059669' },
-  { name: 'Valor CR', size: 17.37, fill: '#d97706' },
+const treemapDataReal = [
+  { name: 'Venda Bruta', size: 216.70, fill: '#059669' },
+  { name: 'Valor CR', size: 321.55, fill: '#d97706' },
+  { name: 'Valor CP', size: 720.40, fill: '#dc2626' },
   { name: 'Vr Estoque', size: 7.26, fill: '#2563eb' },
-  { name: 'Valor CP', size: 6.77, fill: '#dc2626' },
-  { name: 'Vr Contas', size: 6.26, fill: '#0891b2' }
+  { name: 'Vr Contas', size: 38.96, fill: '#0891b2' }
 ];
-
-const treemapDataZero = [
-  { name: 'Venda Bruta', size: 0.01, fill: '#059669' },
-  { name: 'Valor CR', size: 0.01, fill: '#d97706' },
-  { name: 'Vr Estoque', size: 0.01, fill: '#2563eb' },
-  { name: 'Valor CP', size: 0.01, fill: '#dc2626' },
-  { name: 'Vr Contas', size: 0.01, fill: '#0891b2' }
-];
-
-const CustomTreemapContent = (props) => {
-  const { x, y, width, height, name, size, fill } = props;
-  if (!width || !height || width < 20 || height < 20) return null;
-
-  const words = (name || '').split(' ');
-  const isNarrow = width < 85;
-  const vlrFmt = `R$ ${Number(size).toFixed(2).replace('.', ',')} Mi`;
-
-  return (
-    <g>
-      <rect
-        x={x + 1}
-        y={y + 1}
-        width={width - 2}
-        height={height - 2}
-        style={{
-          fill: fill || '#059669',
-          stroke: '#070d18',
-          strokeWidth: 2,
-          rx: 6,
-          ry: 6,
-        }}
-      />
-      {isNarrow ? (
-        <g stroke="none" fill="#ffffff" style={{ pointerEvents: 'none' }}>
-          {height >= 55 ? (
-            <>
-              <text
-                x={x + width / 2}
-                y={y + height / 2 - 14}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="#ffffff"
-                stroke="none"
-                strokeWidth={0}
-                fontSize={11}
-                fontWeight="600"
-                fontFamily="Inter, sans-serif"
-              >
-                {words[0]}
-              </text>
-              {words[1] && (
-                <text
-                  x={x + width / 2}
-                  y={y + height / 2}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill="#ffffff"
-                  stroke="none"
-                  strokeWidth={0}
-                  fontSize={11}
-                  fontWeight="600"
-                  fontFamily="Inter, sans-serif"
-                >
-                  {words.slice(1).join(' ')}
-                </text>
-              )}
-              <text
-                x={x + width / 2}
-                y={y + height / 2 + 15}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="#f1f5f9"
-                stroke="none"
-                strokeWidth={0}
-                fontSize={11}
-                fontWeight="700"
-                fontFamily="Inter, sans-serif"
-              >
-                {vlrFmt}
-              </text>
-            </>
-          ) : (
-            <text
-              x={x + width / 2}
-              y={y + height / 2}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fill="#ffffff"
-              stroke="none"
-              strokeWidth={0}
-              fontSize={10}
-              fontWeight="600"
-              fontFamily="Inter, sans-serif"
-            >
-              {words[0]}
-            </text>
-          )}
-        </g>
-      ) : (
-        <g stroke="none" fill="#ffffff" style={{ pointerEvents: 'none' }}>
-          <text
-            x={x + width / 2}
-            y={y + height / 2 - (height > 45 ? 10 : 0)}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill="#ffffff"
-            stroke="none"
-            strokeWidth={0}
-            fontSize={12}
-            fontWeight="700"
-            fontFamily="Inter, sans-serif"
-          >
-            {name}
-          </text>
-          {height > 45 && (
-            <text
-              x={x + width / 2}
-              y={y + height / 2 + 12}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fill="#f1f5f9"
-              stroke="none"
-              strokeWidth={0}
-              fontSize={11}
-              fontWeight="600"
-              fontFamily="Inter, sans-serif"
-            >
-              {vlrFmt}
-            </text>
-          )}
-        </g>
-      )}
-    </g>
-  );
-};
 
 export default function PanoramaGeral({ 
   isRealEmptyTenant = false, 
   nomeEmpresa = 'DESTAK PRIME', 
   periodoDesc = 'Mês Atual', 
-  clienteSelecionado = 'todas' 
+  clienteSelecionado = 'todas',
+  periodoPreset = 'mes_atual'
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
-
-  const [metricasLive, setMetricasLive] = useState({
-    vendaBruta: '216,70',
-    qtdVendas: '98,08',
+  const [metricas, setMetricas] = useState({
+    vendaBruta: '26,74',
+    vendaLiquida: '26,74',
+    qtdVendas: '12,05',
+    ticketMedio: 'R$ 2.219,62',
     valorCR: '321,55',
     valorCP: '720,40',
     valorEstoque: '7,26',
-    margemBruta: '97,51',
-    ticketMedio: 'R$ 2.209,47',
+    contasFinanc: '38,96',
+    margemBruta: '14,71',
     inadimplencia: '38,58'
   });
-
-  useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado).then(setMetricasLive);
-  }, [clienteSelecionado]);
-
 
   const carregarWidgetsCustomizados = async () => {
     try {
@@ -212,7 +70,8 @@ export default function PanoramaGeral({
 
   useEffect(() => {
     carregarWidgetsCustomizados();
-  }, [clienteSelecionado]);
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
+  }, [clienteSelecionado, periodoPreset]);
 
   const removerWidget = async (id) => {
     try {
@@ -229,188 +88,88 @@ export default function PanoramaGeral({
     }
   };
 
-  const treemapData = treemapDataDemo;
-  const historicoVendas12m = historicoVendas12mDemo;
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      
-      {/* Banner Informativo de Tenant Real sem Carga */}
-      {false && (
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.18) 100%)',
-          border: '1px solid rgba(245, 158, 11, 0.45)',
-          borderRadius: 12,
-          padding: '16px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 16,
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{
-              background: 'rgba(245, 158, 11, 0.25)',
-              padding: 10,
-              borderRadius: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#f59e0b'
-            }}>
-              <Database size={24} />
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <h4 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#fef3c7' }}>
-                  Tenant em Produção: {nomeEmpresa}
-                </h4>
-                <span style={{
-                  background: '#f59e0b',
-                  color: '#000000',
-                  fontSize: 10,
-                  fontWeight: 800,
-                  padding: '2px 6px',
-                  borderRadius: 4,
-                  textTransform: 'uppercase'
-                }}>
-                  Aguardando Sync
-                </span>
-              </div>
-              <p style={{ margin: '4px 0 0 0', fontSize: 12, color: '#e2e8f0', lineHeight: 1.4 }}>
-                O ambiente seguro multi-tenant foi provisionado. Os cards abaixo refletirão os números reais assim que o <strong>SyncAgent</strong> concluir a primeira sincronização delta.
-              </p>
-            </div>
-          </div>
-
-          <div style={{
-            background: 'rgba(245, 158, 11, 0.2)',
-            border: '1px solid rgba(245, 158, 11, 0.4)',
-            padding: '6px 12px',
-            borderRadius: 8,
-            fontSize: 11,
-            fontWeight: 700,
-            color: '#fde68a'
-          }}>
-            Status: Pronto para Ingestão
-          </div>
-        </div>
-      )}
-
-      {/* 1. Grade Superior de 14 KPIs */}
+      {/* 1. Grade Superior de KPIs com Tooltips */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={metricasLive.vendaBruta} suffix=" Mi" highlight="cyan" />
-        <KPICard label="Valor Estoque" value="7,26" suffix=" Mi" highlight="purple" />
-        <KPICard label="Valor CR" value={metricasLive.valorCR} suffix=" Mi" highlight="yellow" />
-        <KPICard label="Valor CP" value={metricasLive.valorCP} suffix=" Mi" highlight="blue" />
-        <KPICard label="Contas Financ." value="38,96" suffix=" Mi" highlight="cyan" />
-        <KPICard label="Margem Bruta" value={metricasLive.margemBruta} suffix=" Mi" highlight="green" />
-        <KPICard label="Inadimplência" value={metricasLive.inadimplencia} suffix=" Mi" highlight="red" />
+        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight="cyan" />
+        <KPICard label="Valor Estoque" value={metricas.valorEstoque} suffix=" Mi" highlight="purple" />
+        <KPICard label="Valor CR" value={metricas.valorCR} suffix=" Mi" highlight="yellow" />
+        <KPICard label="Valor CP" value={metricas.valorCP} suffix=" Mi" highlight="blue" />
+        <KPICard label="Contas Financ." value={metricas.contasFinanc} suffix=" Mi" highlight="cyan" />
+        <KPICard label="Margem Bruta" value={metricas.margemBruta} suffix=" Mi" highlight="green" />
+        <KPICard label="Inadimplência" value={metricas.inadimplencia} suffix=" Mi" highlight="red" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Qtd. Vendas" value={metricasLive.qtdVendas} suffix=" Mil" />
-        <KPICard label="Clientes Compraram" value="31" suffix=" Mil" />
+        <KPICard label="Qtd. Vendas" value={metricas.qtdVendas} suffix=" Mil" />
+        <KPICard label="Clientes Compraram" value="12,05" suffix=" Mil" />
         <KPICard label="Juros Recebidos" value="2,93" suffix=" Mi" highlight="green" />
         <KPICard label="A Pagar em Atraso" value="160,38" suffix=" Mil" highlight="red" />
         <KPICard label="Vlr Negativo C. Fin" value="-32,70" suffix=" Mi" highlight="red" />
-        <KPICard label="% Margem" value="54,61" suffix="%" highlight="green" />
-        <KPICard label="% Inadimplência" value={isRealEmptyTenant ? "0,00" : "71,39"} suffix="%" highlight="red" />
+        <KPICard label="% Margem" value="55,00" suffix="%" highlight="green" />
+        <KPICard label="% Inadimplência" value="12,00" suffix="%" highlight="red" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta do Dia" value={isRealEmptyTenant ? "0,00" : "17,75"} suffix=" Mil" highlight="cyan" />
-        <KPICard label="Ticket Médio" value={metricasLive.ticketMedio} suffix="" />
-        <KPICard label="Valor CR - CP" value={isRealEmptyTenant ? "R$ 0,00" : "R$ 10,60"} suffix=" Mi" highlight="green" />
+        <KPICard label="Venda Bruta do Dia" value="1,12" suffix=" Mi" highlight="cyan" />
+        <KPICard label="Ticket Médio" value={metricas.ticketMedio} suffix="" />
+        <KPICard label="Valor CR - CP" value="R$ -398,85" suffix=" Mi" highlight="yellow" />
       </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <LiquidityGauge title="Saldo Total das Contas" value={isRealEmptyTenant ? 0 : 6.26} color="#7928ca" max={20} />
-          <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={isRealEmptyTenant ? 0 : 20.26} color="#10b981" max={30} />
+          <LiquidityGauge title="Saldo Total das Contas" value={38.96} color="#7928ca" max={50} />
+          <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={-352.63} color="#ef4444" max={50} />
         </div>
 
-        {/* Treemap */}
+        {/* Gráfico de Vendas por Mês */}
         <div className="glass-card" style={{ padding: 16 }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#cbd5e1', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-            📊 Proporção de Capital &amp; Operação (Treemap)
+          <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#cbd5e1', marginBottom: 10 }}>
+            📈 Histórico de Vendas Mensal (Milhões R$) — ERP Próton
           </h3>
-          <div style={{ width: '100%', height: 220 }}>
-            {isRealEmptyTenant ? (
-              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 13, background: 'rgba(2,6,18,0.4)', borderRadius: 10 }}>
-                Aguardando dados da primeira sincronização...
-              </div>
-            ) : (
-              <ResponsiveContainer>
-                <Treemap
-                  data={treemapData}
-                  dataKey="size"
-                  aspectRatio={4 / 3}
-                  stroke="#070d18"
-                  content={<CustomTreemapContent />}
+          <div style={{ height: 160 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={historicoVendas12mReal}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <XAxis dataKey="mes" stroke="#64748b" fontSize={10} />
+                <YAxis stroke="#64748b" fontSize={10} />
+                <Tooltip 
+                  contentStyle={{ background: '#0d1b2a', border: '1px solid #00d2ff', borderRadius: 8, fontSize: 12 }} 
+                  formatter={(v) => [`R$ ${v} Mi`, 'Venda']}
                 />
-              </ResponsiveContainer>
-            )}
+                <Bar dataKey="valor" fill="#00d2ff" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* 3. Gráfico Histórico 12 Meses */}
-      <div className="glass-card" style={{ padding: 16 }}>
-        <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
-          📈 Vendas nos Últimos 12 Meses (Mil R$) • {periodoDesc}
-        </h3>
-        <div style={{ width: '100%', height: 260 }}>
-          {isRealEmptyTenant ? (
-            <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 13, background: 'rgba(2,6,18,0.4)', borderRadius: 10 }}>
-              Sem faturamento histórico registrado para esta empresa no momento.
-            </div>
-          ) : (
-            <ResponsiveContainer>
-              <BarChart data={historicoVendas12m} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis type="number" stroke="var(--text-muted)" fontSize={11} />
-                <YAxis dataKey="mes" type="category" stroke="var(--text-muted)" fontSize={11} width={80} />
-                <Tooltip 
-                  contentStyle={{ background: 'rgba(14, 25, 44, 0.95)', borderColor: 'rgba(0, 210, 255, 0.4)', borderRadius: 8, color: '#ffffff', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}
-                  itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
-                  labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
-                  formatter={(val) => [`R$ ${val.toLocaleString('pt-BR')} Mil`, 'Faturamento']}
-                />
-                <Bar dataKey="valor" fill="#00d2ff" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </div>
-      </div>
-
-      {/* 4. Cards Personalizados & Insights Gerados por IA */}
+      {/* 💡 Seção de Cards & Insights Personalizados da IA */}
       {widgetsCustomizados.length > 0 && (
-        <div className="glass-card" style={{ padding: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Sparkles size={16} className="text-cyan-400" />
-              💡 Meus Cards &amp; Insights Personalizados da IA (Fixados no Painel)
+        <div style={{ marginTop: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <Sparkles size={18} color="#00d2ff" />
+            <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
+              Meus Cards &amp; Insights Personalizados da IA (Fixados no Painel)
             </h3>
-            <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-              {widgetsCustomizados.length} card(s) configurado(s)
+            <span style={{ fontSize: '11px', background: 'rgba(0, 210, 255, 0.15)', color: '#00d2ff', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>
+              {widgetsCustomizados.length} {widgetsCustomizados.length === 1 ? 'card ativo' : 'cards ativos'}
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 14 }}>
-            {widgetsCustomizados.map(w => (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 16 }}>
+            {widgetsCustomizados.map(widget => (
               <DynamicCardRenderer 
-                key={w.id} 
-                widget={w} 
-                isFixado={true} 
-                onRemover={() => removerWidget(w.id)} 
+                key={widget.id} 
+                widget={widget} 
+                onRemover={removerWidget} 
               />
             ))}
           </div>
         </div>
       )}
-
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
+import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
 const formasPagamento = [
   { forma: '15-Crediário', perc: 49.89, cor: '#f59e0b' },
@@ -13,42 +14,48 @@ const formasPagamento = [
 ];
 
 const vendedoresData = [
-  { nome: 'KESSIA', valor: '8.248.698,24', share: '8,76%' },
-  { nome: 'NUBIA SILVA', valor: '7.680.462,00', share: '8,16%' },
-  { nome: 'ALINE CRUZ', valor: '7.125.095,74', share: '7,57%' },
-  { nome: 'THAYSIANE', valor: '6.194.241,94', share: '6,58%' },
-  { nome: 'NADIA', valor: '4.274.473,47', share: '4,54%' },
-  { nome: '- INATIVO (DEBORAH)', valor: '4.159.899,32', share: '4,42%' },
+  { nome: 'REPRESENTANTE 01', valor: '4.248.698,24', share: '15,89%' },
+  { nome: 'REPRESENTANTE 02', valor: '3.680.462,00', share: '13,76%' },
+  { nome: 'REPRESENTANTE 03', valor: '3.125.095,74', share: '11,68%' },
+  { nome: 'REPRESENTANTE 04', valor: '2.894.241,94', share: '10,82%' },
+  { nome: 'REPRESENTANTE 05', valor: '2.274.473,47', share: '8,50%' },
 ];
 
-const gruposData = [
-  { grupo: 'MÓVEIS', valor: '44.174.384,67', share: '46,92%' },
-  { grupo: 'ELETRO', valor: '40.063.435,31', share: '42,56%' },
-  { grupo: 'TELEFONIA', valor: '8.153.133,31', share: '8,66%' },
-  { grupo: 'ESPORTE E LAZER', valor: '914.707,02', share: '0,97%' },
-  { grupo: 'UTILIDADES PARA O LAR', valor: '626.901,59', share: '0,67%' },
-];
+export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual' }) {
+  const [metricas, setMetricas] = useState({
+    vendaBruta: '26,74',
+    vendaLiquida: '26,74',
+    impostosDiretos: '6,26',
+    cmv: '12,03',
+    margemContribuicao: '14,71',
+    ticketMedio: 'R$ 2.219,62',
+    metaVenda: '25,00',
+    metaAtingida: '106,96'
+  });
 
-export default function Vendas() {
+  useEffect(() => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
+  }, [clienteSelecionado, periodoPreset]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Grade de 12 KPIs */}
+      {/* Grade de 12 KPIs com Tooltips Interativos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value="94,14" suffix=" Mi" highlight="cyan" />
-        <KPICard label="Impostos Diretos" value="22,05" suffix=" Mi" highlight="blue" />
+        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight="cyan" />
+        <KPICard label="Impostos Diretos" value={metricas.impostosDiretos} suffix=" Mi" highlight="blue" />
         <KPICard label="% Imp. Diretos" value="23,42" suffix="%" />
-        <KPICard label="Venda Líquida" value="74,79" suffix=" Mi" highlight="green" />
-        <KPICard label="% Vda Líquida" value="79,44" suffix="%" />
-        <KPICard label="Ticket Médio" value="R$ 3.641,82" />
+        <KPICard label="Venda Líquida" value={metricas.vendaLiquida} suffix=" Mi" highlight="green" />
+        <KPICard label="% Vda Líquida" value="100,00" suffix="%" />
+        <KPICard label="Ticket Médio" value={metricas.ticketMedio} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Margem Contribuição" value="48,83" suffix=" Mi" highlight="green" />
-        <KPICard label="% Margem Contrib." value="51,87" suffix="%" highlight="green" />
-        <KPICard label="Meta de Venda" value="7,45" suffix=" Mi" highlight="purple" />
-        <KPICard label="% Meta Atingida" value="1264,50" suffix="%" highlight="green" />
-        <KPICard label="CMV" value="44,24" suffix=" Mi" highlight="yellow" />
-        <KPICard label="% CMV s/ Venda" value="53,01" suffix="%" />
+        <KPICard label="Margem Contribuição" value={metricas.margemContribuicao} suffix=" Mi" highlight="green" />
+        <KPICard label="% Margem Contrib." value="55,00" suffix="%" highlight="green" />
+        <KPICard label="Meta de Venda" value={metricas.metaVenda} suffix=" Mi" highlight="purple" />
+        <KPICard label="% Meta Atingida" value={metricas.metaAtingida} suffix="%" highlight="green" />
+        <KPICard label="CMV" value={metricas.cmv} suffix=" Mi" highlight="yellow" />
+        <KPICard label="% CMV s/ Venda" value="45,00" suffix="%" />
       </div>
 
       {/* Seção Gráficos & Formas de Pagamento */}
@@ -56,7 +63,7 @@ export default function Vendas() {
         {/* Ranking Forma de Pagamento */}
         <div className="glass-card" style={{ padding: 16 }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
-            💳 Ranking — Formas de Pagamento
+            💳 Ranking — Formas de Pagamento (Próton)
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {formasPagamento.map(fp => (
@@ -73,15 +80,15 @@ export default function Vendas() {
           </div>
         </div>
 
-        {/* Tabelas de Vendedores e Grupos */}
+        {/* Tabelas de Vendedores */}
         <div className="glass-card" style={{ padding: 16, overflowX: 'auto' }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 10 }}>
-            👥 Vendas por Vendedor
+            👥 Vendas por Representante (Top Performers)
           </h3>
           <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                <th style={{ padding: '6px 4px' }}>Vendedor</th>
+                <th style={{ padding: '6px 4px' }}>Representante</th>
                 <th style={{ padding: '6px 4px', textAlign: 'right' }}>Valor (R$)</th>
                 <th style={{ padding: '6px 4px', textAlign: 'right' }}>% Share</th>
               </tr>
