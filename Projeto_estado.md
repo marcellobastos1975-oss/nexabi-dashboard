@@ -1,5 +1,5 @@
 ﻿# 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-08-29 — Dashboard Web v1.6.3 PROD & NexaBI SyncAgent v1.5.8 PROD Standalone
+> **Última atualização:** 2026-08-29 — Dashboard Web v1.6.3 PROD & NexaBI SyncAgent v1.6.0 PROD Standalone
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
@@ -132,6 +132,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| SyncAgent Desktop | v1.6.0 PROD | 2026-08-30 | **v1.6.0 PROD (VERSÃO LIMPA CLIENT-SIDE & MOTOR NATIVO UNION ALL)**: Interface de produção totalmente limpa e sem elementos de mapeamento técnico (transferidos para o NexaBI-SchemaStudio); Motor interno com preset oficial Próton ERP e unificação nativa de vendas/títulos ativos e históricos (UNION ALL); Blindagem AES-256 e testes isolados validados. |
 | SchemaStudio Desktop | v1.0.0 PROD | 2026-08-30 | **v1.0.0 PROD (LANÇAMENTO DO NEXABI-SCHEMASTUDIO & ARQUITETURA EM 2 APLICATIVOS)**: Criação da ferramenta técnica oficial do implantador para mapeamento visual de ERPs; Introspecção completa de tabelas e colunas no Oracle; Suporte a Mapeamento Duplo de Tabelas por Módulo (Tabela Ativa / Diária + Tabela Histórica via UNION ALL); Inspetor de distribuição de status em tempo real; Simulador de extração com prévia de registros e volume; Publicador de templates oficiais no Supabase Cloud (erp_templates); Teste isolado aprovado com sucesso. |
 | SyncAgent Desktop | v1.5.8 PROD | 2026-08-29 | **v1.5.8 PROD (ASSISTENTE INTERATIVO DE MAPEAMENTO DE TABELAS & STATUS DO ERP)**: Implementação do Mapeador de Tabelas e Regras de Negócio pelo Implantador; Introspecção dinâmica de tabelas e contagem agrupada de status diretamente no Oracle (SELECT status, COUNT(*)...); Suporte a Tabela Ativa + Tabela Histórica com UNION ALL para Vendas, CR e CP; Blindagem AES-256 no config.json; Teste isolado pré-entrega aprovado. |
 | SyncAgent Desktop | v1.5.7 PROD | 2026-08-29 | **v1.5.7 PROD (ÍCONE OFICIAL N EMBARCADO & MOTOR RESILIENTE DE 5 CAMADAS PARA UNIDADES ORACLE)**: Embarque nativo do ícone oficial N na barra de títulos, modais e barra de tarefas do Windows (eliminando o ícone padrão da pena azul); Implementação do motor de busca em 5 camadas com auto-introspecção de colunas, leitura direta das transações de vendas/CR e fallback automático das 23 unidades Destak Prime com logs de diagnóstico detalhados; Validação isolada pré-entrega aprovada. |
