@@ -132,6 +132,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| SyncAgent Desktop | v1.7.3 PROD | 2026-08-30 | **v1.7.3 PROD (RESILIENT STREAMING & LIVE BATCH LOGS)**: 1) Extração direta ultra resiliente de vendas, contas a receber, contas a pagar e estoques; 2) Logs em tempo real na console por lote de 1.000 registros; 3) Integração direta do botão do modal com a carga Supabase. |
 | SyncAgent Desktop | v1.7.2 PROD | 2026-08-30 | **v1.7.2 PROD (REAL SUPABASE STREAMING PIPELINE)**: 1) Implementado pipeline de extração e ingestão em lotes de 1.000 registros para bi_vendas, bi_contas_receber, bi_contas_pagar e bi_estoques no Supabase; 2) Gravação de bi_sync_logs em tempo real. |
 | Dashboard Web | v2.1.1 PROD | 2026-08-30 | **v2.1.1 PROD (LIVE TENANT DATA & METRICS)**: 1) Desbloqueio da exibição de métricas e gráficos para novos tenants e visão consolidada; 2) Assistente de IA Generativo integrado com RLS Supabase; 3) Build Vite gerado com sucesso. |
 | SchemaStudio Desktop | v2.4.1 PROD | 2026-08-30 | **v2.4.1 PROD (AI AUTONOMOUS DRILLDOWN & AUDIT)**: 1) Visualização detalhada e interativa de cada requisito do Contrato NexaBI atendido no modal da IA; 2) Tabela comparativa com Requisito, Tipo, Tabela Oracle, Coluna Oracle, Origem/JOIN e Status de Confiança; 3) Testes em ambiente isolado validados com sucesso. |
