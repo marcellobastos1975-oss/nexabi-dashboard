@@ -132,6 +132,8 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| SyncAgent Desktop | v1.7.2 PROD | 2026-08-30 | **v1.7.2 PROD (REAL SUPABASE STREAMING PIPELINE)**: 1) Implementado pipeline de extração e ingestão em lotes de 1.000 registros para bi_vendas, bi_contas_receber, bi_contas_pagar e bi_estoques no Supabase; 2) Gravação de bi_sync_logs em tempo real. |
+| Dashboard Web | v2.1.1 PROD | 2026-08-30 | **v2.1.1 PROD (LIVE TENANT DATA & METRICS)**: 1) Desbloqueio da exibição de métricas e gráficos para novos tenants e visão consolidada; 2) Assistente de IA Generativo integrado com RLS Supabase; 3) Build Vite gerado com sucesso. |
 | SchemaStudio Desktop | v2.4.1 PROD | 2026-08-30 | **v2.4.1 PROD (AI AUTONOMOUS DRILLDOWN & AUDIT)**: 1) Visualização detalhada e interativa de cada requisito do Contrato NexaBI atendido no modal da IA; 2) Tabela comparativa com Requisito, Tipo, Tabela Oracle, Coluna Oracle, Origem/JOIN e Status de Confiança; 3) Testes em ambiente isolado validados com sucesso. |
 | SchemaStudio Desktop | v2.4.0 PROD | 2026-08-30 | **v2.4.0 PROD (AI AUTONOMOUS SCHEMA & SNOWFLAKE DESIGNER)**: 1) Agente de Autodescoberta IA baseado no Contrato Semântico do NexaBI; 2) Introspecção automática de tabelas fato, histórico e JOINs encadeados em 1 clique; 3) Relatório de Conformidade IA; 4) Publicação direta no Supabase erp_templates. |
 | Dashboard NexaBI Web | v2.1.0 PROD | 2026-08-30 | **v2.1.0 PROD (GENERATIVE BI & DYNAMIC WIDGET ENGINE)**: 1) Assistente IA Conversacional (Text-to-Card) com sugestões rápidas; 2) Renderizador Dinâmico de Gráficos (DynamicCardRenderer); 3) Botão de Fixar Cards no Painel com persistência em i_user_custom_widgets no Supabase. |

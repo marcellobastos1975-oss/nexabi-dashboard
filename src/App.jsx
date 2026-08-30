@@ -474,7 +474,7 @@ export default function App() {
       <main>
         {moduloAtivo === 'panorama' && (
           <PanoramaGeral 
-            isRealEmptyTenant={isMaster ? (clienteSelecionado !== 'silva') : (usuario.empresaId !== 'silva')}
+            isRealEmptyTenant={false}
             nomeEmpresa={dadosEmpresaAtual.nome} 
             periodoDesc={getPeriodoDescricao()} 
           />

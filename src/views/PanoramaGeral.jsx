@@ -212,8 +212,8 @@ export default function PanoramaGeral({
     }
   };
 
-  const treemapData = isRealEmptyTenant ? treemapDataZero : treemapDataDemo;
-  const historicoVendas12m = isRealEmptyTenant ? [] : historicoVendas12mDemo;
+  const treemapData = treemapDataDemo;
+  const historicoVendas12m = historicoVendas12mDemo;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -282,29 +282,29 @@ export default function PanoramaGeral({
 
       {/* 1. Grade Superior de 14 KPIs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={isRealEmptyTenant ? "0,00" : "94,14"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="cyan" />
-        <KPICard label="Valor Estoque" value={isRealEmptyTenant ? "0,00" : "7,26"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="purple" />
-        <KPICard label="Valor CR" value={isRealEmptyTenant ? "0,00" : "17,37"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="yellow" />
-        <KPICard label="Valor CP" value={isRealEmptyTenant ? "0,00" : "6,77"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="blue" />
-        <KPICard label="Contas Financ." value={isRealEmptyTenant ? "0,00" : "38,96"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="cyan" />
-        <KPICard label="Margem Bruta" value={isRealEmptyTenant ? "0,00" : "3,96"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="green" />
-        <KPICard label="Inadimplência" value={isRealEmptyTenant ? "0,00" : "9,62"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="red" />
+        <KPICard label="Venda Bruta" value="94,14" suffix=" Mi" highlight="cyan" />
+        <KPICard label="Valor Estoque" value="7,26" suffix=" Mi" highlight="purple" />
+        <KPICard label="Valor CR" value="17,37" suffix=" Mi" highlight="yellow" />
+        <KPICard label="Valor CP" value="6,77" suffix=" Mi" highlight="blue" />
+        <KPICard label="Contas Financ." value="38,96" suffix=" Mi" highlight="cyan" />
+        <KPICard label="Margem Bruta" value="3,96" suffix=" Mi" highlight="green" />
+        <KPICard label="Inadimplência" value="9,62" suffix=" Mi" highlight="red" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Qtd. Vendas" value={isRealEmptyTenant ? "0" : "122,66"} suffix={isRealEmptyTenant ? "" : " Mil"} />
-        <KPICard label="Clientes Compraram" value={isRealEmptyTenant ? "0" : "31"} suffix={isRealEmptyTenant ? "" : " Mil"} />
-        <KPICard label="Juros Recebidos" value={isRealEmptyTenant ? "0,00" : "2,93"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="green" />
-        <KPICard label="A Pagar em Atraso" value={isRealEmptyTenant ? "0,00" : "160,38"} suffix={isRealEmptyTenant ? "" : " Mil"} highlight="red" />
-        <KPICard label="Vlr Negativo C. Fin" value={isRealEmptyTenant ? "0,00" : "-32,70"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="red" />
-        <KPICard label="% Margem" value={isRealEmptyTenant ? "0,00" : "54,61"} suffix="%" highlight="green" />
+        <KPICard label="Qtd. Vendas" value="122,66" suffix=" Mil" />
+        <KPICard label="Clientes Compraram" value="31" suffix=" Mil" />
+        <KPICard label="Juros Recebidos" value="2,93" suffix=" Mi" highlight="green" />
+        <KPICard label="A Pagar em Atraso" value="160,38" suffix=" Mil" highlight="red" />
+        <KPICard label="Vlr Negativo C. Fin" value="-32,70" suffix=" Mi" highlight="red" />
+        <KPICard label="% Margem" value="54,61" suffix="%" highlight="green" />
         <KPICard label="% Inadimplência" value={isRealEmptyTenant ? "0,00" : "71,39"} suffix="%" highlight="red" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta do Dia" value={isRealEmptyTenant ? "0,00" : "17,75"} suffix={isRealEmptyTenant ? "" : " Mil"} highlight="cyan" />
-        <KPICard label="Ticket Médio" value={isRealEmptyTenant ? "R$ 0,00" : "R$ 3,64"} suffix={isRealEmptyTenant ? "" : " Mil"} />
-        <KPICard label="Valor CR - CP" value={isRealEmptyTenant ? "R$ 0,00" : "R$ 10,60"} suffix={isRealEmptyTenant ? "" : " Mi"} highlight="green" />
+        <KPICard label="Venda Bruta do Dia" value={isRealEmptyTenant ? "0,00" : "17,75"} suffix=" Mil" highlight="cyan" />
+        <KPICard label="Ticket Médio" value={isRealEmptyTenant ? "R$ 0,00" : "R$ 3,64"} suffix=" Mil" />
+        <KPICard label="Valor CR - CP" value={isRealEmptyTenant ? "R$ 0,00" : "R$ 10,60"} suffix=" Mi" highlight="green" />
       </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}
