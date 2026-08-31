@@ -245,283 +245,293 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', padding: '16px 20px', maxWidth: 1600, margin: '0 auto' }}>
       {/* Header Executivo NexaLife Tech & Alpha Solutions */}
-      <header className="glass-card header-main" style={{ padding: '16px 22px', marginBottom: 16, borderRadius: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <img 
-            src="/nexalife_logo.png" 
-            alt="NexaLife Tech Logo Oficial" 
-            className="header-logo-img"
-            style={{ height: 87, objectFit: 'contain', filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.4))' }} 
-          />
-          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.14)', paddingLeft: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h1 style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '0.5px', color: '#ffffff' }}>
-                NexaBI <span style={{ color: '#00d2ff' }}>— Alpha Suite</span>
-              </h1>
-              <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: 12, background: 'rgba(0, 210, 255, 0.15)', color: '#00d2ff', fontWeight: 700, border: '1px solid rgba(0, 210, 255, 0.3)' }}>
-                Multi-ERP
+      <header className="glass-card header-main" style={{ padding: '16px 22px', marginBottom: 16, borderRadius: 18 }}>
+        
+        {/* LINHA 1 (SUPERIOR): LOGO NEXALIFE (ESQUERDA) + TÍTULO E LOGO NEXABI (DIREITA NA MESMA LINHA) */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, paddingBottom: 14, borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          
+          {/* Lado Esquerdo: Logo Oficial NexaLife Tech + Títulos */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <img 
+              src="/nexalife_logo.png" 
+              alt="NexaLife Tech Logo Oficial" 
+              className="header-logo-img"
+              style={{ height: 87, objectFit: 'contain', filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.4))' }} 
+            />
+            <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.14)', paddingLeft: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h1 style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '0.5px', color: '#ffffff' }}>
+                  NexaBI <span style={{ color: '#00d2ff' }}>— Alpha Suite</span>
+                </h1>
+                <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: 12, background: 'rgba(0, 210, 255, 0.15)', color: '#00d2ff', fontWeight: 700, border: '1px solid rgba(0, 210, 255, 0.3)' }}>
+                  Multi-ERP
+                </span>
+              </div>
+              <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 500 }}>
+                Analytics &amp; BI Corporativo • NexaLife Tech &amp; Alpha Solutions
               </span>
             </div>
-            <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 500 }}>
-              Analytics &amp; BI Corporativo • NexaLife Tech &amp; Alpha Solutions
-            </span>
-          </div>
-        </div>
-
-        {/* Controles, Filtros Hierárquicos e Perfil */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          
-          {/* Badge do ERP Conectado */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(5,16,36,0.85)', padding: '7px 14px', borderRadius: 10, border: '1px solid rgba(0,130,255,0.3)' }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ERP:</span>
-            <strong style={{ fontSize: '11px', color: '#fff' }}>
-              {isMaster ? dadosEmpresaAtual.erp : (usuario.erp || 'Próton (Oracle)')}
-            </strong>
           </div>
 
-          {/* FILTRO 1 (EXCLUSIVO MASTER): SELEÇÃO EXCLUSIVA DE CLIENTES REAIS */}
-          {isMaster && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <select 
-                value={clienteSelecionado} 
-                onChange={(e) => handleMudancaClienteMaster(e.target.value)}
-                style={{ 
-                  background: 'rgba(10, 25, 55, 0.95)', 
-                  border: '1px solid rgba(0, 210, 255, 0.45)', 
-                  color: '#ffffff', 
-                  padding: '8px 14px', 
-                  borderRadius: 10, 
-                  fontSize: '12px', 
-                  fontWeight: 600,
-                  outline: 'none', 
-                  cursor: 'pointer',
-                  boxShadow: '0 0 10px rgba(0, 210, 255, 0.15)'
-                }}
-                title="Filtro Master: Clientes Reais Homologados (Consolidado ou Individual)"
-              >
-                <option value="todas">🏢 Todas as Empresas Reais (Consolidado)</option>
-                {empresasCadastradas
-                  .filter(e => e.cnpj !== '00.000.000/0001-00')
-                  .map(e => (
-                    <option key={e.id || e.cnpj} value={e.cnpj}>
-                      🏪 {e.nome_fantasia || e.razao_social} ({e.cnpj})
-                    </option>
-                  ))
-                }
-              </select>
-            </div>
-          )}
-
-          {/* FILTRO 2: SELEÇÃO DE UNIDADE / FILIAL (DENTRO DO CLIENTE ESCOLHIDO) */}
-          <select 
-            value={unidade} 
-            onChange={(e) => setUnidade(e.target.value)}
-            style={{ 
-              background: 'rgba(5,16,36,0.85)', 
-              border: '1px solid rgba(0,130,255,0.3)', 
-              color: '#fff', 
-              padding: '8px 14px', 
-              borderRadius: 10, 
-              fontSize: '12px', 
-              outline: 'none', 
-              cursor: 'pointer' 
-            }}
-            title="Filtro de Unidade / Filial"
-          >
-            {listaUnidades.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.label}
-              </option>
-            ))}
-          </select>
-
-          {/* FILTRO DE PERÍODO / DATA INTERATIVO */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-            <select 
-              value={periodoPreset} 
-              onChange={(e) => setPeriodoPreset(e.target.value)}
-              style={{ background: 'rgba(5,16,36,0.85)', border: '1px solid rgba(0,130,255,0.3)', color: '#fff', padding: '8px 14px', borderRadius: 10, fontSize: '12px', outline: 'none', cursor: 'pointer' }}
-            >
-              <option value="hoje">⚡ Hoje (Últimas 24h)</option>
-              <option value="7d">📅 Últimos 7 Dias</option>
-              <option value="mes_atual">📅 Mês Atual ({mesAtualFormatado}/{anoAtual})</option>
-              <option value="mes_ant">📅 Mês Anterior ({mesAnteriorFormatado}/{anoMesAnterior})</option>
-              <option value="90d">📅 Últimos 90 Dias (Trimestre)</option>
-              <option value="ano">📅 Ano Atual ({anoAtual})</option>
-              <option value="custom">📆 Período Personalizado...</option>
-            </select>
-
-            {periodoPreset === 'custom' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(5,16,36,0.95)', padding: '4px 8px', borderRadius: 10, border: '1px solid rgba(0,210,255,0.4)' }}>
-                <span style={{ fontSize: 11, color: '#94a3b8' }}>De:</span>
-                <input 
-                  type="date" 
-                  value={dataInicio} 
-                  onChange={(e) => setDataInicio(e.target.value)} 
-                  style={{ background: '#070d18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none' }}
-                />
-                <span style={{ fontSize: 11, color: '#94a3b8' }}>Até:</span>
-                <input 
-                  type="date" 
-                  value={dataFim} 
-                  onChange={(e) => setDataFim(e.target.value)} 
-                  style={{ background: '#070d18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none' }}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Botão de Atualização Rápida */}
-          <button 
-            className="btn-primary" 
-            style={{ padding: '8px 16px', fontSize: '12px', borderRadius: 10 }}
-            onClick={handleAtualizar}
-            disabled={atualizando}
-          >
-            <RefreshCw size={14} className={atualizando ? 'spin' : ''} />
-            {atualizando ? 'Atualizando...' : 'Atualizar'}
-          </button>
-
-          
-          {/* Botão Oficial do Assistente IA (Disponível para Master e Clientes) */}
-          <button
-            onClick={() => setDrawerAIAberto(true)}
-            style={{
-              background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)',
-              border: '1px solid rgba(0, 210, 255, 0.6)',
-              color: '#ffffff',
-              padding: '8px 16px',
-              borderRadius: 10,
-              fontSize: '12px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              boxShadow: '0 0 16px rgba(0, 210, 255, 0.35)',
-              transition: 'all 0.2s ease'
-            }}
-            title="Abrir Assistente de Inteligência Artificial NexaBI"
-          >
-            <Sparkles size={15} color="#ffffff" />
-            <span>🤖 Assistente IA</span>
-          </button>
-
-          {/* Badge de Identificação do Usuário e Perfil */}
-          <div 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 6, 
-              padding: '7px 14px', 
-              borderRadius: 10, 
-              fontSize: '12px', 
-              fontWeight: 700,
-              background: isMaster ? 'rgba(121, 40, 202, 0.22)' : 'rgba(0, 210, 255, 0.18)',
-              border: isMaster ? '1px solid rgba(168, 85, 247, 0.45)' : '1px solid rgba(0, 210, 255, 0.4)',
-              color: isMaster ? '#d8b4fe' : '#38bdf8'
-            }}
-            title={isMaster ? 'Perfil Master: Visão Completa Multi-Cliente' : `Perfil Cliente: ${usuario.empresa}`}
-          >
-            {isMaster ? <ShieldCheck size={15} color="#c084fc" /> : <Building2 size={15} color="#00d2ff" />}
-            <span>
-              {isMaster ? '👑 Master NexaLife' : `🏪 ${usuario.nome || 'Cliente'}`}
-            </span>
-          </div>
-
-          {/* Botão Painel Master de Gestão de Empresas & Chaves de API */}
-          {isMaster && (
-            <button
-              onClick={() => setModalEmpresasAberto(true)}
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 82, 204, 0.32) 0%, rgba(0, 210, 255, 0.22) 100%)',
-                border: '1px solid rgba(0, 210, 255, 0.55)',
-                color: '#38bdf8',
-                padding: '8px 14px',
-                borderRadius: 10,
-                fontSize: '12px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                boxShadow: '0 0 14px rgba(0, 210, 255, 0.22)',
-                transition: 'all 0.2s ease'
-              }}
-              title="Cadastrar Empresas e Gerar API Keys para o SyncAgent"
-            >
-              <Building2 size={14} color="#00d2ff" />
-              <span>Clientes &amp; API Keys</span>
-            </button>
-          )}
-
-          {/* Botão Painel Master de Gestão de Usuários (Camada 1: Reset Administrativo) */}
-          {isMaster && (
-            <button
-              onClick={() => setModalUsuariosAberto(true)}
-              style={{
-                background: 'linear-gradient(135deg, rgba(121, 40, 202, 0.28) 0%, rgba(0, 210, 255, 0.22) 100%)',
-                border: '1px solid rgba(168, 85, 247, 0.55)',
-                color: '#e9d5ff',
-                padding: '8px 14px',
-                borderRadius: 10,
-                fontSize: '12px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                boxShadow: '0 0 14px rgba(168, 85, 247, 0.25)',
-                transition: 'all 0.2s ease'
-              }}
-              title="Gerenciar Usuários e Redefinir Senhas como Master"
-            >
-              <Users size={14} color="#c084fc" />
-              <span>Gerenciar Usuários</span>
-            </button>
-          )}
-
-          {/* Botão de Logout */}
-          <button 
-            onClick={handleLogout}
-            style={{
-              background: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid rgba(239, 68, 68, 0.35)',
-              color: '#fca5a5',
-              padding: '8px 14px',
-              borderRadius: 10,
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.12)'; }}
-            title="Sair da Sessão"
-          >
-            <LogOut size={14} /> Sair
-          </button>
-
-          {/* Logo Oficial NexaBI — Alpha Suite (Direita) */}
-          <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 8, borderLeft: '1px solid rgba(255, 255, 255, 0.14)' }}>
+          {/* Lado Direito (Mesma Linha Superior): Logo Oficial NexaBI — Alpha Suite */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <img 
               src="/nexabi_logo.png" 
               alt="NexaBI — Alpha Suite Logo Oficial" 
               className="header-nexabi-logo-img"
               style={{ 
-                height: 72, 
+                height: 87, 
                 objectFit: 'contain', 
-                borderRadius: 12,
+                borderRadius: 14,
                 filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.45))',
                 border: '1px solid rgba(0, 210, 255, 0.35)',
-                background: 'rgba(4, 13, 30, 0.85)',
-                padding: 3
+                background: 'rgba(4, 13, 30, 0.9)'
               }} 
             />
+          </div>
+        </div>
+
+        {/* LINHA 2 (INFERIOR): CONTROLES, FILTROS HIERÁRQUICOS, IA E PERFIL */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, paddingTop: 12 }}>
+          
+          {/* Bloco de Filtros Operacionais */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            {/* Badge do ERP Conectado */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(5,16,36,0.85)', padding: '7px 14px', borderRadius: 10, border: '1px solid rgba(0,130,255,0.3)' }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>ERP:</span>
+              <strong style={{ fontSize: '11px', color: '#fff' }}>
+                {isMaster ? dadosEmpresaAtual.erp : (usuario.erp || 'Próton (Oracle)')}
+              </strong>
+            </div>
+
+            {/* FILTRO 1 (EXCLUSIVO MASTER): SELEÇÃO EXCLUSIVA DE CLIENTES REAIS */}
+            {isMaster && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <select 
+                  value={clienteSelecionado} 
+                  onChange={(e) => handleMudancaClienteMaster(e.target.value)}
+                  style={{ 
+                    background: 'rgba(10, 25, 55, 0.95)', 
+                    border: '1px solid rgba(0, 210, 255, 0.45)', 
+                    color: '#ffffff', 
+                    padding: '8px 14px', 
+                    borderRadius: 10, 
+                    fontSize: '12px', 
+                    fontWeight: 600,
+                    outline: 'none', 
+                    cursor: 'pointer',
+                    boxShadow: '0 0 10px rgba(0, 210, 255, 0.15)'
+                  }}
+                  title="Filtro Master: Clientes Reais Homologados (Consolidado ou Individual)"
+                >
+                  <option value="todas">🏢 Todas as Empresas Reais (Consolidado)</option>
+                  {empresasCadastradas
+                    .filter(e => e.cnpj !== '00.000.000/0001-00')
+                    .map(e => (
+                      <option key={e.id || e.cnpj} value={e.cnpj}>
+                        🏪 {e.nome_fantasia || e.razao_social} ({e.cnpj})
+                      </option>
+                    ))
+                  }
+                </select>
+              </div>
+            )}
+
+            {/* FILTRO 2: SELEÇÃO DE UNIDADE / FILIAL (DENTRO DO CLIENTE ESCOLHIDO) */}
+            <select 
+              value={unidade} 
+              onChange={(e) => setUnidade(e.target.value)}
+              style={{ 
+                background: 'rgba(5,16,36,0.85)', 
+                border: '1px solid rgba(0,130,255,0.3)', 
+                color: '#fff', 
+                padding: '8px 14px', 
+                borderRadius: 10, 
+                fontSize: '12px', 
+                outline: 'none', 
+                cursor: 'pointer' 
+              }}
+              title="Filtro de Unidade / Filial"
+            >
+              {listaUnidades.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.label}
+                </option>
+              ))}
+            </select>
+
+            {/* FILTRO DE PERÍODO / DATA INTERATIVO */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+              <select 
+                value={periodoPreset} 
+                onChange={(e) => setPeriodoPreset(e.target.value)}
+                style={{ background: 'rgba(5,16,36,0.85)', border: '1px solid rgba(0,130,255,0.3)', color: '#fff', padding: '8px 14px', borderRadius: 10, fontSize: '12px', outline: 'none', cursor: 'pointer' }}
+              >
+                <option value="hoje">⚡ Hoje (Últimas 24h)</option>
+                <option value="7d">📅 Últimos 7 Dias</option>
+                <option value="mes_atual">📅 Mês Atual ({mesAtualFormatado}/{anoAtual})</option>
+                <option value="mes_ant">📅 Mês Anterior ({mesAnteriorFormatado}/{anoMesAnterior})</option>
+                <option value="90d">📅 Últimos 90 Dias (Trimestre)</option>
+                <option value="ano">📅 Ano Atual ({anoAtual})</option>
+                <option value="custom">📆 Período Personalizado...</option>
+              </select>
+
+              {periodoPreset === 'custom' && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(5,16,36,0.95)', padding: '4px 8px', borderRadius: 10, border: '1px solid rgba(0,210,255,0.4)' }}>
+                  <span style={{ fontSize: 11, color: '#94a3b8' }}>De:</span>
+                  <input 
+                    type="date" 
+                    value={dataInicio} 
+                    onChange={(e) => setDataInicio(e.target.value)} 
+                    style={{ background: '#070d18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none' }}
+                  />
+                  <span style={{ fontSize: 11, color: '#94a3b8' }}>Até:</span>
+                  <input 
+                    type="date" 
+                    value={dataFim} 
+                    onChange={(e) => setDataFim(e.target.value)} 
+                    style={{ background: '#070d18', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none' }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Botão de Atualização Rápida */}
+            <button 
+              className="btn-primary" 
+              style={{ padding: '8px 16px', fontSize: '12px', borderRadius: 10 }}
+              onClick={handleAtualizar}
+              disabled={atualizando}
+            >
+              <RefreshCw size={14} className={atualizando ? 'spin' : ''} />
+              {atualizando ? 'Atualizando...' : 'Atualizar'}
+            </button>
+
+            {/* Botão Oficial do Assistente IA (Disponível para Master e Clientes) */}
+            <button
+              onClick={() => setDrawerAIAberto(true)}
+              style={{
+                background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)',
+                border: '1px solid rgba(0, 210, 255, 0.6)',
+                color: '#ffffff',
+                padding: '8px 16px',
+                borderRadius: 10,
+                fontSize: '12px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                boxShadow: '0 0 16px rgba(0, 210, 255, 0.35)',
+                transition: 'all 0.2s ease'
+              }}
+              title="Abrir Assistente de Inteligência Artificial NexaBI"
+            >
+              <Sparkles size={15} color="#ffffff" />
+              <span>🤖 Assistente IA</span>
+            </button>
+          </div>
+
+          {/* Bloco de Gestão de Usuário & Sessão */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            {/* Badge de Identificação do Usuário e Perfil */}
+            <div 
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 6, 
+                padding: '7px 14px', 
+                borderRadius: 10, 
+                fontSize: '12px', 
+                fontWeight: 700,
+                background: isMaster ? 'rgba(121, 40, 202, 0.22)' : 'rgba(0, 210, 255, 0.18)',
+                border: isMaster ? '1px solid rgba(168, 85, 247, 0.45)' : '1px solid rgba(0, 210, 255, 0.4)',
+                color: isMaster ? '#d8b4fe' : '#38bdf8'
+              }}
+              title={isMaster ? 'Perfil Master: Visão Completa Multi-Cliente' : `Perfil Cliente: ${usuario.empresa}`}
+            >
+              {isMaster ? <ShieldCheck size={15} color="#c084fc" /> : <Building2 size={15} color="#00d2ff" />}
+              <span>
+                {isMaster ? '👑 Master NexaLife' : `🏪 ${usuario.nome || 'Cliente'}`}
+              </span>
+            </div>
+
+            {/* Botão Painel Master de Gestão de Empresas & Chaves de API */}
+            {isMaster && (
+              <button
+                onClick={() => setModalEmpresasAberto(true)}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 82, 204, 0.32) 0%, rgba(0, 210, 255, 0.22) 100%)',
+                  border: '1px solid rgba(0, 210, 255, 0.55)',
+                  color: '#38bdf8',
+                  padding: '8px 14px',
+                  borderRadius: 10,
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  boxShadow: '0 0 14px rgba(0, 210, 255, 0.22)',
+                  transition: 'all 0.2s ease'
+                }}
+                title="Cadastrar Empresas e Gerar API Keys para o SyncAgent"
+              >
+                <Building2 size={14} color="#00d2ff" />
+                <span>Clientes &amp; API Keys</span>
+              </button>
+            )}
+
+            {/* Botão Painel Master de Gestão de Usuários (Camada 1: Reset Administrativo) */}
+            {isMaster && (
+              <button
+                onClick={() => setModalUsuariosAberto(true)}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(121, 40, 202, 0.28) 0%, rgba(0, 210, 255, 0.22) 100%)',
+                  border: '1px solid rgba(168, 85, 247, 0.55)',
+                  color: '#e9d5ff',
+                  padding: '8px 14px',
+                  borderRadius: 10,
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  boxShadow: '0 0 14px rgba(168, 85, 247, 0.25)',
+                  transition: 'all 0.2s ease'
+                }}
+                title="Gerenciar Usuários e Redefinir Senhas como Master"
+              >
+                <Users size={14} color="#c084fc" />
+                <span>Gerenciar Usuários</span>
+              </button>
+            )}
+
+            {/* Botão de Logout */}
+            <button 
+              onClick={handleLogout}
+              style={{
+                background: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#fca5a5',
+                padding: '8px 14px',
+                borderRadius: 10,
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.12)'; }}
+              title="Sair da Sessão"
+            >
+              <LogOut size={14} /> Sair
+            </button>
           </div>
         </div>
       </header>
