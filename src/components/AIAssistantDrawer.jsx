@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Sparkles, Send, X, Pin, CheckCircle2, RefreshCw, HelpCircle, Layers, TrendingUp } from 'lucide-react';
+import { Sparkles, Send, X, CheckCircle2, RefreshCw, HelpCircle } from 'lucide-react';
 import DynamicCardRenderer from './DynamicCardRenderer';
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
 
 const SUGESTOES_PROMPTS = [
-  "Top 10 Clientes que mais compraram este mês",
-  "Ranking de Vendas por Filial / Unidade",
-  "Evolução Diária de Faturamento dos últimos 7 dias",
-  "Participação das Categorias de Status de Pedidos",
-  "Top 5 Vendedores com maior faturamento"
+  "5 produtos mais vendidos este mês",
+  "Top 5 vendedores com maior faturamento",
+  "Top 10 clientes que mais compraram",
+  "Mercadorias com estoque parado (> 90 dias)",
+  "Ranking de faturamento por filial",
+  "Evolução diária de faturamento dos últimos 7 dias"
 ];
 
 export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '30820528000178', onWidgetFixado }) {
@@ -30,114 +31,163 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
     setTimeout(() => {
       let widgetGerado = null;
 
-      if (q.includes('cliente') || q.includes('compraram') || q.includes('top 10')) {
+      // 1. PRODUTOS MAIS VENDIDOS / MERCADORIAS / CURVA ABC
+      if (q.includes('produto') || q.includes('mercadoria') || q.includes('mais vendido') || q.includes('item') || q.includes('itens')) {
+        widgetGerado = {
+          titulo: 'Top 5 Produtos Mais Vendidos no Mês',
+          tipo_widget: 'ranking',
+          dimensao: 'produto_descricao',
+          metrica: 'sum(valor_liquido)',
+          config_json: {
+            subtitulo: 'Ranking de Faturamento por Mercadoria (ERP Próton)',
+            is_moeda: true,
+            explicacao_ia: 'Os 5 produtos líderes representam 38,4% da receita comercial de vendas.',
+            dados: [
+              { label: 'SMART TV 50" 4K UHD CRYSTAL HDR', valor: 845200.00 },
+              { label: 'REFRIGERADOR FROST FREE 375L INOX', valor: 692400.00 },
+              { label: 'SMARTPHONE 128GB 5G TELA 6.6"', valor: 584100.00 },
+              { label: 'FOGÃO 4 BOCAS AUTOMÁTICO INOX', valor: 421300.00 },
+              { label: 'CONJUNTO ESTOFADO 3 E 2 LUGARES SUEDE', valor: 389700.00 },
+            ]
+          }
+        };
+      }
+      // 2. VENDEDORES (NUNCA REPRESENTANTE)
+      else if (q.includes('vendedor') || q.includes('vendedores') || q.includes('equipe comercial') || q.includes('atendente')) {
+        widgetGerado = {
+          titulo: 'Top 5 Vendedores com Maior Faturamento',
+          tipo_widget: 'ranking',
+          dimensao: 'vendedor_nome',
+          metrica: 'sum(valor_liquido)',
+          config_json: {
+            subtitulo: 'Desempenho Comercial por Vendedor no Período',
+            is_moeda: true,
+            explicacao_ia: 'Kessia lidera o ranking com R$ 4,24 Mi faturados (15,89% de share total).',
+            dados: [
+              { label: 'KESSIA', valor: 4248698.24 },
+              { label: 'NUBIA SILVA', valor: 3680462.00 },
+              { label: 'ALINE CRUZ', valor: 3125095.74 },
+              { label: 'THAYSIANE', valor: 2894241.94 },
+              { label: 'NADIA', valor: 2274473.47 },
+            ]
+          }
+        };
+      }
+      // 3. ESTOQUE PARADO / SEM GIRO
+      else if (q.includes('parado') || q.includes('giro') || q.includes('sem venda') || q.includes('obsoleto') || q.includes('encalhado')) {
+        widgetGerado = {
+          titulo: 'Alerta: Top Mercadorias com Estoque Parado (> 90 Dias)',
+          tipo_widget: 'ranking',
+          dimensao: 'produto_descricao',
+          metrica: 'sum(valor_estoque)',
+          config_json: {
+            subtitulo: 'Capital Imobilizado Sem Giro Recente (Ação Comercial Recomendada)',
+            is_moeda: true,
+            explicacao_ia: 'Total de R$ 1,28 Mi imobilizado em itens sem movimentação há mais de 90 dias. Sugere-se campanha de queima ou remanejamento de filiais.',
+            dados: [
+              { label: 'LAVADORA DE ROUPAS 15KG PREMIUM', valor: 142800.00 },
+              { label: 'PAINEL HOME THEATER 2.20M CARVALHO', valor: 118400.00 },
+              { label: 'SMART TV 65" 8K NEO QLED', valor: 98600.00 },
+              { label: 'COLCHÃO QUEEN SIZE MOLAS ENSACADAS', valor: 87300.00 },
+              { label: 'FORNO ELETRÔNICO DE EMBUTIR 80L', valor: 76500.00 },
+            ]
+          }
+        };
+      }
+      // 4. CLIENTES QUE MAIS COMPRARAM
+      else if (q.includes('cliente') || q.includes('comprador') || q.includes('top 10')) {
         widgetGerado = {
           titulo: 'Top 10 Clientes em Faturamento',
           tipo_widget: 'ranking',
           dimensao: 'cliente_nome',
           metrica: 'sum(valor_liquido)',
           config_json: {
-            subtitulo: 'Curva ABC de Clientes (Mês Atual - Próton)',
+            subtitulo: 'Curva ABC de Clientes Homologados (ERP Próton)',
             is_moeda: true,
-            explicacao_ia: 'Os 10 principais clientes representam 64% do faturamento líquido total.',
+            explicacao_ia: 'Os 10 principais clientes representam 64,2% do faturamento líquido total da empresa.',
             dados: [
-              { label: 'Supermercado Central Ltda', valor: 84250.00 },
-              { label: 'Comercial Alvorada Bahia', valor: 62100.50 },
-              { label: 'Atacadão Salvador Prime', valor: 58900.00 },
-              { label: 'Distribuidora Feirense', valor: 45320.00 },
-              { label: 'Mercantil Bahia Norte', valor: 39800.00 },
-              { label: 'Rede Lojas União', valor: 31200.00 },
-              { label: 'Hiper Centro Sul', valor: 28400.00 },
-              { label: 'Casa & Construção Baiana', valor: 24600.00 },
-              { label: 'Mini Mercado Popular', valor: 19500.00 },
-              { label: 'Empório dos Cereais', valor: 16800.00 },
+              { label: 'SUPERMERCADO CENTRAL BAHIA LTDA', valor: 3633460.00 },
+              { label: 'COMERCIAL ALVORADA FEIRA LTDA', valor: 1463760.00 },
+              { label: 'DISTRIBUIDORA BAHIA NORTE', valor: 885570.00 },
+              { label: 'ATACADÃO SALVADOR PRIME', valor: 794970.00 },
+              { label: 'REDE LOJAS UNIÃO DO INTERIOR', valor: 496900.00 },
+              { label: 'MERCANTIL FEIRENSE DE ALIMENTOS', valor: 389400.00 },
+              { label: 'CASA & CONSTRUÇÃO BAIANA', valor: 312000.00 },
+              { label: 'HIPER CENTRO SUL LTDA', valor: 284000.00 },
+              { label: 'MINI MERCADO POPULAR', valor: 195000.00 },
+              { label: 'EMPÓRIO DOS CEREAIS PRIME', valor: 168000.00 },
             ]
           }
         };
-      } else if (q.includes('filial') || q.includes('unidade')) {
+      }
+      // 5. FILIAIS / UNIDADES
+      else if (q.includes('filial') || q.includes('unidade') || q.includes('loja')) {
         widgetGerado = {
-          titulo: 'Faturamento por Filial',
+          titulo: 'Faturamento Consolidado por Filial',
           tipo_widget: 'barras',
           dimensao: 'filial_nome',
           metrica: 'sum(valor_liquido)',
           config_json: {
-            subtitulo: 'Desempenho por Ponto de Venda',
+            subtitulo: 'Receita Faturada por Ponto de Venda (ERP Próton)',
             horizontal: true,
             is_moeda: true,
             metrica_label: 'Faturamento',
-            explicacao_ia: 'A Filial 01 (Matriz) e Filial 03 lideram a receita consolidada do grupo.',
+            explicacao_ia: 'A Filial 01 (Matriz Salvador) e Filial 03 (Feira de Santana) concentram 68% do faturamento.',
             dados: [
-              { label: '01 - Matriz Centro', valor: 145000.00 },
-              { label: '03 - Feira de Santana', valor: 112000.00 },
-              { label: '02 - Lauro de Freitas', valor: 98500.00 },
-              { label: '04 - Vitória da Conquista', valor: 76000.00 },
-              { label: '05 - Camaçari CD', valor: 64200.00 },
+              { label: '01 - Matriz Salvador', valor: 12450000.00 },
+              { label: '03 - Feira de Santana', valor: 8120000.00 },
+              { label: '02 - Lauro de Freitas', valor: 3985000.00 },
+              { label: '04 - Vitória da Conquista', valor: 1420000.00 },
+              { label: '05 - Camaçari CD', valor: 765000.00 },
             ]
           }
         };
-      } else if (q.includes('dia') || q.includes('evolucao') || q.includes('diari')) {
+      }
+      // 6. EVOLUÇÃO TEMPORAL
+      else if (q.includes('dia') || q.includes('evolucao') || q.includes('diari') || q.includes('semana')) {
         widgetGerado = {
           titulo: 'Evolução Diária de Vendas',
           tipo_widget: 'linhas',
           dimensao: 'data_emissao',
           metrica: 'sum(valor_liquido)',
           config_json: {
-            subtitulo: 'Últimos 7 Dias de Operação',
+            subtitulo: 'Faturamento nos Últimos 7 Dias de Operação',
             is_moeda: true,
             metrica_label: 'Vendas Líquidas',
-            explicacao_ia: 'Pico de vendas registrado na última quinta-feira com forte conversão.',
+            explicacao_ia: 'Pico de vendas registrado na última quinta e sexta-feira com alta conversão em crediário.',
             dados: [
-              { label: 'Segunda', valor: 28400.00 },
-              { label: 'Terça', valor: 34100.00 },
-              { label: 'Quarta', valor: 39800.00 },
-              { label: 'Quinta', valor: 54200.00 },
-              { label: 'Sexta', valor: 48900.00 },
-              { label: 'Sábado', valor: 42100.00 },
-              { label: 'Domingo', valor: 18500.00 },
+              { label: 'Segunda', valor: 884000.00 },
+              { label: 'Terça', valor: 941000.00 },
+              { label: 'Quarta', valor: 1098000.00 },
+              { label: 'Quinta', valor: 1542000.00 },
+              { label: 'Sexta', valor: 1489000.00 },
+              { label: 'Sábado', valor: 1121000.00 },
+              { label: 'Domingo', valor: 485000.00 },
             ]
           }
         };
-      } else if (q.includes('vendedor') || q.includes('representante')) {
+      }
+      // FALLBACK INTELIGENTE
+      else {
         widgetGerado = {
-          titulo: 'Top Vendedores do Mês',
-          tipo_widget: 'barras',
-          dimensao: 'vendedor_nome',
-          metrica: 'sum(valor_liquido)',
-          config_json: {
-            subtitulo: 'Ranking de Vendas por Representante',
-            horizontal: false,
-            is_moeda: true,
-            metrica_label: 'Total Vendido',
-            explicacao_ia: 'Carlos Eduardo atingiu 128% da meta mensal estipulada.',
-            dados: [
-              { label: 'Carlos Eduardo', valor: 89400.00 },
-              { label: 'Mariana Santos', valor: 76200.00 },
-              { label: 'Roberto Silva', valor: 68100.00 },
-              { label: 'Fernanda Lima', valor: 54900.00 },
-              { label: 'Lucas Andrade', valor: 42300.00 },
-            ]
-          }
-        };
-      } else {
-        widgetGerado = {
-          titulo: 'Métrica Personalizada de Vendas',
+          titulo: 'Análise Comercial Personalizada',
           tipo_widget: 'kpi',
           dimensao: 'geral',
           metrica: 'ticket_medio',
           config_json: {
-            subtitulo: 'Ticket Médio de Venda Consolidado',
-            valor: 1845.60,
+            subtitulo: 'Ticket Médio de Vendas Consolidado',
+            valor: 2219.62,
             is_moeda: true,
-            variacao: 8.4,
-            descricao: 'Valor médio por pedido faturado no período selecionado.',
-            explicacao_ia: 'Ticket médio com alta de 8.4% impulsionado pela venda de itens de maior valor agregado.'
+            variacao: 12.4,
+            descricao: 'Média de faturamento por pedido emitido no mês atual.',
+            explicacao_ia: 'Ticket médio em R$ 2.219,62 impulsionado pelas vendas de eletrodomésticos e móveis.'
           }
         };
       }
 
       setRespostaIA(widgetGerado);
       setCarregando(false);
-    }, 500);
+    }, 450);
   };
 
   const fixarNoPainel = async (w) => {
@@ -210,7 +260,7 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
                 Assistente IA de Negócios (Generative BI)
               </h3>
               <p style={{ margin: 0, fontSize: '11px', color: '#38bdf8' }}>
-                Faça perguntas em linguagem natural e crie cards para o seu painel
+                Faça perguntas em linguagem natural e gere cards para o seu painel
               </p>
             </div>
           </div>
@@ -297,7 +347,7 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ex: Top 10 clientes que mais compraram este mês..."
+              placeholder="Ex: 5 produtos mais vendidos, estoque parado..."
               style={{
                 flex: 1,
                 background: '#16253b',
