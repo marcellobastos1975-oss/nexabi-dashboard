@@ -23,26 +23,9 @@ const titulosPagarData = [
 ];
 
 export default function ContasPagar({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
-  const isTenantVazio = clienteSelecionado && (
-    clienteSelecionado.includes('10.237.062') || 
-    clienteSelecionado.includes('f7acf52e') || 
-    clienteSelecionado === 'arcoverde'
-  );
-
-  const isFilial3 = unidade === '3';
-  const isFilial1 = unidade === '1';
-
-  const [metricas, setMetricas] = useState(() => {
-    if (isTenantVazio) {
-      return {
-        valorCP: '0,00',
-        hasData: false
-      };
-    }
-    return {
-      valorCP: isFilial3 ? '28,91' : (isFilial1 ? '691,50' : '720,40'),
-      hasData: true
-    };
+  const [metricas, setMetricas] = useState({
+    valorCP: '0,00',
+    hasData: true
   });
 
   useEffect(() => {
@@ -51,7 +34,7 @@ export default function ContasPagar({ clienteSelecionado = 'todas', periodoPrese
     });
   }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

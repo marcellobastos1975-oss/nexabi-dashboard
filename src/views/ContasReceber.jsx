@@ -23,30 +23,11 @@ const topClientes = [
 ];
 
 export default function ContasReceber({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
-  const isTenantVazio = clienteSelecionado && (
-    clienteSelecionado.includes('10.237.062') || 
-    clienteSelecionado.includes('f7acf52e') || 
-    clienteSelecionado === 'arcoverde'
-  );
-
-  const isFilial3 = unidade === '3';
-  const isFilial1 = unidade === '1';
-
-  const [metricas, setMetricas] = useState(() => {
-    if (isTenantVazio) {
-      return {
-        valorCR: '0,00',
-        inadimplencia: '0,00',
-        vendaBruta: '0,00',
-        hasData: false
-      };
-    }
-    return {
-      valorCR: isFilial3 ? '24,30' : (isFilial1 ? '297,26' : '321,55'),
-      inadimplencia: isFilial3 ? '2,92' : (isFilial1 ? '35,67' : '38,58'),
-      vendaBruta: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
-      hasData: true
-    };
+  const [metricas, setMetricas] = useState({
+    valorCR: '0,00',
+    inadimplencia: '0,00',
+    vendaBruta: '0,00',
+    hasData: true
   });
 
   useEffect(() => {
@@ -55,7 +36,7 @@ export default function ContasReceber({ clienteSelecionado = 'todas', periodoPre
     });
   }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

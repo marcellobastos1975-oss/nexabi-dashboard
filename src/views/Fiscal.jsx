@@ -24,26 +24,9 @@ const entradasCFOP = [
 ];
 
 export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
-  const isTenantVazio = clienteSelecionado && (
-    clienteSelecionado.includes('10.237.062') || 
-    clienteSelecionado.includes('f7acf52e') || 
-    clienteSelecionado === 'arcoverde'
-  );
-
-  const isFilial3 = unidade === '3';
-  const isFilial1 = unidade === '1';
-
-  const [metricas, setMetricas] = useState(() => {
-    if (isTenantVazio) {
-      return {
-        impostosDiretos: '0,00',
-        hasData: false
-      };
-    }
-    return {
-      impostosDiretos: isFilial3 ? '5,21' : (isFilial1 ? '5,62' : '6,26'),
-      hasData: true
-    };
+  const [metricas, setMetricas] = useState({
+    impostosDiretos: '0,00',
+    hasData: true
   });
 
   useEffect(() => {
@@ -52,7 +35,7 @@ export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = '
     });
   }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

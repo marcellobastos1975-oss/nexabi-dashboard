@@ -39,44 +39,18 @@ export default function PanoramaGeral({
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
 
-  const isTenantVazio = clienteSelecionado && (
-    clienteSelecionado.includes('10.237.062') || 
-    clienteSelecionado.includes('f7acf52e') || 
-    clienteSelecionado === 'arcoverde'
-  );
-
-  const isFilial3 = unidade === '3';
-  const isFilial1 = unidade === '1';
-
-  const [metricas, setMetricas] = useState(() => {
-    if (isTenantVazio) {
-      return {
-        hasData: false,
-        vendaBruta: '0,00',
-        vendaLiquida: '0,00',
-        qtdVendas: '0,00',
-        ticketMedio: 'R$ 0,00',
-        valorCR: '0,00',
-        valorCP: '0,00',
-        valorEstoque: '0,00',
-        contasFinanc: '0,00',
-        margemBruta: '0,00',
-        inadimplencia: '0,00'
-      };
-    }
-    return {
-      hasData: true,
-      vendaBruta: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
-      vendaLiquida: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
-      qtdVendas: isFilial3 ? '9,93' : (isFilial1 ? '2,13' : '12,05'),
-      ticketMedio: isFilial3 ? 'R$ 276,00' : (isFilial1 ? 'R$ 11.294,00' : 'R$ 2.219,62'),
-      valorCR: isFilial3 ? '24,30' : (isFilial1 ? '297,26' : '321,55'),
-      valorCP: isFilial3 ? '28,91' : (isFilial1 ? '691,50' : '720,40'),
-      valorEstoque: isFilial3 ? '0,75' : (isFilial1 ? '3,21' : '3,96'),
-      contasFinanc: isFilial3 ? '4,50' : (isFilial1 ? '34,46' : '38,96'),
-      margemBruta: isFilial3 ? '1,51' : (isFilial1 ? '13,20' : '14,71'),
-      inadimplencia: isFilial3 ? '2,92' : (isFilial1 ? '35,67' : '38,58')
-    };
+  const [metricas, setMetricas] = useState({
+    hasData: true,
+    vendaBruta: '0,00',
+    vendaLiquida: '0,00',
+    qtdVendas: '0,00',
+    ticketMedio: 'R$ 0,00',
+    valorCR: '0,00',
+    valorCP: '0,00',
+    valorEstoque: '0,00',
+    contasFinanc: '0,00',
+    margemBruta: '0,00',
+    inadimplencia: '0,00'
   });
 
   const carregarWidgetsCustomizados = async () => {
@@ -119,7 +93,7 @@ export default function PanoramaGeral({
     }
   };
 
-  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData);
 
   const historicoGrafico = temDados ? historicoVendas12mReal : [
     { mes: '2026-jan', valor: 0 },

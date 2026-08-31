@@ -27,15 +27,9 @@ const comprasFornecedor = [
 ];
 
 export default function Compras({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
-  const isTenantVazio = clienteSelecionado && (
-    clienteSelecionado.includes('10.237.062') || 
-    clienteSelecionado.includes('f7acf52e') || 
-    clienteSelecionado === 'arcoverde'
-  );
-
-  const [metricas, setMetricas] = useState(() => ({
-    hasData: !isTenantVazio
-  }));
+  const [metricas, setMetricas] = useState({
+    hasData: true
+  });
 
   useEffect(() => {
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
@@ -43,7 +37,7 @@ export default function Compras({ clienteSelecionado = 'todas', periodoPreset = 
     });
   }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

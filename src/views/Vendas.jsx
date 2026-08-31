@@ -21,40 +21,16 @@ const vendedoresData = [
 ];
 
 export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
-  const isTenantVazio = clienteSelecionado && (
-    clienteSelecionado.includes('10.237.062') || 
-    clienteSelecionado.includes('f7acf52e') || 
-    clienteSelecionado === 'arcoverde'
-  );
-
-  const isFilial3 = unidade === '3';
-  const isFilial1 = unidade === '1';
-
-  const [metricas, setMetricas] = useState(() => {
-    if (isTenantVazio) {
-      return {
-        hasData: false,
-        vendaBruta: '0,00',
-        vendaLiquida: '0,00',
-        impostosDiretos: '0,00',
-        cmv: '0,00',
-        margemContribuicao: '0,00',
-        ticketMedio: 'R$ 0,00',
-        metaVenda: '0,00',
-        metaAtingida: '0,00'
-      };
-    }
-    return {
-      hasData: true,
-      vendaBruta: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
-      vendaLiquida: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
-      impostosDiretos: isFilial3 ? '5,21' : (isFilial1 ? '5,62' : '6,26'),
-      cmv: isFilial3 ? '10,02' : (isFilial1 ? '10,80' : '12,03'),
-      margemContribuicao: isFilial3 ? '12,24' : (isFilial1 ? '13,20' : '14,71'),
-      ticketMedio: isFilial3 ? 'R$ 275,31' : (isFilial1 ? 'R$ 11.294,00' : 'R$ 2.219,62'),
-      metaVenda: isFilial3 ? '2,50' : (isFilial1 ? '22,50' : '25,00'),
-      metaAtingida: isFilial3 ? '890,44' : '106,67'
-    };
+  const [metricas, setMetricas] = useState({
+    hasData: true,
+    vendaBruta: '0,00',
+    vendaLiquida: '0,00',
+    impostosDiretos: '0,00',
+    cmv: '0,00',
+    margemContribuicao: '0,00',
+    ticketMedio: 'R$ 0,00',
+    metaVenda: '0,00',
+    metaAtingida: '0,00'
   });
 
   useEffect(() => {
@@ -63,7 +39,7 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
     });
   }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

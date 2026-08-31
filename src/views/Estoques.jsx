@@ -29,28 +29,10 @@ const paretoData = [
 export default function Estoques({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
   const [abaEstoque, setAbaEstoque] = useState('mais_vendidos');
 
-  const isTenantVazio = clienteSelecionado && (
-    clienteSelecionado.includes('10.237.062') || 
-    clienteSelecionado.includes('f7acf52e') || 
-    clienteSelecionado === 'arcoverde'
-  );
-
-  const isFilial3 = unidade === '3';
-  const isFilial1 = unidade === '1';
-
-  const [metricas, setMetricas] = useState(() => {
-    if (isTenantVazio) {
-      return {
-        valorEstoque: '0,00',
-        margemBruta: '0,00',
-        hasData: false
-      };
-    }
-    return {
-      valorEstoque: isFilial3 ? '0,75' : (isFilial1 ? '3,21' : '3,96'),
-      margemBruta: isFilial3 ? '12,24' : (isFilial1 ? '13,20' : '14,71'),
-      hasData: true
-    };
+  const [metricas, setMetricas] = useState({
+    valorEstoque: '0,00',
+    margemBruta: '0,00',
+    hasData: true
   });
 
   useEffect(() => {
@@ -59,7 +41,7 @@ export default function Estoques({ clienteSelecionado = 'todas', periodoPreset =
     });
   }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
