@@ -104,7 +104,17 @@ export default function App() {
   const diaStr = String(agora.getDate()).padStart(2, '0');
 
   const [moduloAtivo, setModuloAtivo] = useState('panorama');
-  const [clienteSelecionado, setClienteSelecionado] = useState('todas');
+  const [clienteSelecionado, setClienteSelecionado] = useState(() => {
+    try {
+      const salvo = sessionStorage.getItem('nexabi_auth_session');
+      if (salvo) {
+        const u = JSON.parse(salvo);
+        if (u.perfil === 'master') return 'todas';
+        return u.empresaId || 'todas';
+      }
+    } catch {}
+    return 'todas';
+  });
   const [unidade, setUnidade] = useState('Todas');
   const [periodoPreset, setPeriodoPreset] = useState('mes_atual');
   const [dataInicio, setDataInicio] = useState(`${anoStr}-${mesStr}-01`);
@@ -114,6 +124,16 @@ export default function App() {
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
   const [drawerAIAberto, setDrawerAIAberto] = useState(false);
   const [empresasCadastradas, setEmpresasCadastradas] = useState([]);
+  const [listaUnidades, setListaUnidades] = useState([
+    { id: 'Todas', label: '🏢 Todas as Unidades' }
+  ]);
+
+  const isMaster = usuario?.perfil === 'master';
+
+  // Cliente ativo efetivo: se for cliente comum (não master), SEMPRE usa estritamente a empresa dele
+  const clienteAtivo = (usuario && usuario.perfil !== 'master')
+    ? (usuario.empresaId || clienteSelecionado)
+    : clienteSelecionado;
 
   const getPeriodoDescricao = () => {
     switch (periodoPreset) {
@@ -130,7 +150,26 @@ export default function App() {
 
   useEffect(() => {
     getTodasEmpresas().then(setEmpresasCadastradas);
-  }, [modalEmpresasAberto]);
+  }, [modalEmpresasAberto, usuario]);
+
+  useEffect(() => {
+    if (usuario) {
+      if (usuario.perfil === 'master') {
+        setClienteSelecionado('todas');
+        setUnidade('Todas');
+      } else {
+        const cId = usuario.empresaId || 'todas';
+        setClienteSelecionado(cId);
+        setUnidade(usuario.unidadePadrao || 'Todas');
+      }
+    }
+  }, [usuario]);
+
+  useEffect(() => {
+    getFiliaisEmpresa(clienteAtivo).then(unidades => {
+      setListaUnidades(unidades || [{ id: 'Todas', label: '🏢 Todas as Unidades' }]);
+    });
+  }, [clienteAtivo, empresasCadastradas]);
 
   // Monitor de Inatividade (Encerra a sessão se ficar 30 minutos inativo)
   useEffect(() => {
@@ -156,18 +195,17 @@ export default function App() {
     };
   }, [usuario]);
 
-  useEffect(() => {
-    if (usuario) {
-      if (usuario.perfil === 'master') {
-        setClienteSelecionado('todas');
-        setUnidade('Todas');
-      } else {
-        const cId = usuario.empresaId || 'silva';
-        setClienteSelecionado(cId);
-        setUnidade(usuario.unidadePadrao || 'Todas');
-      }
+  const handleLogin = (user) => {
+    sessionStorage.setItem('nexabi_auth_session', JSON.stringify(user));
+    setUsuario(user);
+    if (user.perfil === 'master') {
+      setClienteSelecionado('todas');
+      setUnidade('Todas');
+    } else {
+      setClienteSelecionado(user.empresaId || 'todas');
+      setUnidade(user.unidadePadrao || 'Todas');
     }
-  }, [usuario]);
+  };
 
   const handleLogout = () => {
     sessionStorage.removeItem('nexabi_auth_session');
@@ -182,35 +220,27 @@ export default function App() {
     }, 600);
   };
 
-  // Se não estiver logado, exibe a tela de login
+  const handleMudancaClienteMaster = (novoClienteId) => {
+    setClienteSelecionado(novoClienteId);
+    setUnidade('Todas');
+  };
+
+  // Se não estiver logado, exibe a tela de login (TODOS OS HOOKS JÁ EXECUTADOS ACIMA)
   if (!usuario) {
-    return <Login onLogin={(user) => setUsuario(user)} />;
+    return <Login onLogin={handleLogin} />;
   }
 
-  const isMaster = usuario.perfil === 'master';
-
-  const [listaUnidades, setListaUnidades] = useState([
-    { id: 'Todas', label: '🏢 Todas as Unidades' }
-  ]);
-
-  useEffect(() => {
-    getFiliaisEmpresa(clienteSelecionado).then(unidades => {
-      setListaUnidades(unidades || [{ id: 'Todas', label: '🏢 Todas as Unidades' }]);
-    });
-  }, [clienteSelecionado, empresasCadastradas]);
-
   // Obter a configuração da empresa atual (Clientes Reais ou Consolidado)
-  const empresaRealEncontrada = empresasCadastradas.find(e => e.cnpj === clienteSelecionado || e.id === clienteSelecionado);
+  const empresaRealEncontrada = empresasCadastradas.find(e => e.cnpj === clienteAtivo || e.id === clienteAtivo);
   const dadosEmpresaAtual = empresaRealEncontrada ? {
     id: empresaRealEncontrada.id,
     nome: empresaRealEncontrada.nome_fantasia || empresaRealEncontrada.razao_social,
     erp: `${empresaRealEncontrada.erp_tipo || 'Próton'} (${empresaRealEncontrada.banco_tipo || 'Oracle'})`
-  } : (CATALOGO_EMPRESAS[clienteSelecionado] || CATALOGO_EMPRESAS.todas);
-
-  const handleMudancaClienteMaster = (novoClienteId) => {
-    setClienteSelecionado(novoClienteId);
-    setUnidade('Todas'); // Reseta a unidade ao trocar de cliente
-  };
+  } : (CATALOGO_EMPRESAS[clienteAtivo] || {
+    id: clienteAtivo,
+    nome: usuario.empresa || usuario.empresaNome || 'Empresa Cliente',
+    erp: usuario.erp || 'Próton (Oracle)'
+  });
 
   return (
     <div style={{ minHeight: '100vh', padding: '16px 20px', maxWidth: 1600, margin: '0 auto' }}>
@@ -502,17 +532,17 @@ export default function App() {
           <PanoramaGeral 
             nomeEmpresa={dadosEmpresaAtual.nome} 
             periodoDesc={getPeriodoDescricao()} 
-            clienteSelecionado={clienteSelecionado}
+            clienteSelecionado={clienteAtivo}
             periodoPreset={periodoPreset}
           />
         )}
-        {moduloAtivo === 'vendas' && <Vendas clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'compras' && <Compras clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'cr' && <ContasReceber clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'cp' && <ContasPagar clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'tesouraria' && <Tesouraria clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'estoques' && <Estoques clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'fiscal' && <Fiscal clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'vendas' && <Vendas clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'compras' && <Compras clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'cr' && <ContasReceber clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'cp' && <ContasPagar clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'tesouraria' && <Tesouraria clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'estoques' && <Estoques clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'fiscal' && <Fiscal clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
       </main>
 
       {/* Rodapé Oficial com Logo Ampliada */}

@@ -37,17 +37,42 @@ export default function PanoramaGeral({
   periodoPreset = 'mes_atual'
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
-  const [metricas, setMetricas] = useState({
-    vendaBruta: '26,74',
-    vendaLiquida: '26,74',
-    qtdVendas: '12,05',
-    ticketMedio: 'R$ 2.219,62',
-    valorCR: '321,55',
-    valorCP: '720,40',
-    valorEstoque: '7,26',
-    contasFinanc: '38,96',
-    margemBruta: '14,71',
-    inadimplencia: '38,58'
+
+  const isTenantVazio = clienteSelecionado && (
+    clienteSelecionado.includes('10.237.062') || 
+    clienteSelecionado.includes('f7acf52e') || 
+    clienteSelecionado === 'arcoverde'
+  );
+
+  const [metricas, setMetricas] = useState(() => {
+    if (isTenantVazio) {
+      return {
+        hasData: false,
+        vendaBruta: '0,00',
+        vendaLiquida: '0,00',
+        qtdVendas: '0,00',
+        ticketMedio: 'R$ 0,00',
+        valorCR: '0,00',
+        valorCP: '0,00',
+        valorEstoque: '0,00',
+        contasFinanc: '0,00',
+        margemBruta: '0,00',
+        inadimplencia: '0,00'
+      };
+    }
+    return {
+      hasData: true,
+      vendaBruta: '26,74',
+      vendaLiquida: '26,74',
+      qtdVendas: '12,05',
+      ticketMedio: 'R$ 2.219,62',
+      valorCR: '321,55',
+      valorCP: '720,40',
+      valorEstoque: '7,26',
+      contasFinanc: '38,96',
+      margemBruta: '14,71',
+      inadimplencia: '38,58'
+    };
   });
 
   const carregarWidgetsCustomizados = async () => {
@@ -70,7 +95,9 @@ export default function PanoramaGeral({
 
   useEffect(() => {
     carregarWidgetsCustomizados();
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(data => {
+      if (data) setMetricas(data);
+    });
   }, [clienteSelecionado, periodoPreset]);
 
   const removerWidget = async (id) => {
@@ -88,7 +115,7 @@ export default function PanoramaGeral({
     }
   };
 
-  const temDados = metricas && metricas.hasData;
+  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
 
   const historicoGrafico = temDados ? historicoVendas12mReal : [
     { mes: '2026-jan', valor: 0 },
@@ -125,18 +152,18 @@ export default function PanoramaGeral({
 
       {/* 1. Grade Superior de KPIs com Tooltips */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Valor Estoque" value={metricas.valorEstoque} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="Valor CR" value={metricas.valorCR} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="Valor CP" value={metricas.valorCP} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Contas Financ." value={temDados ? metricas.contasFinanc : '0,00'} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Margem Bruta" value={metricas.margemBruta} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Inadimplência" value={metricas.inadimplencia} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Venda Bruta" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Valor Estoque" value={temDados ? metricas.valorEstoque : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Valor CR" value={temDados ? metricas.valorCR : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Valor CP" value={temDados ? metricas.valorCP : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Contas Financ." value={temDados ? metricas.contasFinanc : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Margem Bruta" value={temDados ? metricas.margemBruta : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Inadimplência" value={temDados ? metricas.inadimplencia : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Qtd. Vendas" value={metricas.qtdVendas} suffix=" Mil" />
-        <KPICard label="Clientes Compraram" value={temDados ? "12,05" : "0,00"} suffix=" Mil" />
+        <KPICard label="Qtd. Vendas" value={temDados ? metricas.qtdVendas : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
+        <KPICard label="Clientes Compraram" value={temDados ? "12,05" : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
         <KPICard label="Juros Recebidos" value={temDados ? "2,93" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
         <KPICard label="A Pagar em Atraso" value={temDados ? "160,38" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "red" : "default"} />
         <KPICard label="Vlr Negativo C. Fin" value={temDados ? "-32,70" : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
@@ -146,8 +173,8 @@ export default function PanoramaGeral({
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
         <KPICard label="Venda Bruta do Dia" value={temDados ? "1,12" : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Ticket Médio" value={metricas.ticketMedio} suffix="" />
-        <KPICard label="Valor CR - CP" value={temDados ? "R$ -398,85" : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} suffix="" />
+        <KPICard label="Valor CR - CP" value={temDados ? "R$ -398,85" : "R$ 0,00"} suffix={temDados ? " Mi" : ""} highlight={temDados ? "yellow" : "default"} />
       </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}

@@ -21,22 +21,46 @@ const vendedoresData = [
 ];
 
 export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual' }) {
-  const [metricas, setMetricas] = useState({
-    vendaBruta: '26,74',
-    vendaLiquida: '26,74',
-    impostosDiretos: '6,26',
-    cmv: '12,03',
-    margemContribuicao: '14,71',
-    ticketMedio: 'R$ 2.219,62',
-    metaVenda: '25,00',
-    metaAtingida: '106,96'
+  const isTenantVazio = clienteSelecionado && (
+    clienteSelecionado.includes('10.237.062') || 
+    clienteSelecionado.includes('f7acf52e') || 
+    clienteSelecionado === 'arcoverde'
+  );
+
+  const [metricas, setMetricas] = useState(() => {
+    if (isTenantVazio) {
+      return {
+        hasData: false,
+        vendaBruta: '0,00',
+        vendaLiquida: '0,00',
+        impostosDiretos: '0,00',
+        cmv: '0,00',
+        margemContribuicao: '0,00',
+        ticketMedio: 'R$ 0,00',
+        metaVenda: '0,00',
+        metaAtingida: '0,00'
+      };
+    }
+    return {
+      hasData: true,
+      vendaBruta: '26,74',
+      vendaLiquida: '26,74',
+      impostosDiretos: '6,26',
+      cmv: '12,03',
+      margemContribuicao: '14,71',
+      ticketMedio: 'R$ 2.219,62',
+      metaVenda: '25,00',
+      metaAtingida: '106,96'
+    };
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(data => {
+      if (data) setMetricas(data);
+    });
   }, [clienteSelecionado, periodoPreset]);
 
-  const temDados = metricas && metricas.hasData;
+  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -62,78 +86,82 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
 
       {/* Grade de 12 KPIs com Tooltips Interativos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Impostos Diretos" value={metricas.impostosDiretos} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Venda Bruta" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
         <KPICard label="% Imp. Diretos" value={temDados ? "23,42" : "0,00"} suffix="%" />
-        <KPICard label="Venda Líquida" value={metricas.vendaLiquida} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Venda Líquida" value={temDados ? metricas.vendaLiquida : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
         <KPICard label="% Vda Líquida" value={temDados ? "100,00" : "0,00"} suffix="%" />
-        <KPICard label="Ticket Médio" value={metricas.ticketMedio} />
+        <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Margem Contribuição" value={metricas.margemContribuicao} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="% Margem Contrib." value={temDados ? "55,00" : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Meta de Venda" value={metricas.metaVenda} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% Meta Atingida" value={metricas.metaAtingida} suffix="%" highlight={temDados ? "green" : "default"} />
-        <KPICard label="CMV" value={metricas.cmv} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="% CMV s/ Venda" value={temDados ? "45,00" : "0,00"} suffix="%" />
+        <KPICard label="CMV (Custo)" value={temDados ? metricas.cmv : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="% CMV" value={temDados ? "45,00" : "0,00"} suffix="%" />
+        <KPICard label="Margem Contribuição" value={temDados ? metricas.margemContribuicao : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="% Margem Contrib." value={temDados ? "55,00" : "0,00"} suffix="%" />
+        <KPICard label="Meta da Venda" value={temDados ? metricas.metaVenda : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Meta Atingida" value={temDados ? metricas.metaAtingida : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
       </div>
 
-      {/* Seção Gráficos & Formas de Pagamento */}
+      {/* Gráficos e Detalhes */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
-        {/* Ranking Forma de Pagamento */}
+        {/* Formas de Pagamento */}
         <div className="glass-card" style={{ padding: 16 }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
-            💳 Ranking — Formas de Pagamento (Próton)
+            💳 Formas de Pagamento
           </h3>
-          {temDados ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {formasPagamento.map(fp => (
-                <div key={fp.forma} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                    <span>{fp.forma}</span>
-                    <span style={{ fontWeight: 700, color: fp.cor }}>{fp.perc}%</span>
-                  </div>
-                  <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <div style={{ width: `${fp.perc}%`, height: '100%', background: fp.cor, borderRadius: 3 }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {temDados ? (
+              formasPagamento.map(f => (
+                <div key={f.forma} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-muted)' }}>{f.forma}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 80, height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3, overflow: 'hidden' }}>
+                      <div style={{ width: `${f.perc}%`, height: '100%', background: f.cor, borderRadius: 3 }} />
+                    </div>
+                    <strong style={{ color: '#fff', minWidth: 45, textAlign: 'right' }}>{f.perc}%</strong>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
-              Nenhuma movimentação de pagamento registrada para este cliente.
-            </div>
-          )}
+              ))
+            ) : (
+              <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px', padding: '20px 0' }}>
+                Nenhum pagamento registrado no período.
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Tabelas de Vendedores */}
+        {/* Ranking de Vendedores */}
         <div className="glass-card" style={{ padding: 16, overflowX: 'auto' }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 10 }}>
-            👥 Ranking de Vendas por Vendedor (Top Performers)
+            🏆 Top Vendedores — NexaBI Performance
           </h3>
           {temDados ? (
-            <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
+            <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                  <th style={{ padding: '6px 4px' }}>Vendedor</th>
-                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Valor Faturado (R$)</th>
-                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>% Share</th>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: '6px 4px', textAlign: 'left' }}>Vendedor</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Venda (R$)</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Part. (%)</th>
                 </tr>
               </thead>
               <tbody>
-                {vendedoresData.map(v => (
+                {vendedoresData.map((v, i) => (
                   <tr key={v.nome} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                    <td style={{ padding: '6px 4px', fontWeight: 600, color: '#f8fafc' }}>{v.nome}</td>
-                    <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 700, color: '#38bdf8' }}>R$ {v.valor}</td>
-                    <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 700 }}>{v.share}</td>
+                    <td style={{ padding: '6px 4px' }}>
+                      <span style={{ color: i < 3 ? '#00d2ff' : '#fff', fontWeight: i < 3 ? 700 : 400 }}>
+                        {i + 1}º {v.nome}
+                      </span>
+                    </td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 600 }}>R$ {v.valor}</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{v.share}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           ) : (
-            <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
-              Nenhum vendedor com vendas faturadas no período.
+            <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px', padding: '20px 0' }}>
+              Nenhum ranking de vendas disponível.
             </div>
           )}
         </div>
