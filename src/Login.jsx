@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Lock, User, ChevronRight, AlertCircle, MessageSquare, KeyRound, CheckCircle } from 'lucide-react';
 import { APP_VERSION } from './config';
-import { autenticarUsuario } from './authStore';
+import { autenticarUsuario, sincronizarUsuariosSupabase } from './authStore';
 import ModalRecuperarSenha from './components/ModalRecuperarSenha';
 import './Login.css';
 
@@ -12,6 +12,10 @@ export default function Login({ onLogin }) {
   const [sucessoMsg, setSucessoMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [modalRecuperarAberto, setModalRecuperarAberto] = useState(false);
+
+  useEffect(() => {
+    sincronizarUsuariosSupabase().catch(() => {});
+  }, []);
 
   const handleAuth = (e) => {
     e.preventDefault();

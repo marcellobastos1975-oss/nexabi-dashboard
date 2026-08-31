@@ -3,7 +3,7 @@ import {
   X, Users, UserPlus, KeyRound, Trash2, ShieldCheck, 
   Building2, Phone, CheckCircle, AlertCircle, Search, Lock, Edit3
 } from 'lucide-react';
-import { getTodosUsuarios, cadastrarUsuario, editarUsuario, adminRedefinirSenha, excluirUsuario } from '../authStore';
+import { getTodosUsuarios, sincronizarUsuariosSupabase, cadastrarUsuario, editarUsuario, adminRedefinirSenha, excluirUsuario } from '../authStore';
 import { getTodasEmpresas } from '../empresaStore';
 import { formatarWhatsApp } from '../maskUtils';
 
@@ -31,7 +31,7 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
   const [editNome, setEditNome] = useState('');
   const [editWhatsapp, setEditWhatsapp] = useState('');
   const [editPerfil, setEditPerfil] = useState('cliente');
-  const [editEmpresaId, setEditEmpresaId] = useState('silva');
+  const [editEmpresaId, setEditEmpresaId] = useState('');
   const [editUnidade, setEditUnidade] = useState('Todas');
 
   // Form Reset Master
@@ -46,37 +46,12 @@ export default function ModalGerenciarUsuarios({ isOpen, onClose }) {
     const reais = (listaEmp || []).filter(e => e.cnpj !== '00.000.000/0001-00');
     setEmpresasCadastradas(reais);
     
-    if (reais.length > 0) {
-      const destak = reais[0];
-      setNovaEmpresaId(destak.cnpj || destak.id);
-      
-      // 1. Garante que o usuário silva pertença estritamente à empresa de Demonstração
-      editarUsuario('silva', {
-        empresaId: 'silva',
-        empresaNome: 'Lojas Silva (Demonstração)',
-        erp: 'Próton (Oracle)'
-      });
-
-      // 2. Garante que o usuário dell pertença formalmente à DESTAK PRIME
-      editarUsuario('dell', {
-        empresaId: destak.cnpj,
-        empresaNome: destak.nome_fantasia || destak.razao_social,
-        erp: `${destak.erp_tipo || 'Próton'} (${destak.banco_tipo || 'Oracle'})`
-      });
-
-      // 3. Auto-reparo de cadastros customizados sem vínculo
-      const listaUsers = getTodosUsuarios();
-      listaUsers.forEach(usr => {
-        if (usr.username.toLowerCase() !== 'silva' && usr.perfil === 'cliente' && (usr.empresaNome === 'Empresa Cliente' || !usr.empresaNome)) {
-          editarUsuario(usr.username, {
-            empresaId: destak.cnpj,
-            empresaNome: destak.nome_fantasia || destak.razao_social,
-            erp: `${destak.erp_tipo || 'Próton'} (${destak.banco_tipo || 'Oracle'})`
-          });
-        }
-      });
+    if (reais.length > 0 && !novaEmpresaId) {
+      setNovaEmpresaId(reais[0].cnpj || reais[0].id);
     }
-    setUsuarios(getTodosUsuarios());
+    
+    const usersSincronizados = await sincronizarUsuariosSupabase();
+    setUsuarios(usersSincronizados || getTodosUsuarios());
   };
 
   useEffect(() => {

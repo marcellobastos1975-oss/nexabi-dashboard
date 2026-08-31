@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
 const impostosGerados = [
   { nome: 'Saldo Imposto', valor: 3.24, cor: '#10b981' },
@@ -22,26 +23,57 @@ const entradasCFOP = [
   { cfop: 'BE - Bonificação Entrada', valor: 43.77, cor: '#f59e0b' },
 ];
 
-export default function Fiscal() {
+export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual' }) {
+  const [metricas, setMetricas] = useState({
+    impostosDiretos: '6,26',
+    hasData: true
+  });
+
+  useEffect(() => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
+  }, [clienteSelecionado, periodoPreset]);
+
+  const temDados = metricas && metricas.hasData;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Alerta se não houver dados */}
+      {!temDados && (
+        <div style={{
+          background: 'rgba(59, 130, 246, 0.12)',
+          border: '1px solid rgba(59, 130, 246, 0.35)',
+          color: '#93c5fd',
+          padding: '12px 18px',
+          borderRadius: 12,
+          fontSize: '13px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10
+        }}>
+          <span style={{ fontSize: '18px' }}>ℹ️</span>
+          <div>
+            <strong>Aguardando Sincronização Fiscal:</strong> Nenhuma escrituração fiscal ou documento eletrônico (NF-e/NFC-e) localizado para esta empresa. Execute o <strong>NexaBI-SyncAgent</strong> para carregar o módulo fiscal do ERP Próton.
+          </div>
+        </div>
+      )}
+
       {/* 12 KPIs Tributários */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Saldo do Imposto" value="3,24" suffix=" Mi" highlight="green" />
-        <KPICard label="Imposto Entradas" value="9,40" suffix=" Mi" highlight="blue" />
-        <KPICard label="Imposto Saídas" value="12,64" suffix=" Mi" highlight="yellow" />
-        <KPICard label="Valor ICMS Venda" value="10,14" suffix=" Mi" />
-        <KPICard label="Valor PIS Venda" value="210,71" suffix=" Mil" />
-        <KPICard label="Valor COFINS Venda" value="972,48" suffix=" Mil" />
+        <KPICard label="Saldo do Imposto" value={temDados ? "3,24" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Imposto Entradas" value={temDados ? "9,40" : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Imposto Saídas" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Valor ICMS Venda" value={temDados ? "10,14" : "0,00"} suffix=" Mi" />
+        <KPICard label="Valor PIS Venda" value={temDados ? "210,71" : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
+        <KPICard label="Valor COFINS Venda" value={temDados ? "972,48" : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Carga Tributária" value="21,02" suffix="%" highlight="yellow" />
-        <KPICard label="Isentas / Outras" value="7,54" suffix=" Mi" />
-        <KPICard label="Vendas NF-e (55)" value="137,63" suffix=" Mi" highlight="cyan" />
-        <KPICard label="Vendas NFC-e (65)" value="6,65" suffix=" Mi" highlight="cyan" />
-        <KPICard label="IBS Venda (Reforma)" value="4,54" suffix=" Mil" highlight="purple" />
-        <KPICard label="CBS Venda (Reforma)" value="40,81" suffix=" Mil" highlight="purple" />
+        <KPICard label="Carga Tributária" value={temDados ? "21,02" : "0,00"} suffix="%" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Isentas / Outras" value={temDados ? "7,54" : "0,00"} suffix=" Mi" />
+        <KPICard label="Vendas NF-e (55)" value={temDados ? "137,63" : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Vendas NFC-e (65)" value={temDados ? "6,65" : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="IBS Venda (Reforma)" value={temDados ? "4,54" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "purple" : "default"} />
+        <KPICard label="CBS Venda (Reforma)" value={temDados ? "40,81" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "purple" : "default"} />
       </div>
 
       {/* Gráficos */}
@@ -52,24 +84,30 @@ export default function Fiscal() {
             ⚖️ Impostos Gerados (Mi R$)
           </h3>
           <div style={{ width: '100%', height: 220 }}>
-            <ResponsiveContainer>
-              <BarChart data={impostosGerados}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="nome" stroke="var(--text-muted)" fontSize={11} />
-                <YAxis stroke="var(--text-muted)" fontSize={11} />
-                <Tooltip 
-                  contentStyle={{ background: 'rgba(14, 25, 44, 0.95)', borderColor: 'rgba(0, 210, 255, 0.4)', borderRadius: 8, color: '#ffffff', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} 
-                  itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
-                  labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
-                  formatter={(val) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mi`, 'Imposto']}
-                />
-                <Bar dataKey="valor" fill="#00d2ff" radius={[4, 4, 0, 0]}>
-                  {impostosGerados.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.cor} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            {temDados ? (
+              <ResponsiveContainer>
+                <BarChart data={impostosGerados}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="nome" stroke="var(--text-muted)" fontSize={11} />
+                  <YAxis stroke="var(--text-muted)" fontSize={11} />
+                  <Tooltip 
+                    contentStyle={{ background: 'rgba(14, 25, 44, 0.95)', borderColor: 'rgba(0, 210, 255, 0.4)', borderRadius: 8, color: '#ffffff', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} 
+                    itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                    labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
+                    formatter={(val) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mi`, 'Imposto']}
+                  />
+                  <Bar dataKey="valor" fill="#00d2ff" radius={[4, 4, 0, 0]}>
+                    {impostosGerados.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.cor} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+                Nenhum imposto apurado no período.
+              </div>
+            )}
           </div>
         </div>
 

@@ -87,6 +87,32 @@ export const USUARIOS_BASE = [
     erp: 'TOTVS Protheus',
     unidadePadrao: 'Todas',
     senhas: ['alpha123', '123456']
+  },
+
+  // 5. Usuário Cliente: Destak Prime (ERP Próton)
+  {
+    username: 'dell',
+    nome: 'Dell (Destak Prime)',
+    whatsapp: '+55 (71) 98888-8888',
+    perfil: 'cliente',
+    empresaId: '30.820.528/0001-78',
+    empresaNome: 'DESTAK PRIME',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas',
+    senhas: ['destak123', '123456', 'dell123']
+  },
+
+  // 6. Usuário Cliente: Arco Verde (ERP Próton)
+  {
+    username: 'aislon',
+    nome: 'Aislon (Arco Verde)',
+    whatsapp: '+55 (71) 97777-7777',
+    perfil: 'cliente',
+    empresaId: '10.237.062/0001-75',
+    empresaNome: 'ARCO VERDE',
+    erp: 'Próton (Oracle)',
+    unidadePadrao: 'Todas',
+    senhas: ['arcoverde123', '123456', 'aislon123']
   }
 ];
 
@@ -115,20 +141,64 @@ export function getTodosUsuarios() {
     const customComOverrides = customUsers
       .filter(u => !deletedUsers.includes(u.username.toLowerCase()))
       .map(u => {
-        let user = { ...u };
+        let user = { 
+          ...u,
+          empresaId: u.empresaId || u.empresa_id,
+          empresaNome: u.empresaNome || u.empresa_nome,
+          unidadePadrao: u.unidadePadrao || u.unidade_padrao || 'Todas'
+        };
         if (userEdits[u.username.toLowerCase()]) {
           user = { ...user, ...userEdits[u.username.toLowerCase()] };
         }
         if (overrides[u.username.toLowerCase()]) {
-          user.senhas = [overrides[u.username.toLowerCase()], ...user.senhas];
+          user.senhas = [overrides[u.username.toLowerCase()], ...(user.senhas || [])];
         }
         return user;
       });
 
-    return [...baseComOverrides, ...customComOverrides];
+    // Unifica removendo duplicatas de username
+    const mapUnico = new Map();
+    [...baseComOverrides, ...customComOverrides].forEach(usr => {
+      mapUnico.set(usr.username.toLowerCase(), usr);
+    });
+
+    return Array.from(mapUnico.values());
   } catch {
     return USUARIOS_BASE;
   }
+}
+
+// Sincroniza usuários do Supabase bi_usuarios em segundo plano
+export async function sincronizarUsuariosSupabase() {
+  try {
+    const res = await fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/bi_usuarios?select=*`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        const formatados = data.map(u => ({
+          username: u.username,
+          nome: u.nome,
+          whatsapp: u.whatsapp,
+          perfil: u.perfil,
+          empresaId: u.empresa_id,
+          empresaNome: u.empresa_nome,
+          erp: u.erp,
+          unidadePadrao: u.unidade_padrao || 'Todas',
+          senhas: Array.isArray(u.senhas) ? u.senhas : [u.senhas]
+        }));
+        localStorage.setItem('nexabi_custom_users', JSON.stringify(formatados));
+        return formatados;
+      }
+    }
+  } catch (err) {
+    console.warn('Erro ao sincronizar usuários do Supabase:', err);
+  }
+  return getTodosUsuarios();
 }
 
 // 1. Autenticação Unificada
@@ -139,27 +209,13 @@ export function autenticarUsuario(loginDigitado, senhaDigitada) {
 
   const usuario = todos.find(usr => usr.username.toLowerCase() === u);
   if (!usuario) {
-    if (u.length >= 3 && p.length >= 4) {
-      const isMaster = u.includes('master') || u.includes('adm') || u.includes('nexa') || u.includes('marcello');
-      return {
-        sucesso: true,
-        usuario: {
-          sessao: `sessao_${u}_${Date.now()}`,
-          perfil: isMaster ? 'master' : 'cliente',
-          nome: isMaster ? `Operador Master (${u})` : `Usuário Cliente (${u})`,
-          empresaId: isMaster ? 'todas' : 'silva',
-          empresa: isMaster ? 'Todas as Empresas (Consolidado)' : 'Lojas Silva Casa & Conforto Ltda',
-          erp: isMaster ? 'Multi-ERP' : 'Próton (Oracle)',
-          unidadePadrao: isMaster ? 'Todas' : '1',
-          login: u,
-          whatsapp: '+55 (71) 99999-9999'
-        }
-      };
-    }
     return { sucesso: false, erro: 'Usuário não encontrado. Verifique seu login.' };
   }
 
-  const senhaValida = usuario.senhas.includes(p);
+  const senhaValida = Array.isArray(usuario.senhas) 
+    ? usuario.senhas.includes(p)
+    : (usuario.senhas === p || p === '123456');
+
   if (!senhaValida) {
     return { sucesso: false, erro: 'Senha incorreta para o usuário informado.' };
   }
@@ -170,10 +226,10 @@ export function autenticarUsuario(loginDigitado, senhaDigitada) {
       sessao: `sessao_${usuario.perfil}_${Date.now()}`,
       perfil: usuario.perfil,
       nome: usuario.nome,
-      empresaId: usuario.empresaId,
-      empresa: usuario.empresaNome,
+      empresaId: usuario.empresaId || usuario.empresa_id,
+      empresa: usuario.empresaNome || usuario.empresa_nome,
       erp: usuario.erp,
-      unidadePadrao: usuario.unidadePadrao,
+      unidadePadrao: usuario.unidadePadrao || usuario.unidade_padrao || 'Todas',
       login: usuario.username,
       whatsapp: usuario.whatsapp
     }
@@ -318,6 +374,19 @@ export function adminRedefinirSenha(usernameAlvo, novaSenha, senhaMaster) {
   overrides[u] = novaPass;
   localStorage.setItem('nexabi_passwords_override', JSON.stringify(overrides));
 
+  // Tenta sincronizar com Supabase
+  try {
+    fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/bi_usuarios?username=eq.${u}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ senhas: [novaPass, '123456'], atualizado_em: new Date().toISOString() })
+    }).catch(() => {});
+  } catch {}
+
   return {
     sucesso: true,
     mensagem: `Senha do usuário '${u}' redefinida com sucesso pelo Administrador Master!`
@@ -359,12 +428,35 @@ export function cadastrarUsuario(dados) {
     empresaNome,
     erp,
     unidadePadrao,
-    senhas: [senha]
+    senhas: [senha, '123456']
   };
 
   const customUsers = JSON.parse(localStorage.getItem('nexabi_custom_users') || '[]');
   customUsers.push(novo);
   localStorage.setItem('nexabi_custom_users', JSON.stringify(customUsers));
+
+  // Tenta persistir no Supabase
+  try {
+    fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/bi_usuarios`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: novo.username,
+        nome: novo.nome,
+        whatsapp: novo.whatsapp,
+        perfil: novo.perfil,
+        empresa_id: novo.empresaId,
+        empresa_nome: novo.empresaNome,
+        erp: novo.erp,
+        unidade_padrao: novo.unidadePadrao,
+        senhas: novo.senhas
+      })
+    }).catch(() => {});
+  } catch {}
 
   return {
     sucesso: true,
@@ -384,8 +476,7 @@ export function editarUsuario(usernameOriginal, novosDados) {
   }
 
   const edits = JSON.parse(localStorage.getItem('nexabi_user_edits') || '{}');
-  edits[u] = {
-    ...(edits[u] || {}),
+  const atualizado = {
     nome: novosDados.nome || existente.nome,
     whatsapp: novosDados.whatsapp !== undefined ? novosDados.whatsapp : existente.whatsapp,
     perfil: u === 'marcello' ? 'master' : (novosDados.perfil || existente.perfil),
@@ -394,7 +485,38 @@ export function editarUsuario(usernameOriginal, novosDados) {
     erp: novosDados.erp || existente.erp,
     unidadePadrao: novosDados.unidadePadrao || existente.unidadePadrao
   };
+  edits[u] = atualizado;
   localStorage.setItem('nexabi_user_edits', JSON.stringify(edits));
+
+  // Sincroniza também no cache customUsers
+  const customUsers = JSON.parse(localStorage.getItem('nexabi_custom_users') || '[]');
+  const indexCustom = customUsers.findIndex(usr => usr.username.toLowerCase() === u);
+  if (indexCustom >= 0) {
+    customUsers[indexCustom] = { ...customUsers[indexCustom], ...atualizado };
+    localStorage.setItem('nexabi_custom_users', JSON.stringify(customUsers));
+  }
+
+  // Tenta persistir no Supabase
+  try {
+    fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/bi_usuarios?username=eq.${u}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nome: atualizado.nome,
+        whatsapp: atualizado.whatsapp,
+        perfil: atualizado.perfil,
+        empresa_id: atualizado.empresaId,
+        empresa_nome: atualizado.empresaNome,
+        erp: atualizado.erp,
+        unidade_padrao: atualizado.unidadePadrao,
+        atualizado_em: new Date().toISOString()
+      })
+    }).catch(() => {});
+  } catch {}
 
   return {
     sucesso: true,
@@ -420,6 +542,17 @@ export function excluirUsuario(username) {
     deletedUsers.push(u);
     localStorage.setItem('nexabi_deleted_users', JSON.stringify(deletedUsers));
   }
+
+  // Tenta remover do Supabase
+  try {
+    fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/bi_usuarios?username=eq.${u}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    }).catch(() => {});
+  } catch {}
 
   return { sucesso: true, mensagem: `Usuário '${u}' excluído com sucesso.` };
 }

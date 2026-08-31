@@ -88,40 +88,73 @@ export default function PanoramaGeral({
     }
   };
 
+  const temDados = metricas && metricas.hasData;
+
+  const historicoGrafico = temDados ? historicoVendas12mReal : [
+    { mes: '2026-jan', valor: 0 },
+    { mes: '2026-fev', valor: 0 },
+    { mes: '2026-mar', valor: 0 },
+    { mes: '2026-abr', valor: 0 },
+    { mes: '2026-mai', valor: 0 },
+    { mes: '2026-jun', valor: 0 },
+    { mes: '2026-jul', valor: 0 },
+    { mes: '2026-ago', valor: 0 },
+  ];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Alerta de Empresa Sem Dados Sincronizados */}
+      {!temDados && (
+        <div style={{
+          background: 'rgba(59, 130, 246, 0.12)',
+          border: '1px solid rgba(59, 130, 246, 0.35)',
+          color: '#93c5fd',
+          padding: '12px 18px',
+          borderRadius: 12,
+          fontSize: '13px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10
+        }}>
+          <span style={{ fontSize: '18px' }}>ℹ️</span>
+          <div>
+            <strong>Aguardando Primeira Sincronização:</strong> Nenhum dado localizado para <strong>{nomeEmpresa}</strong> no banco em nuvem. Abra o <strong>NexaBI-SyncAgent</strong> no servidor/estação do cliente para iniciar a ingestão contínua dos dados do ERP Próton.
+          </div>
+        </div>
+      )}
+
       {/* 1. Grade Superior de KPIs com Tooltips */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight="cyan" />
-        <KPICard label="Valor Estoque" value={metricas.valorEstoque} suffix=" Mi" highlight="purple" />
-        <KPICard label="Valor CR" value={metricas.valorCR} suffix=" Mi" highlight="yellow" />
-        <KPICard label="Valor CP" value={metricas.valorCP} suffix=" Mi" highlight="blue" />
-        <KPICard label="Contas Financ." value={metricas.contasFinanc} suffix=" Mi" highlight="cyan" />
-        <KPICard label="Margem Bruta" value={metricas.margemBruta} suffix=" Mi" highlight="green" />
-        <KPICard label="Inadimplência" value={metricas.inadimplencia} suffix=" Mi" highlight="red" />
+        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Valor Estoque" value={metricas.valorEstoque} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Valor CR" value={metricas.valorCR} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Valor CP" value={metricas.valorCP} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Contas Financ." value={temDados ? metricas.contasFinanc : '0,00'} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Margem Bruta" value={metricas.margemBruta} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Inadimplência" value={metricas.inadimplencia} suffix=" Mi" highlight={temDados ? "red" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
         <KPICard label="Qtd. Vendas" value={metricas.qtdVendas} suffix=" Mil" />
-        <KPICard label="Clientes Compraram" value="12,05" suffix=" Mil" />
-        <KPICard label="Juros Recebidos" value="2,93" suffix=" Mi" highlight="green" />
-        <KPICard label="A Pagar em Atraso" value="160,38" suffix=" Mil" highlight="red" />
-        <KPICard label="Vlr Negativo C. Fin" value="-32,70" suffix=" Mi" highlight="red" />
-        <KPICard label="% Margem" value="55,00" suffix="%" highlight="green" />
-        <KPICard label="% Inadimplência" value="12,00" suffix="%" highlight="red" />
+        <KPICard label="Clientes Compraram" value={temDados ? "12,05" : "0,00"} suffix=" Mil" />
+        <KPICard label="Juros Recebidos" value={temDados ? "2,93" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="A Pagar em Atraso" value={temDados ? "160,38" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "red" : "default"} />
+        <KPICard label="Vlr Negativo C. Fin" value={temDados ? "-32,70" : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="% Margem" value={temDados ? "55,00" : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Inadimplência" value={temDados ? "12,00" : "0,00"} suffix="%" highlight={temDados ? "red" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta do Dia" value="1,12" suffix=" Mi" highlight="cyan" />
+        <KPICard label="Venda Bruta do Dia" value={temDados ? "1,12" : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
         <KPICard label="Ticket Médio" value={metricas.ticketMedio} suffix="" />
-        <KPICard label="Valor CR - CP" value="R$ -398,85" suffix=" Mi" highlight="yellow" />
+        <KPICard label="Valor CR - CP" value={temDados ? "R$ -398,85" : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
       </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <LiquidityGauge title="Saldo Total das Contas" value={38.96} color="#7928ca" max={50} />
-          <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={-352.63} color="#ef4444" max={50} />
+          <LiquidityGauge title="Saldo Total das Contas" value={temDados ? 38.96 : 0} color="#7928ca" max={50} />
+          <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={temDados ? -352.63 : 0} color="#ef4444" max={50} />
         </div>
 
         {/* Gráfico de Vendas por Mês */}
@@ -131,7 +164,7 @@ export default function PanoramaGeral({
           </h3>
           <div style={{ height: 160 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={historicoVendas12mReal}>
+              <BarChart data={historicoGrafico}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis dataKey="mes" stroke="#64748b" fontSize={10} />
                 <YAxis stroke="#64748b" fontSize={10} />

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { 
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip, 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line 
 } from 'recharts';
+import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
 const capitalGiroData = [
   { name: 'Total de Estoque', value: 7.26, color: '#10b981' },
@@ -35,16 +36,47 @@ const fluxoProximos10Dias = [
   { dia: '05/jul', credito: 58.60, debito: 38.62, saldo: 19.98 },
 ];
 
-export default function Tesouraria() {
+export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual' }) {
+  const [metricas, setMetricas] = useState({
+    contasFinanc: '38,96',
+    hasData: true
+  });
+
+  useEffect(() => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
+  }, [clienteSelecionado, periodoPreset]);
+
+  const temDados = metricas && metricas.hasData;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Alerta se não houver dados */}
+      {!temDados && (
+        <div style={{
+          background: 'rgba(59, 130, 246, 0.12)',
+          border: '1px solid rgba(59, 130, 246, 0.35)',
+          color: '#93c5fd',
+          padding: '12px 18px',
+          borderRadius: 12,
+          fontSize: '13px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10
+        }}>
+          <span style={{ fontSize: '18px' }}>ℹ️</span>
+          <div>
+            <strong>Aguardando Sincronização de Tesouraria:</strong> Nenhuma movimentação bancária ou saldo financeiro encontrado para esta empresa. Execute o <strong>NexaBI-SyncAgent</strong> para carregar o módulo de tesouraria do ERP Próton.
+          </div>
+        </div>
+      )}
+
       {/* 5 KPIs Centrais */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10 }}>
-        <KPICard label="Saldo Total das Contas" value="6,26" suffix=" Mi" highlight="purple" />
-        <KPICard label="Total Entradas" value="104,35" suffix=" Mi" highlight="green" />
-        <KPICard label="% Entradas" value="55,60" suffix="%" highlight="green" />
-        <KPICard label="Total Saídas" value="83,34" suffix=" Mi" highlight="blue" />
-        <KPICard label="% Saídas" value="44,40" suffix="%" highlight="blue" />
+        <KPICard label="Saldo Total das Contas" value={temDados ? "6,26" : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Total Entradas" value={temDados ? "104,35" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Entradas" value={temDados ? "55,60" : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Total Saídas" value={temDados ? "83,34" : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="% Saídas" value={temDados ? "44,40" : "0,00"} suffix="%" highlight={temDados ? "blue" : "default"} />
       </div>
 
       {/* Donut Capital de Giro + Centros de Custo */}
@@ -55,49 +87,57 @@ export default function Tesouraria() {
             🍩 Composição do Capital de Giro
           </h3>
           <div style={{ width: '100%', height: 180 }}>
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie 
-                  data={capitalGiroData} 
-                  dataKey="value" 
-                  nameKey="name" 
-                  cx="50%" 
-                  cy="50%" 
-                  innerRadius={45} 
-                  outerRadius={75}
-                  paddingAngle={3}
-                  stroke="#070d18"
-                  strokeWidth={2}
-                >
-                  {capitalGiroData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    background: 'rgba(14, 25, 44, 0.95)', 
-                    borderColor: 'rgba(0, 210, 255, 0.4)', 
-                    borderRadius: 8,
-                    color: '#ffffff',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
-                  }} 
-                  itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
-                  labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
-                  formatter={(val, name) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mi`, name]}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            {temDados ? (
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie 
+                    data={capitalGiroData} 
+                    dataKey="value" 
+                    nameKey="name" 
+                    cx="50%" 
+                    cy="50%" 
+                    innerRadius={45} 
+                    outerRadius={75}
+                    paddingAngle={3}
+                    stroke="#070d18"
+                    strokeWidth={2}
+                  >
+                    {capitalGiroData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: 'rgba(14, 25, 44, 0.95)', 
+                      borderColor: 'rgba(0, 210, 255, 0.4)', 
+                      borderRadius: 8,
+                      color: '#ffffff',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+                    }} 
+                    itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                    labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
+                    formatter={(val, name) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mi`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+                Nenhum saldo financeiro apurado.
+              </div>
+            )}
           </div>
           {/* Legenda em texto claro e sem bordas */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 8, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 8 }}>
-            {capitalGiroData.map(item => (
-              <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '11px' }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
-                <span style={{ color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}:</span>
-                <strong style={{ color: '#ffffff', marginLeft: 'auto' }}>R$ {item.value} Mi</strong>
-              </div>
-            ))}
-          </div>
+          {temDados && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 8, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 8 }}>
+              {capitalGiroData.map(item => (
+                <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '11px' }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
+                  <span style={{ color: '#cbd5e1', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}:</span>
+                  <strong style={{ color: '#ffffff', marginLeft: 'auto' }}>R$ {item.value} Mi</strong>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Tabela Centros de Custo */}

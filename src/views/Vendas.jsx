@@ -36,25 +36,47 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
     fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
   }, [clienteSelecionado, periodoPreset]);
 
+  const temDados = metricas && metricas.hasData;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Alerta se não houver dados */}
+      {!temDados && (
+        <div style={{
+          background: 'rgba(59, 130, 246, 0.12)',
+          border: '1px solid rgba(59, 130, 246, 0.35)',
+          color: '#93c5fd',
+          padding: '12px 18px',
+          borderRadius: 12,
+          fontSize: '13px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10
+        }}>
+          <span style={{ fontSize: '18px' }}>ℹ️</span>
+          <div>
+            <strong>Aguardando Sincronização de Vendas:</strong> Nenhum pedido de venda encontrado para esta empresa no banco de dados. Execute o <strong>NexaBI-SyncAgent</strong> para carregar o histórico de vendas do ERP Próton.
+          </div>
+        </div>
+      )}
+
       {/* Grade de 12 KPIs com Tooltips Interativos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight="cyan" />
-        <KPICard label="Impostos Diretos" value={metricas.impostosDiretos} suffix=" Mi" highlight="blue" />
-        <KPICard label="% Imp. Diretos" value="23,42" suffix="%" />
-        <KPICard label="Venda Líquida" value={metricas.vendaLiquida} suffix=" Mi" highlight="green" />
-        <KPICard label="% Vda Líquida" value="100,00" suffix="%" />
+        <KPICard label="Venda Bruta" value={metricas.vendaBruta} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Impostos Diretos" value={metricas.impostosDiretos} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="% Imp. Diretos" value={temDados ? "23,42" : "0,00"} suffix="%" />
+        <KPICard label="Venda Líquida" value={metricas.vendaLiquida} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Vda Líquida" value={temDados ? "100,00" : "0,00"} suffix="%" />
         <KPICard label="Ticket Médio" value={metricas.ticketMedio} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Margem Contribuição" value={metricas.margemContribuicao} suffix=" Mi" highlight="green" />
-        <KPICard label="% Margem Contrib." value="55,00" suffix="%" highlight="green" />
-        <KPICard label="Meta de Venda" value={metricas.metaVenda} suffix=" Mi" highlight="purple" />
-        <KPICard label="% Meta Atingida" value={metricas.metaAtingida} suffix="%" highlight="green" />
-        <KPICard label="CMV" value={metricas.cmv} suffix=" Mi" highlight="yellow" />
-        <KPICard label="% CMV s/ Venda" value="45,00" suffix="%" />
+        <KPICard label="Margem Contribuição" value={metricas.margemContribuicao} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Margem Contrib." value={temDados ? "55,00" : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Meta de Venda" value={metricas.metaVenda} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="% Meta Atingida" value={metricas.metaAtingida} suffix="%" highlight={temDados ? "green" : "default"} />
+        <KPICard label="CMV" value={metricas.cmv} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="% CMV s/ Venda" value={temDados ? "45,00" : "0,00"} suffix="%" />
       </div>
 
       {/* Seção Gráficos & Formas de Pagamento */}
@@ -64,19 +86,25 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
             💳 Ranking — Formas de Pagamento (Próton)
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {formasPagamento.map(fp => (
-              <div key={fp.forma} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                  <span>{fp.forma}</span>
-                  <span style={{ fontWeight: 700, color: fp.cor }}>{fp.perc}%</span>
+          {temDados ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {formasPagamento.map(fp => (
+                <div key={fp.forma} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                    <span>{fp.forma}</span>
+                    <span style={{ fontWeight: 700, color: fp.cor }}>{fp.perc}%</span>
+                  </div>
+                  <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <div style={{ width: `${fp.perc}%`, height: '100%', background: fp.cor, borderRadius: 3 }} />
+                  </div>
                 </div>
-                <div style={{ width: '100%', height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                  <div style={{ width: `${fp.perc}%`, height: '100%', background: fp.cor, borderRadius: 3 }} />
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+              Nenhuma movimentação de pagamento registrada para este cliente.
+            </div>
+          )}
         </div>
 
         {/* Tabelas de Vendedores */}
@@ -84,24 +112,30 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 10 }}>
             👥 Ranking de Vendas por Vendedor (Top Performers)
           </h3>
-          <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                <th style={{ padding: '6px 4px' }}>Vendedor</th>
-                <th style={{ padding: '6px 4px', textAlign: 'right' }}>Valor Faturado (R$)</th>
-                <th style={{ padding: '6px 4px', textAlign: 'right' }}>% Share</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vendedoresData.map(v => (
-                <tr key={v.nome} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <td style={{ padding: '6px 4px', fontWeight: 600, color: '#f8fafc' }}>{v.nome}</td>
-                  <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 700, color: '#38bdf8' }}>R$ {v.valor}</td>
-                  <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 700 }}>{v.share}</td>
+          {temDados ? (
+            <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: '6px 4px' }}>Vendedor</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Valor Faturado (R$)</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>% Share</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {vendedoresData.map(v => (
+                  <tr key={v.nome} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                    <td style={{ padding: '6px 4px', fontWeight: 600, color: '#f8fafc' }}>{v.nome}</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 700, color: '#38bdf8' }}>R$ {v.valor}</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 700 }}>{v.share}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+              Nenhum vendedor com vendas faturadas no período.
+            </div>
+          )}
         </div>
       </div>
     </div>

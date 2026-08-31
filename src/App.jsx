@@ -16,7 +16,7 @@ import Login from './Login';
 import ModalGerenciarUsuarios from './components/ModalGerenciarUsuarios';
 import ModalGerenciarEmpresas from './components/ModalGerenciarEmpresas';
 import AIAssistantDrawer from './components/AIAssistantDrawer';
-import { getTodasEmpresas } from './empresaStore';
+import { getTodasEmpresas, getFiliaisEmpresa } from './empresaStore';
 import { APP_VERSION } from './config';
 
 const MODULOS = [
@@ -189,22 +189,23 @@ export default function App() {
 
   const isMaster = usuario.perfil === 'master';
 
+  const [listaUnidades, setListaUnidades] = useState([
+    { id: 'Todas', label: '🏢 Todas as Unidades' }
+  ]);
+
+  useEffect(() => {
+    getFiliaisEmpresa(clienteSelecionado).then(unidades => {
+      setListaUnidades(unidades || [{ id: 'Todas', label: '🏢 Todas as Unidades' }]);
+    });
+  }, [clienteSelecionado, empresasCadastradas]);
+
   // Obter a configuração da empresa atual (Clientes Reais ou Consolidado)
   const empresaRealEncontrada = empresasCadastradas.find(e => e.cnpj === clienteSelecionado || e.id === clienteSelecionado);
   const dadosEmpresaAtual = empresaRealEncontrada ? {
     id: empresaRealEncontrada.id,
     nome: empresaRealEncontrada.nome_fantasia || empresaRealEncontrada.razao_social,
-    erp: `${empresaRealEncontrada.erp_tipo || 'Próton'} (${empresaRealEncontrada.banco_tipo || 'Oracle'})`,
-    unidades: [
-      { id: 'Todas', label: `🏢 Todas as Unidades (${empresaRealEncontrada.nome_fantasia || empresaRealEncontrada.razao_social})` },
-      { id: '1', label: '01 - Matriz Principal' }
-    ]
+    erp: `${empresaRealEncontrada.erp_tipo || 'Próton'} (${empresaRealEncontrada.banco_tipo || 'Oracle'})`
   } : (CATALOGO_EMPRESAS[clienteSelecionado] || CATALOGO_EMPRESAS.todas);
-
-  const listaUnidades = dadosEmpresaAtual.unidades || [
-    { id: 'Todas', label: 'Todas as Filiais Autorizadas' },
-    { id: '1', label: '01 - Matriz Principal' }
-  ];
 
   const handleMudancaClienteMaster = (novoClienteId) => {
     setClienteSelecionado(novoClienteId);
@@ -499,7 +500,6 @@ export default function App() {
       <main>
         {moduloAtivo === 'panorama' && (
           <PanoramaGeral 
-            isRealEmptyTenant={false}
             nomeEmpresa={dadosEmpresaAtual.nome} 
             periodoDesc={getPeriodoDescricao()} 
             clienteSelecionado={clienteSelecionado}
@@ -507,12 +507,12 @@ export default function App() {
           />
         )}
         {moduloAtivo === 'vendas' && <Vendas clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'compras' && <Compras />}
-        {moduloAtivo === 'cr' && <ContasReceber />}
-        {moduloAtivo === 'cp' && <ContasPagar />}
-        {moduloAtivo === 'tesouraria' && <Tesouraria />}
-        {moduloAtivo === 'estoques' && <Estoques />}
-        {moduloAtivo === 'fiscal' && <Fiscal />}
+        {moduloAtivo === 'compras' && <Compras clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'cr' && <ContasReceber clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'cp' && <ContasPagar clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'tesouraria' && <Tesouraria clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'estoques' && <Estoques clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'fiscal' && <Fiscal clienteSelecionado={clienteSelecionado} periodoPreset={periodoPreset} />}
       </main>
 
       {/* Rodapé Oficial com Logo Ampliada */}

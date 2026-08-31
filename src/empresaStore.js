@@ -179,6 +179,45 @@ export async function atualizarEmpresa(id, dados) {
   return { sucesso: true, empresa: { id, ...dadosAtualizados } };
 }
 
+export async function getFiliaisEmpresa(empresaId) {
+  if (!empresaId || empresaId === 'todas') {
+    return [{ id: 'Todas', label: '🏢 Todas as Unidades (Consolidado)' }];
+  }
+
+  const todasEmp = await getTodasEmpresas();
+  const emp = todasEmp.find(e => e.cnpj === empresaId || e.id === empresaId);
+  const uuid = emp ? emp.id : empresaId;
+  const nomeEmpresa = emp ? (emp.nome_fantasia || emp.razao_social) : 'Empresa';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/filiais?empresa_id=eq.${uuid}&select=*&order=codigo_filial.asc`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return [
+          { id: 'Todas', label: `🏢 Todas as Filiais (${nomeEmpresa})` },
+          ...data.map(f => ({
+            id: String(f.codigo_filial),
+            label: `${String(f.codigo_filial).padStart(2, '0')} - ${f.nome_filial}${f.cidade ? ` (${f.cidade}/${f.uf || 'BA'})` : ''}`
+          }))
+        ];
+      }
+    }
+  } catch (err) {
+    console.warn('Erro ao buscar filiais da empresa no Supabase:', err);
+  }
+
+  // Se não há filiais sincronizadas para esta empresa
+  return [
+    { id: 'Todas', label: `🏢 Todas as Unidades (${nomeEmpresa})` }
+  ];
+}
+
 export async function excluirEmpresa(id) {
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/empresas?id=eq.${id}`, {
