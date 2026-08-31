@@ -34,7 +34,8 @@ export default function PanoramaGeral({
   nomeEmpresa = 'DESTAK PRIME', 
   periodoDesc = 'Mês Atual', 
   clienteSelecionado = 'todas',
-  periodoPreset = 'mes_atual'
+  periodoPreset = 'mes_atual',
+  unidade = 'Todas'
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
 
@@ -43,6 +44,9 @@ export default function PanoramaGeral({
     clienteSelecionado.includes('f7acf52e') || 
     clienteSelecionado === 'arcoverde'
   );
+
+  const isFilial3 = unidade === '3';
+  const isFilial1 = unidade === '1';
 
   const [metricas, setMetricas] = useState(() => {
     if (isTenantVazio) {
@@ -62,16 +66,16 @@ export default function PanoramaGeral({
     }
     return {
       hasData: true,
-      vendaBruta: '26,74',
-      vendaLiquida: '26,74',
-      qtdVendas: '12,05',
-      ticketMedio: 'R$ 2.219,62',
-      valorCR: '321,55',
-      valorCP: '720,40',
-      valorEstoque: '7,26',
-      contasFinanc: '38,96',
-      margemBruta: '14,71',
-      inadimplencia: '38,58'
+      vendaBruta: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
+      vendaLiquida: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
+      qtdVendas: isFilial3 ? '9,93' : (isFilial1 ? '2,13' : '12,05'),
+      ticketMedio: isFilial3 ? 'R$ 276,00' : (isFilial1 ? 'R$ 11.294,00' : 'R$ 2.219,62'),
+      valorCR: isFilial3 ? '24,30' : (isFilial1 ? '297,26' : '321,55'),
+      valorCP: isFilial3 ? '28,91' : (isFilial1 ? '691,50' : '720,40'),
+      valorEstoque: isFilial3 ? '0,75' : (isFilial1 ? '3,21' : '3,96'),
+      contasFinanc: isFilial3 ? '4,50' : (isFilial1 ? '34,46' : '38,96'),
+      margemBruta: isFilial3 ? '1,51' : (isFilial1 ? '13,20' : '14,71'),
+      inadimplencia: isFilial3 ? '2,92' : (isFilial1 ? '35,67' : '38,58')
     };
   });
 
@@ -95,10 +99,10 @@ export default function PanoramaGeral({
 
   useEffect(() => {
     carregarWidgetsCustomizados();
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset]);
+  }, [clienteSelecionado, periodoPreset, unidade]);
 
   const removerWidget = async (id) => {
     try {

@@ -36,17 +36,36 @@ const fluxoProximos10Dias = [
   { dia: '05/jul', credito: 58.60, debito: 38.62, saldo: 19.98 },
 ];
 
-export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual' }) {
-  const [metricas, setMetricas] = useState({
-    contasFinanc: '38,96',
-    hasData: true
+export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+  const isTenantVazio = clienteSelecionado && (
+    clienteSelecionado.includes('10.237.062') || 
+    clienteSelecionado.includes('f7acf52e') || 
+    clienteSelecionado === 'arcoverde'
+  );
+
+  const isFilial3 = unidade === '3';
+  const isFilial1 = unidade === '1';
+
+  const [metricas, setMetricas] = useState(() => {
+    if (isTenantVazio) {
+      return {
+        contasFinanc: '0,00',
+        hasData: false
+      };
+    }
+    return {
+      contasFinanc: isFilial3 ? '4,50' : (isFilial1 ? '34,46' : '38,96'),
+      hasData: true
+    };
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
-  }, [clienteSelecionado, periodoPreset]);
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+      if (data) setMetricas(data);
+    });
+  }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = metricas && metricas.hasData;
+  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -72,10 +91,10 @@ export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset
 
       {/* 5 KPIs Centrais */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10 }}>
-        <KPICard label="Saldo Total das Contas" value={temDados ? "6,26" : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="Total Entradas" value={temDados ? "104,35" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Saldo Total das Contas" value={temDados ? (isFilial3 ? "0,75" : (isFilial1 ? "5,51" : "6,26")) : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Total Entradas" value={temDados ? (isFilial3 ? "12,50" : (isFilial1 ? "91,85" : "104,35")) : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
         <KPICard label="% Entradas" value={temDados ? "55,60" : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Total Saídas" value={temDados ? "83,34" : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Total Saídas" value={temDados ? (isFilial3 ? "10,20" : (isFilial1 ? "73,14" : "83,34")) : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
         <KPICard label="% Saídas" value={temDados ? "44,40" : "0,00"} suffix="%" highlight={temDados ? "blue" : "default"} />
       </div>
 
@@ -145,24 +164,30 @@ export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 10 }}>
             📑 Total por Centro de Custo
           </h3>
-          <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)' }}>
-                <th style={{ padding: '6px 4px', textAlign: 'left' }}>Centro de Custo</th>
-                <th style={{ padding: '6px 4px', textAlign: 'right' }}>Entradas (R$)</th>
-                <th style={{ padding: '6px 4px', textAlign: 'right' }}>Saídas (R$)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {centrosCusto.map(cc => (
-                <tr key={cc.codigo} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <td style={{ padding: '6px 4px' }}>{cc.nome}</td>
-                  <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{cc.entradas}</td>
-                  <td style={{ padding: '6px 4px', textAlign: 'right', color: '#00d2ff', fontWeight: 600 }}>{cc.saidas}</td>
+          {temDados ? (
+            <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: '6px 4px', textAlign: 'left' }}>Centro de Custo</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Entradas (R$)</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Saídas (R$)</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {centrosCusto.map(cc => (
+                  <tr key={cc.codigo} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                    <td style={{ padding: '6px 4px' }}>{cc.nome}</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{cc.entradas}</td>
+                    <td style={{ padding: '6px 4px', textAlign: 'right', color: '#00d2ff', fontWeight: 600 }}>{cc.saidas}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px', padding: '20px 0' }}>
+              Nenhum centro de custo movimentado.
+            </div>
+          )}
         </div>
       </div>
 
@@ -172,27 +197,33 @@ export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset
           📅 Projeção de Fluxo de Caixa — Próximos 10 Dias (Mil R$)
         </h3>
         <div style={{ width: '100%', height: 260 }}>
-          <ResponsiveContainer>
-            <BarChart data={fluxoProximos10Dias}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="dia" stroke="var(--text-muted)" fontSize={11} />
-              <YAxis stroke="var(--text-muted)" fontSize={11} />
-              <Tooltip 
-                contentStyle={{ 
-                  background: 'rgba(14, 25, 44, 0.95)', 
-                  borderColor: 'rgba(0, 210, 255, 0.4)', 
-                  borderRadius: 8, 
-                  color: '#ffffff',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
-                }} 
-                itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
-                labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
-                formatter={(val, name) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mil`, name]}
-              />
-              <Bar dataKey="credito" fill="#ef4444" name="Crédito" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="debito" fill="#3b82f6" name="Débito" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          {temDados ? (
+            <ResponsiveContainer>
+              <BarChart data={fluxoProximos10Dias}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="dia" stroke="var(--text-muted)" fontSize={11} />
+                <YAxis stroke="var(--text-muted)" fontSize={11} />
+                <Tooltip 
+                  contentStyle={{ 
+                    background: 'rgba(14, 25, 44, 0.95)', 
+                    borderColor: 'rgba(0, 210, 255, 0.4)', 
+                    borderRadius: 8, 
+                    color: '#ffffff',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+                  }} 
+                  itemStyle={{ color: '#ffffff', fontSize: '12px', fontWeight: 600 }}
+                  labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
+                  formatter={(val, name) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mil`, name]}
+                />
+                <Bar dataKey="credito" fill="#ef4444" name="Crédito" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="debito" fill="#3b82f6" name="Débito" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+              Nenhuma projeção de fluxo de caixa disponível.
+            </div>
+          )}
         </div>
       </div>
     </div>

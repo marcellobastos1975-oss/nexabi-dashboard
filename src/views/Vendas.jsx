@@ -20,12 +20,15 @@ const vendedoresData = [
   { nome: 'MARCOS VINICIUS', valor: '1.745.210,00', share: '6,53%' },
 ];
 
-export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual' }) {
+export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
   const isTenantVazio = clienteSelecionado && (
     clienteSelecionado.includes('10.237.062') || 
     clienteSelecionado.includes('f7acf52e') || 
     clienteSelecionado === 'arcoverde'
   );
+
+  const isFilial3 = unidade === '3';
+  const isFilial1 = unidade === '1';
 
   const [metricas, setMetricas] = useState(() => {
     if (isTenantVazio) {
@@ -43,22 +46,22 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
     }
     return {
       hasData: true,
-      vendaBruta: '26,74',
-      vendaLiquida: '26,74',
-      impostosDiretos: '6,26',
-      cmv: '12,03',
-      margemContribuicao: '14,71',
-      ticketMedio: 'R$ 2.219,62',
-      metaVenda: '25,00',
-      metaAtingida: '106,96'
+      vendaBruta: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
+      vendaLiquida: isFilial3 ? '2,74' : (isFilial1 ? '24,00' : '26,74'),
+      impostosDiretos: isFilial3 ? '5,21' : (isFilial1 ? '5,62' : '6,26'),
+      cmv: isFilial3 ? '10,02' : (isFilial1 ? '10,80' : '12,03'),
+      margemContribuicao: isFilial3 ? '12,24' : (isFilial1 ? '13,20' : '14,71'),
+      ticketMedio: isFilial3 ? 'R$ 275,31' : (isFilial1 ? 'R$ 11.294,00' : 'R$ 2.219,62'),
+      metaVenda: isFilial3 ? '2,50' : (isFilial1 ? '22,50' : '25,00'),
+      metaAtingida: isFilial3 ? '890,44' : '106,67'
     };
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset]);
+  }, [clienteSelecionado, periodoPreset, unidade]);
 
   const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
 

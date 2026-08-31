@@ -534,15 +534,16 @@ export default function App() {
             periodoDesc={getPeriodoDescricao()} 
             clienteSelecionado={clienteAtivo}
             periodoPreset={periodoPreset}
+            unidade={unidade}
           />
         )}
-        {moduloAtivo === 'vendas' && <Vendas clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'compras' && <Compras clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'cr' && <ContasReceber clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'cp' && <ContasPagar clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'tesouraria' && <Tesouraria clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'estoques' && <Estoques clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
-        {moduloAtivo === 'fiscal' && <Fiscal clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} />}
+        {moduloAtivo === 'vendas' && <Vendas clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
+        {moduloAtivo === 'compras' && <Compras clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
+        {moduloAtivo === 'cr' && <ContasReceber clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
+        {moduloAtivo === 'cp' && <ContasPagar clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
+        {moduloAtivo === 'tesouraria' && <Tesouraria clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
+        {moduloAtivo === 'estoques' && <Estoques clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
+        {moduloAtivo === 'fiscal' && <Fiscal clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
       </main>
 
       {/* Rodapé Oficial com Logo Ampliada */}

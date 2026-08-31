@@ -26,16 +26,24 @@ const comprasFornecedor = [
   { nome: 'RECONFLEX COLCHÕES INDÚSTRIA', valor: '63,99', share: '5,53%' },
 ];
 
-export default function Compras({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual' }) {
-  const [metricas, setMetricas] = useState({
-    hasData: true
-  });
+export default function Compras({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+  const isTenantVazio = clienteSelecionado && (
+    clienteSelecionado.includes('10.237.062') || 
+    clienteSelecionado.includes('f7acf52e') || 
+    clienteSelecionado === 'arcoverde'
+  );
+
+  const [metricas, setMetricas] = useState(() => ({
+    hasData: !isTenantVazio
+  }));
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset).then(setMetricas);
-  }, [clienteSelecionado, periodoPreset]);
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+      if (data) setMetricas(data);
+    });
+  }, [clienteSelecionado, periodoPreset, unidade]);
 
-  const temDados = metricas && metricas.hasData;
+  const temDados = isTenantVazio ? false : Boolean(metricas && metricas.hasData);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -126,33 +134,35 @@ export default function Compras({ clienteSelecionado = 'todas', periodoPreset = 
       </div>
 
       {/* Comparativos Fiscais */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
-        <div className="glass-card" style={{ padding: 16 }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
-            🚚 Compras: Dentro vs Fora do Estado (Origem Tributária)
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '10px 0' }}>
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: 4 }}>
-                <span>Fora do Estado (Interestadual)</span>
-                <strong style={{ color: '#38bdf8' }}>78,35%</strong>
+      {temDados && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
+          <div className="glass-card" style={{ padding: 16 }}>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
+              🚚 Compras: Dentro vs Fora do Estado (Origem Tributária)
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '10px 0' }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: 4 }}>
+                  <span>Fora do Estado (Interestadual)</span>
+                  <strong style={{ color: '#38bdf8' }}>78,35%</strong>
+                </div>
+                <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.05)', borderRadius: 5 }}>
+                  <div style={{ width: '78.35%', height: '100%', background: '#38bdf8', borderRadius: 5 }} />
+                </div>
               </div>
-              <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.05)', borderRadius: 5 }}>
-                <div style={{ width: '78.35%', height: '100%', background: '#38bdf8', borderRadius: 5 }} />
-              </div>
-            </div>
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: 4 }}>
-                <span>Dentro do Estado (Bahia)</span>
-                <strong style={{ color: '#10b981' }}>21,65%</strong>
-              </div>
-              <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.05)', borderRadius: 5 }}>
-                <div style={{ width: '21.65%', height: '100%', background: '#10b981', borderRadius: 5 }} />
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: 4 }}>
+                  <span>Dentro do Estado (Bahia)</span>
+                  <strong style={{ color: '#10b981' }}>21,65%</strong>
+                </div>
+                <div style={{ width: '100%', height: 10, background: 'rgba(255,255,255,0.05)', borderRadius: 5 }}>
+                  <div style={{ width: '21.65%', height: '100%', background: '#10b981', borderRadius: 5 }} />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
