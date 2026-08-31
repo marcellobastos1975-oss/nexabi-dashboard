@@ -1,5 +1,5 @@
-﻿# 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-08-30 — Dashboard Web v2.3.0 PROD & NexaBI SyncAgent v1.8.0 PROD
+# 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
+> **Última atualização:** 2026-08-31 — Dashboard Web v2.4.3 PROD & NexaBI SyncAgent v1.8.4 PROD
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
@@ -10,8 +10,8 @@ Para garantir a máxima qualidade, segurança e conformidade do ecossistema Nexa
 
 ### 🏷️ 1. Diretriz de Versionamento Contínuo e Rastreável (OBRIGATÓRIO A CADA ALTERAÇÃO)
 * **Toda e qualquer alteração de código ou funcionalidade exige incremento imediato de versão**:
-  * **Dashboard Web**: **`v1.6.3 PROD`** (Exibido no rodapé oficial do sistema, `config.js` e `package.json`).
-  * **SyncAgent Desktop**: **`v1.5.2`** (Exibido no título da janela gráfica e rodapé do executável).
+  * **Dashboard Web**: **`v2.4.3 PROD`** (Exibido no rodapé oficial do sistema, `config.js` e `package.json`).
+  * **SyncAgent Desktop**: **`v1.8.4 PROD`** (Exibido no título da janela gráfica e rodapé do executável).
 * Nenhuma alteração é liberada sem a atualização formal do número da versão e seu respectivo registro no Histórico de Versões.
 
 ### 🚀 2. Diretriz de Commit & Push Obrigatório no Git em Tempo Real
@@ -65,7 +65,26 @@ pm run build e confirmar compilação com zero erros.
      * Realizar deploy no Google Cloud Firebase Hosting e confirmar disponibilidade online (HTTP 200).
   3. **Nuvem & Banco de Dados (Supabase)**:
      * Validar integridade das tabelas ODS, índices, RLS e autenticação via REST API com TLS 1.3.
-* **Objetivo**: Assegurar que o usuário e os clientes finais recebam entregas 100% funcionais, seguras e validadas, eliminando qualquer desperdício de tempo ou falhas em ambiente de produção.
+### 🗄️ 9. Diretriz de Conexão e Governança de Schemas Oracle Próton (DBAUSER & APPUSER)
+* **Propriedade dos Objetos**: No Próton ERP, o usuário **`DBAUSER`** é o proprietário (*owner*) de todos os objetos e tabelas do banco de dados Oracle (`TNUD_UNIDADE`, `TPED_PEDIDO_VENDA`, `TVND_VENDEDOR`, `TCLI_CLIENTE`, `TFOR_FORNECEDOR`, `TMER_MERCADORIA`, `TREC_ABERTO`, `TPAG_ABERTO`, `TMER_ESTOQUE`, etc.).
+* **Usuário de Aplicação / Leitura**: O usuário **`APPUSER`** é utilizado pelas estações/aplicações e possui *grants* de leitura (`SELECT`) em todos os objetos do schema `DBAUSER`.
+* **Regra de Inicialização de Sessão**: Ao conectar no Oracle utilizando `APPUSER` (ou qualquer usuário de aplicação), o sistema executa automaticamente na abertura do pool/conexão:
+  ```sql
+  ALTER SESSION SET CURRENT_SCHEMA = DBAUSER
+  ```
+  Isso garante que consultas diretas a qualquer tabela do Próton funcionem de forma 100% transparente e nativa, com ou sem o prefixo explícito `DBAUSER.`.
+
+### 🎨 10. Diretriz de Identidade Visual Oficial, Logotipos e Ícones do Ecossistema (OBRIGATÓRIO)
+* **Logotipo Oficial Completo (`nexabi_logo.png` / `app_logo_header.png`)**:
+  * Monograma 3D Cyber N com colunas analíticas ascendentes e tipografia moderna *NexaBI — Alpha Suite*.
+  * Localização oficial: `Dashboard/public/nexabi_logo.png` e `SyncAgent/app_logo_header.png`.
+  * **Posicionamento no Dashboard**: Exibido obrigatoriamente no **lado direito do cabeçalho** (tanto no perfil Master quanto no perfil Cliente), balanceando com a marca NexaLife Tech no lado esquerdo.
+* **Ícone Oficial 3D N (`favicon.ico`, `favicon.png`, `favicon.svg`, `app_icon.ico`, `app_icon.png`)**:
+  * Monograma 3D N em perspectiva isométrica translúcida com neon ciano e safira.
+  * Localização oficial: `Dashboard/public/` (web favicons), `SyncAgent/` e `SchemaStudio/`.
+  * **Barra de Tarefas e Título Windows**: Aplicativos Desktop utilizam `ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID` e `win.iconbitmap(default=ico)` para garantir a exibição permanente do ícone 3D N oficial (eliminando o ícone padrão de pena do Tkinter).
+* **Banners de Compartilhamento Social & Open Graph (`og-image.png`, `og-preview.png`, `nexabi_og_preview.png`)**:
+  * Resolução 1200x630 em `Dashboard/public/` para pré-visualização rica e elegante de links no WhatsApp, Telegram, LinkedIn e redes sociais.
 
 ---
 
@@ -74,31 +93,28 @@ pm run build e confirmar compilação com zero erros.
 ```
 G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 ├── SyncAgent\                     → Agente Extrator Local/Datacenter (Python oracledb Thin/Thick + NSSM)
-│   ├── NexaBI-SyncAgent.exe       → Executável portátil compilado (--noconsole, AES-256, UI responsiva)
+│   ├── NexaBI-SyncAgent.exe       → Executável portátil compilado (--noconsole, AES-256, ícone 3D N oficial)
 │   ├── sync_gui.py                → Interface gráfica executiva Tkinter responsiva
 │   ├── oracle_queries.py          → Queries Delta com hints e mapeamento de TNUD_UNIDADE
 │   ├── sync_agent.py              → Worker de extração contínua e auto-provisionamento
+│   ├── app_icon.ico / .png        → Ícone oficial 3D N multi-resolução
+│   ├── app_logo_header.png        → Logotipo oficial 3D Cyber N
 │   ├── config.json                → Configuração criptografada AES-256
 │   └── requirements.txt           → Dependências Python (oracledb, requests, cryptography)
-├── Backend\                       → API Cloud REST & Analytics (FastAPI + Supabase PostgreSQL)
-│   ├── main.py                    → Rotas analíticas, cache em memória e endpoints de sync
-│   ├── config.py                  → Inicializador oficial do Supabase Python
-│   ├── .env                       → Variáveis de ambiente e chaves secretas
-│   └── requirements.txt           → Dependências FastAPI, Uvicorn, Supabase
+├── SchemaStudio\                  → Estúdio de Mapeamento Técnico e Semântico IA
+│   ├── NexaBI-SchemaStudio.exe   → Executável portátil compilado (ícone 3D N oficial)
+│   ├── app_studio.py              → Mapeador visual com descoberta autônoma IA
+│   └── app_icon.ico / .png        → Ícone oficial 3D N multi-resolução
 ├── Dashboard\                     → Interface Web BI SPA (React 18 + Vite + Recharts + Lucide)
-│   ├── public\                    → Favicons 3D N, logos oficiais (nexalife_logo.png)
+│   ├── public\                    → Favicons 3D N (ico/png/svg), nexabi_logo.png, nexalife_logo.png, og-image.png
 │   ├── src\views\                 → 8 Módulos Completos (Panorama, Vendas, Compras, CR, CP, Tesouraria, Estoques, Fiscal)
 │   ├── src\components\            → Componentes reutilizáveis (KPICard, LiquidityGauge, ModalEmpresas, ModalUsuarios)
 │   ├── src\maskUtils.js           → Utilitários de auto-máscaras em tempo real (WhatsApp, CNPJ)
-│   ├── src\App.jsx                → Header executivo, seletor de empresas reais, períodos dinâmicos e navegação
-│   ├── src\config.js              → Configurações oficiais (APP_VERSION = 'v1.6.3 PROD')
+│   ├── src\App.jsx                → Header executivo dual-brand, seletor de empresas reais e filtros
+│   ├── src\config.js              → Configurações oficiais (APP_VERSION = 'v2.4.3 PROD')
 │   ├── src\index.css              → Tema Dark Navy Glassmorphism da NexaLife Tech
-│   └── dist\                      → Build compilado pronto para produção
+│   └── dist\                      → Build compilado pronto para produção no Firebase
 ├── Database\                      → Esquemas SQL, Materialized Views, RPCs e Seed
-│   ├── 01_schema_multi_tenant.sql → 10 Tabelas ODS multi-tenant com índices otimizados
-│   ├── 02_materialized_views.sql  → Visões materializadas para agregação ultrarrápida
-│   ├── 03_rpcs_analytics.sql      → Funções PostgreSQL para consultas sub-30ms
-│   └── 04_seed_demonstracao.sql   → Carga isolada de dados de teste (Lojas Silva)
 ├── Conexões.txt                   → Arquivo local seguro com todas as chaves (protegido no .gitignore)
 ├── PROTON BI.mp4                  → Vídeo original de referência do BI Próton
 ├── Projeto_estado.md              → Documentação viva de engenharia, queries e governança
@@ -120,7 +136,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 | **PostgreSQL Host** | `db.fwlexdycmquuwfrfwokv.supabase.co` | Host direto (Portas 5432 / 6543) |
 | **Firebase Projeto Corporativo** | `NexaLife-Ecosystem` (`nexalife-ecosystem`) | **Projeto Cloud Exclusivo NexaLife** 🟢 |
 | **Domínio Corporativo Oficial** | `https://nexalifetech.com.br` / `www` | **Portal Institucional NexaLife TECH** 🟢 |
-| **Subdomínio NexaBI Oficial** | `https://bi.nexalifetech.com.br` | **Plataforma NexaBI — Alpha Suite (v1.6.3 PROD)** 📊 🟢 |
+| **Subdomínio NexaBI Oficial** | `https://bi.nexalifetech.com.br` | **Plataforma NexaBI — Alpha Suite (v2.4.3 PROD)** 📊 🟢 |
 | **Subdomínio Nexa-RPA Oficial** | `https://pdv.nexalifetech.com.br` | **Portal de Gestão & Automação PDVs (RPA)** 🤖 🟢 |
 | **Firebase Hosting (NexaBI)** | `https://nexabi-suite.web.app` | Endpoint Google Cloud NexaBI |
 | **Dashboard GitHub** | `https://github.com/marcellobastos1975-oss/nexabi-dashboard.git` | Código-fonte versionado |
@@ -132,6 +148,17 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| Dashboard Web | v2.4.3 PROD | 2026-08-31 | **v2.4.3 PROD (NOVO LOGOTIPO OFICIAL 3D CYBER N, HEADER DUAL-BRAND MASTER/CLIENTE, OPENGRAPH WHATSAPP & FAVICONS 3D)**: 1) Criação e integração do novo logotipo oficial *NexaBI — Alpha Suite* (`/nexabi_logo.png`) no lado direito do cabeçalho (visível para perfil Master e Cliente); 2) Atualização completa de metatags Open Graph e banners de pré-visualização rica para compartilhamento em WhatsApp, redes sociais e Google (`og-image.png`, `og-preview.png`, `nexabi_og_preview.png`); 3) Geração do pacote de favicons multi-resolução (`favicon.ico`, `favicon.png`, `favicon.svg`); 4) Build e Deploy concluídos com sucesso no Firebase Hosting (`https://nexabi-suite.web.app`). |
+| SyncAgent Desktop | v1.8.5 PROD | 2026-08-31 | **v1.8.5 PROD (ÍCONE OFICIAL 3D N EMBARCADO, ELIMINAÇÃO DA PENA TKINTER NO WINDOWS & BADGE NOVO NO CABEÇALHO)**: 1) Geração e empacotamento dos novos ícones oficiais 3D N multi-resolução (`app_icon.ico`, `app_icon.png`, `app_logo_header.png`); 2) Inclusão de `ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID` e `win.iconbitmap(default=ico)`, forçando o Windows a exibir o ícone 3D N oficial na Barra de Tarefas, Alt+Tab e Barra de Título (eliminando o ícone padrão da pena); 3) Badge gráfico atualizado no cabeçalho; 4) Recompilação do executável autônomo portátil `NexaBI-SyncAgent.exe`. |
+| SchemaStudio Desktop | v2.4.2 PROD | 2026-08-31 | **v2.4.2 PROD (PADRONIZAÇÃO VISUAL 3D N & APPUSERMODELID NO WINDOWS)**: 1) Atualização de `app_icon.ico` e `app_icon.png` com o novo monograma 3D N; 2) Configuração de `SetCurrentProcessExplicitAppUserModelID` e `set_app_icon` para barra de tarefas e título; 3) Recompilação do binário standalone `NexaBI-SchemaStudio.exe`. |
+| Dashboard Web | v2.4.3 PROD | 2026-08-31 | **v2.4.3 PROD (CONSOLIDAÇÃO REAL MULTI-EMPRESA, ATIVAÇÃO DE DADOS ARCO VERDE & CADASTRO DE FILIAIS NO DASHBOARD)**: 1) Remoção de bloqueio estático `isTenantVazio` em `dashboardDataService.js` e nas 8 views do sistema; 2) Atualização da função RPC PostgreSQL `get_dashboard_metrics` para calcular dinamicamente dados consolidados de todas as empresas reais (Destak Prime + Arco Verde = R$ 105,66 Mi Vendas, R$ 456,35 Mi CR, R$ 1.045,14 Mi CP, R$ 116,95 Mi Estoques) e métricas individuais com filtragem temporal estrita (`mes_atual`, `30d`, `90d`, `ano`); 3) Cadastradas as 6 filiais da Arco Verde na tabela `filiais` no Supabase com sincronização nos seletores do Dashboard; 4) Build e Deploy concluídos com sucesso no Firebase Hosting (`https://nexabi-suite.web.app`). |
+| SyncAgent Desktop | v1.8.4 PROD | 2026-08-31 | **v1.8.4 PROD (RELATÓRIO DE AUDITORIA & DIAGNÓSTICO DE CARGA INICIAL COM PERSISTÊNCIA DUAL)**: 1) Criação do motor automático de auditoria e perfilamento que gera `relatorio_auditoria_sync.json` e `relatorio_auditoria_sync.log` a cada carga; 2) Criação e provisionamento da tabela `bi_sync_logs` no Supabase com índices e RLS para armazenamento histórico dos metadados de sincronização; 3) Mapeamento e rastreamento completo de tabelas e colunas do ERP Próton (`tped_pedido_venda`, `tund_unidade`, `trec_aberto`, `tpag_aberto`, `tmer_estoque`, `tcli_cliente`, `tvnd_vendedor`, `tfor_fornecedor`, `tmer_mercadoria`); 4) Recompilação do executável autônomo `NexaBI-SyncAgent.exe`. |
+| SyncAgent Desktop | v1.8.3 PROD | 2026-08-31 | **v1.8.3 PROD (PRIORIZAÇÃO DE TUND_UNIDADE, INTROSPECÇÃO INTELIGENTE DE NOMES FANTASIA & LIMPEZA DE CÓDIGOS/CEP)**: 1) Inclusão prioritária da tabela nativa do Próton ERP `dbauser.tund_unidade` / `tund_unidade` no topo dos candidatos de busca de filiais; 2) Motor de introspecção semântica de colunas: busca em ordem de qualidade os campos reais (`tund_nome_fantasia`, `tund_fantasia`, `tund_nome_reduzido`, `tund_razao_social`, `tund_descricao`, `tund_nome`), filtrando e descartando valores puramente numéricos (como códigos postais/CEP `44000000`) e placeholders de template (`'BASE MODELO'`, `'MODELO'`); 3) Extração e preservação dos nomes comerciais reais da empresa (ex: `ARCO VERDE MATRIZ`, `LOJA GARANHUNS`, `LOJA CARUARU`...); 4) Recompilação do binário standalone `NexaBI-SyncAgent.exe`. |
+| SyncAgent Desktop | v1.8.2 PROD | 2026-08-31 | **v1.8.2 PROD (DEDUPLICAÇÃO INTELIGENTE DE UNIDADES, SANITIZAÇÃO DE TEMPLATE 'BASE MODELO' & GRID RESPONSIVO)**: 1) Implementada deduplicação estrita de códigos de unidade (`cod_unidade`) por dicionário numérico e ordenação crescente em `SyncEngine.obter_unidades_oracle()` e `app_main.py`, eliminando a repetição de checkboxes que ocorria em schemas de multi-empresa/franquias (ex: 18 checkboxes repetidos no cliente Arco Verde reduzidos para as 6 filiais únicas reais `01..06`); 2) Implementado motor de sanitização de nomes de template do Próton ERP: detecta placeholders como `'BASE MODELO'`, `'MODELO'`, `'PADRAO'` ou `'BASE'` e formata com elegância para `Filial XX (Cidade)` ou `Filial XX`, preservando 100% dos nomes e razões sociais próprios quando presentes; 3) Ajustada a query `QUERY_UNIDADES_ORACLE` com `DISTINCT` e `COALESCE/NULLIF`; 4) Ajustado o layout dos checkboxes na interface gráfica para `col_count` adaptativo e texto expandido (`[:24]`); 5) Recompilação do executável autônomo portátil `NexaBI-SyncAgent.exe`. |
+| Dashboard Web | v2.4.2 PROD | 2026-08-31 | **v2.4.2 PROD (FILTRAGEM DINÂMICA POR FILIAL/UNIDADE NA RPC, REPASSE EM 8 VIEWS & ELIMINAÇÃO TOTAL DE FLICKER ENTRE ABAS)**: 1) Atualizada a função RPC PostgreSQL `get_dashboard_metrics` no Supabase para receber `p_filial` e calcular dinamicamente indicadores segregados por unidade (Vendas, CR, CP, Estoques e Financeiro); 2) Atualizado `dashboardDataService.js` com cache instantâneo em memória (`metricsCache`) por chave `(empresaId_periodo_unidade)` eliminando qualquer delay de rede entre trocas de abas; 3) Atualizado `App.jsx` repassando `unidade={unidade}` para todas as 8 views; 4) Blindadas todas as views (`PanoramaGeral`, `Vendas`, `Compras`, `ContasReceber`, `ContasPagar`, `Tesouraria`, `Estoques`, `Fiscal`) com inicialização síncrona `isTenantVazio` e proteção `temDados` em todas as tabelas e gráficos, eliminando 100% do vazamento/flicker visual de outras empresas ao alternar abas; 5) Build e Deploy concluídos com sucesso no Firebase Hosting (`https://nexabi-suite.web.app`). |
+| Dashboard Web | v2.4.1 PROD | 2026-08-31 | **v2.4.1 PROD (CORREÇÃO DE TRANSIÇÃO DE LOGIN SEM TELA PRETA & BLINDAGEM DE CLIENTE ATIVO)**: 1) Resolução do erro de ciclo de vida do React (violação de Hooks pós-condicional) movendo todos os Hooks (`useState`, `useEffect`) para o topo absoluto do componente `App.jsx`, eliminando a tela preta após o login e a necessidade de F5/refresh; 2) Criação da variável estrita `clienteAtivo` que impede que um usuário cliente receba ou consulte dados de `todas` (Consolidado); 3) Inicialização e blindagem de estado zerado (`0,00`) em `PanoramaGeral.jsx` e `Vendas.jsx` para tenants sem dados (Arco Verde); 4) Rebuild e Deploy efetuados no Firebase Hosting (`https://nexabi-suite.web.app`). |
+| Dashboard Web | v2.4.0 PROD | 2026-08-31 | **v2.4.0 PROD (SEGREGAÇÃO MULTI-TENANT ESTRITA, BANCO BI_USUARIOS NO SUPABASE, RPC GET_DASHBOARD_METRICS, FILIAIS DINÂMICAS & EMPTY STATE REAL)**: 1) Criação e provisionamento da tabela `bi_usuarios` no Supabase com persistência centralizada de usuários e vínculo estrito de empresas (eliminando dependência exclusiva de LocalStorage); 2) Criação da função RPC PostgreSQL `get_dashboard_metrics` no Supabase para agregar dinamicamente indicadores por tenant (`empresa_id`); 3) Correção definitiva do bug de atribuição em `ModalGerenciarUsuarios.jsx` (remoção da sobreescrita indevida de `reais[0]`); 4) Correção da autenticação em `authStore.js` garantindo que `dell` acesse estritamente a Destak Prime e `aislon` acesse estritamente a Arco Verde; 5) Seletor de filiais em `App.jsx` atualizado para consulta dinâmica da tabela `filiais` por `empresa_id`, eliminando filiais fictícias de demonstração; 6) Todas as views (`PanoramaGeral`, `Vendas`, `Compras`, `ContasReceber`, `ContasPagar`, `Tesouraria`, `Estoques`, `Fiscal`) atualizadas com suporte a `clienteSelecionado`, `periodoPreset` e renderização de estado zerado (`0,00`) e banner de prontidão para empresas sem dados sincronizados; 7) Build e Deploy concluídos com sucesso no Firebase Hosting (`https://nexabi-suite.web.app`). |
+| SyncAgent Desktop | v1.8.1 PROD | 2026-08-31 | **v1.8.1 PROD (DESCOBERTA DINÂMICA MULTI-SCHEMA, ELIMINAÇÃO DE FALLBACK 23 E SUPORTE PLUG-AND-PLAY A NOVOS TENANTS)**: 1) Eliminação definitiva do fallback hardcoded de 23 unidades da Destak Prime; 2) Implementação do motor de busca e descoberta de unidades em 5 camadas (Schemas dinâmicos APPUSER/DBAUSER/PROTON, catálogo ALL_TABLES e descoberta heurística transacional por movimentação de vendas, CR e estoques); 3) Implementação de `_resolve_table_and_cols` para que todas as extrações dimensionais e de fatos funcionem independentemente do schema/usuário conectado; 4) Tratamento transparente de erros no carregamento de filiais e diagnóstico; 5) Recompilação do binário standalone `NexaBI-SyncAgent.exe` homologado em teste automatizado. |
 | SyncAgent Desktop | v1.8.0 PROD | 2026-08-30 | **v1.8.0 PROD (ENRIQUECIMENTO DIMENSIONAL DE NOMES REAIS DO PRÓTON)**: 1) Extração automática das 4 tabelas de cadastro do Oracle: dbauser.tvnd_vendedor (Vendedores), dbauser.tcli_cliente (Clientes), dbauser.tfor_fornecedor (Fornecedores) e dbauser.tmer_mercadoria (Mercadorias/Produtos); 2) Criação das tabelas bi_dim_vendedores, bi_dim_clientes, bi_dim_fornecedores e bi_dim_produtos no Supabase; 3) Mapeamento em memória substituindo códigos numéricos pelos nomes e descrições reais da Destak Prime em Vendas, CR, CP e Estoques; 4) Compilação do executável autônomo NexaBI-SyncAgent.exe homologado em teste isolado. |
 | Dashboard Web | v2.3.0 PROD | 2026-08-30 | **v2.3.0 PROD (MOTOR NLP AVANÇADO, VENDEDORES REAIS, FORNECEDORES & DECISÃO DE ESTOQUE)**: 1) IA Generativa aprimorada para responder com exatidão sobre Produtos mais vendidos, Vendedores, Estoque Parado, Clientes e Filiais; 2) Vendas atualizadas com nomes e termos de Vendedores (Kessia, Núbia, Aline, Thaysiane, Nádia); 3) Compras com fornecedores reais e sem corte de texto; 4) Contas a Receber com nomes fantasia de clientes; 5) Contas a Pagar com credores reais; 6) Estoques com Top Mercadorias, Alerta de Estoque Parado (>90d) e Curva ABC interativa; 7) Deploy no Firebase Hosting. |
 | Dashboard Web | v2.2.2 PROD | 2026-08-30 | **v2.2.2 PROD (BRANDING SOCIAL OPEN GRAPH & WHATSAPP PREVIEW COMPLETO)**: 1) Criação e provisionamento de banner Open Graph de alta fidelidade (1200x630) `og-image.png` e `og-preview.png` com logo 3D N neon e estética premium glassmorphism dark navy; 2) Configuração completa de metatags Open Graph e Twitter Cards no `<head>` do `index.html` para preview rico em compartilhamentos no WhatsApp, Telegram, LinkedIn e redes sociais; 3) Versionamento formal `v2.2.2 PROD` e deploy homologado no Google Cloud Firebase Hosting. |
