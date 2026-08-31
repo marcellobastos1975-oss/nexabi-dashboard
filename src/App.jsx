@@ -505,6 +505,24 @@ export default function App() {
           >
             <LogOut size={14} /> Sair
           </button>
+
+          {/* Logo Oficial NexaBI — Alpha Suite (Direita) */}
+          <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 8, borderLeft: '1px solid rgba(255, 255, 255, 0.14)' }}>
+            <img 
+              src="/nexabi_logo.png" 
+              alt="NexaBI — Alpha Suite Logo Oficial" 
+              className="header-nexabi-logo-img"
+              style={{ 
+                height: 72, 
+                objectFit: 'contain', 
+                borderRadius: 12,
+                filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.45))',
+                border: '1px solid rgba(0, 210, 255, 0.35)',
+                background: 'rgba(4, 13, 30, 0.85)',
+                padding: 3
+              }} 
+            />
+          </div>
         </div>
       </header>
 

@@ -203,7 +203,7 @@ export async function getFiliaisEmpresa(empresaId) {
           { id: 'Todas', label: `🏢 Todas as Filiais (${nomeEmpresa})` },
           ...data.map(f => ({
             id: String(f.codigo_filial),
-            label: `${String(f.codigo_filial).padStart(2, '0')} - ${f.nome_filial}${f.cidade ? ` (${f.cidade}/${f.uf || 'BA'})` : ''}`
+            label: `${String(f.codigo_filial).padStart(2, '0')} - ${f.nome_filial}${f.cidade ? ` (${f.cidade}${f.uf ? `/${f.uf}` : ''})` : ''}`
           }))
         ];
       }
