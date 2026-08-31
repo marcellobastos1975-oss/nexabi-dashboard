@@ -1,5 +1,5 @@
 ﻿# 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-08-30 — Dashboard Web v2.2.2 PROD & NexaBI SyncAgent v1.7.5 PROD
+> **Última atualização:** 2026-08-30 — Dashboard Web v2.3.0 PROD & NexaBI SyncAgent v1.8.0 PROD
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
