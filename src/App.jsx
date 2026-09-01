@@ -282,10 +282,7 @@ export default function App() {
               style={{ 
                 height: 87, 
                 objectFit: 'contain', 
-                borderRadius: 14,
-                filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.45))',
-                border: '1px solid rgba(0, 210, 255, 0.35)',
-                background: 'rgba(4, 13, 30, 0.9)'
+                filter: 'drop-shadow(0 0 18px rgba(0, 210, 255, 0.8)) drop-shadow(0 0 6px rgba(0, 180, 255, 0.5))'
               }} 
             />
           </div>

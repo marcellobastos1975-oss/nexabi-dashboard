@@ -58,13 +58,26 @@ export default function Login({ onLogin }) {
       <div className="login-panel-container">
         <div className="login-card-alpha">
           
-          {/* Logo Oficial NexaLife TECH */}
+          {/* Logos Oficiais: NexaLife Tech + NexaBI Alpha Suite */}
           <div className="login-brand-header">
-            <img 
-              src="/nexalife_logo.png" 
-              alt="NexaLife Tech" 
-              className="login-brand-logo"
-            />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 8 }}>
+              <img 
+                src="/nexalife_logo.png" 
+                alt="NexaLife Tech" 
+                className="login-brand-logo"
+                style={{ marginBottom: 0 }}
+              />
+              <div style={{ width: 1, height: 48, background: 'rgba(0,210,255,0.25)', borderRadius: 2 }} />
+              <img 
+                src="/nexabi_logo.png" 
+                alt="NexaBI — Alpha Suite" 
+                style={{ 
+                  height: 64, 
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 0 14px rgba(0, 210, 255, 0.7)) drop-shadow(0 0 4px rgba(0, 210, 255, 0.4))'
+                }}
+              />
+            </div>
             <h2 className="login-brand-title">NexaBI — Alpha Suite</h2>
             <p className="login-brand-subtitle">Portal Corporativo de Business Intelligence Multi-ERP</p>
           </div>
