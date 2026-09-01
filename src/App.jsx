@@ -253,7 +253,7 @@ export default function App() {
           {/* Lado Esquerdo: Logo Oficial NexaLife Tech + Títulos */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <img 
-              src="/nexalife_logo.png" 
+              src={`/nexalife_logo.png?v=${APP_VERSION}`} 
               alt="NexaLife Tech Logo Oficial" 
               className="header-logo-img"
               style={{ height: 87, objectFit: 'contain', filter: 'drop-shadow(0 4px 16px rgba(0, 210, 255, 0.4))' }} 
@@ -276,13 +276,13 @@ export default function App() {
           {/* Lado Direito (Mesma Linha Superior): Logo Oficial NexaBI — Alpha Suite */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <img 
-              src="/nexabi_logo.png" 
+              src={`/nexabi_logo.png?v=${APP_VERSION}`} 
               alt="NexaBI — Alpha Suite Logo Oficial" 
               className="header-nexabi-logo-img"
               style={{ 
                 height: 87, 
                 objectFit: 'contain', 
-                filter: 'drop-shadow(0 0 18px rgba(0, 210, 255, 0.8)) drop-shadow(0 0 6px rgba(0, 180, 255, 0.5))'
+                filter: 'drop-shadow(0 0 16px rgba(0, 210, 255, 0.6))'
               }} 
             />
           </div>
@@ -575,7 +575,7 @@ export default function App() {
       <footer style={{ marginTop: 36, textAlign: 'center', fontSize: '12px', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 10 }}>
           <img 
-            src="/nexalife_logo.png" 
+            src={`/nexalife_logo.png?v=${APP_VERSION}`} 
             alt="NexaLife Tech" 
             style={{ height: 63, objectFit: 'contain', filter: 'drop-shadow(0 3px 12px rgba(0, 210, 255, 0.35))' }} 
           />

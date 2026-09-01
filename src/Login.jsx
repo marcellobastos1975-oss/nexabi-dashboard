@@ -60,21 +60,21 @@ export default function Login({ onLogin }) {
           
           {/* Logos Oficiais: NexaLife Tech + NexaBI Alpha Suite */}
           <div className="login-brand-header">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 12 }}>
               <img 
-                src="/nexalife_logo.png" 
+                src={`/nexalife_logo.png?v=${APP_VERSION}`} 
                 alt="NexaLife Tech" 
                 className="login-brand-logo"
                 style={{ marginBottom: 0 }}
               />
-              <div style={{ width: 1, height: 48, background: 'rgba(0,210,255,0.25)', borderRadius: 2 }} />
+              <div style={{ width: 1, height: 46, background: 'rgba(0, 210, 255, 0.25)', borderRadius: 2 }} />
               <img 
-                src="/nexabi_logo.png" 
+                src={`/nexabi_logo.png?v=${APP_VERSION}`} 
                 alt="NexaBI — Alpha Suite" 
                 style={{ 
                   height: 64, 
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 0 14px rgba(0, 210, 255, 0.7)) drop-shadow(0 0 4px rgba(0, 210, 255, 0.4))'
+                  filter: 'drop-shadow(0 0 14px rgba(0, 210, 255, 0.6))'
                 }}
               />
             </div>
