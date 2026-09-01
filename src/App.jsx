@@ -18,6 +18,7 @@ import ModalGerenciarEmpresas from './components/ModalGerenciarEmpresas';
 import AIAssistantDrawer from './components/AIAssistantDrawer';
 import { getTodasEmpresas, getFiliaisEmpresa } from './empresaStore';
 import { APP_VERSION } from './config';
+import { clearMetricsCache } from './services/dashboardDataService';
 
 const MODULOS = [
   { id: 'panorama', label: 'Panorama Geral', icon: BarChart3 },
@@ -214,6 +215,7 @@ export default function App() {
   };
 
   const handleAtualizar = () => {
+    clearMetricsCache();
     setAtualizando(true);
     setTimeout(() => {
       setAtualizando(false);
@@ -560,15 +562,73 @@ export default function App() {
             clienteSelecionado={clienteAtivo}
             periodoPreset={periodoPreset}
             unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
           />
         )}
-        {moduloAtivo === 'vendas' && <Vendas clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
-        {moduloAtivo === 'compras' && <Compras clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
-        {moduloAtivo === 'cr' && <ContasReceber clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
-        {moduloAtivo === 'cp' && <ContasPagar clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
-        {moduloAtivo === 'tesouraria' && <Tesouraria clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
-        {moduloAtivo === 'estoques' && <Estoques clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
-        {moduloAtivo === 'fiscal' && <Fiscal clienteSelecionado={clienteAtivo} periodoPreset={periodoPreset} unidade={unidade} />}
+        {moduloAtivo === 'vendas' && (
+          <Vendas 
+            clienteSelecionado={clienteAtivo} 
+            periodoPreset={periodoPreset} 
+            unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
+          />
+        )}
+        {moduloAtivo === 'compras' && (
+          <Compras 
+            clienteSelecionado={clienteAtivo} 
+            periodoPreset={periodoPreset} 
+            unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
+          />
+        )}
+        {moduloAtivo === 'cr' && (
+          <ContasReceber 
+            clienteSelecionado={clienteAtivo} 
+            periodoPreset={periodoPreset} 
+            unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
+          />
+        )}
+        {moduloAtivo === 'cp' && (
+          <ContasPagar 
+            clienteSelecionado={clienteAtivo} 
+            periodoPreset={periodoPreset} 
+            unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
+          />
+        )}
+        {moduloAtivo === 'tesouraria' && (
+          <Tesouraria 
+            clienteSelecionado={clienteAtivo} 
+            periodoPreset={periodoPreset} 
+            unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
+          />
+        )}
+        {moduloAtivo === 'estoques' && (
+          <Estoques 
+            clienteSelecionado={clienteAtivo} 
+            periodoPreset={periodoPreset} 
+            unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
+          />
+        )}
+        {moduloAtivo === 'fiscal' && (
+          <Fiscal 
+            clienteSelecionado={clienteAtivo} 
+            periodoPreset={periodoPreset} 
+            unidade={unidade}
+            dataInicio={dataInicio}
+            dataFim={dataFim}
+          />
+        )}
       </main>
 
       {/* Rodapé Oficial com Logo Ampliada */}

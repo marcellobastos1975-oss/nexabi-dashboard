@@ -6,12 +6,6 @@ import {
 } from 'recharts';
 import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
-const capitalGiroData = [
-  { name: 'Total de Estoque', value: 7.26, color: '#10b981' },
-  { name: 'Total Contas a Receber', value: 17.37, color: '#3b82f6' },
-  { name: 'Total Contas a Pagar', value: 6.77, color: '#ef4444' },
-  { name: 'Total Contas Financeiras', value: 38.96, color: '#00d2ff' },
-];
 
 const centrosCusto = [
   { codigo: '201040002', nome: 'AJUSTE DE SALDO BANCÁRIO', entradas: '45.969.605,84', saidas: '38.233.952,77' },
@@ -36,19 +30,38 @@ const fluxoProximos10Dias = [
   { dia: '05/jul', credito: 58.60, debito: 38.62, saldo: 19.98 },
 ];
 
-export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+export default function Tesouraria({ 
+  clienteSelecionado = 'todas', 
+  periodoPreset = 'mes_atual', 
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null 
+}) {
   const [metricas, setMetricas] = useState({
     contasFinanc: '0,00',
+    saldoTotalContas: '0,00',
+    vlrNegativoContas: '0,00',
+    valorCR: '0,00',
+    valorCP: '0,00',
+    valorEstoque: '0,00',
     hasData: true
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
-  const temDados = Boolean(metricas && metricas.hasData);
+  const temSaldoFinanc = parseFloat((metricas.contasFinanc || '0').replace(',', '.')) !== 0;
+  const temDados = Boolean(metricas && metricas.hasData && temSaldoFinanc);
+
+  const capitalGiroData = [
+    { name: 'Total de Estoque', value: parseFloat((metricas.valorEstoque || '0').replace(',', '.')) || 0, color: '#10b981' },
+    { name: 'Total Contas a Receber', value: parseFloat((metricas.valorCR || '0').replace(',', '.')) || 0, color: '#3b82f6' },
+    { name: 'Total Contas a Pagar', value: parseFloat((metricas.valorCP || '0').replace(',', '.')) || 0, color: '#ef4444' },
+    { name: 'Total Contas Financeiras', value: parseFloat((metricas.contasFinanc || '0').replace(',', '.')) || 0, color: '#00d2ff' },
+  ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -67,23 +80,22 @@ export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset
         }}>
           <span style={{ fontSize: '18px' }}>ℹ️</span>
           <div>
-            <strong>Aguardando Sincronização de Tesouraria:</strong> Nenhuma movimentação bancária ou saldo financeiro encontrado para esta empresa. Execute o <strong>NexaBI-SyncAgent</strong> para carregar o módulo de tesouraria do ERP Próton.
+            <strong>Aguardando Sincronização de Tesouraria:</strong> Nenhuma conta bancária ou movimentação de tesouraria encontrada para esta empresa no banco em nuvem. Execute o <strong>NexaBI-SyncAgent</strong> para carregar os saldos bancários do ERP Próton.
           </div>
         </div>
       )}
 
       {/* 5 KPIs Centrais */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10 }}>
-        <KPICard label="Saldo Total das Contas" value={temDados ? (isFilial3 ? "0,75" : (isFilial1 ? "5,51" : "6,26")) : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="Total Entradas" value={temDados ? (isFilial3 ? "12,50" : (isFilial1 ? "91,85" : "104,35")) : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="% Entradas" value={temDados ? "55,60" : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Total Saídas" value={temDados ? (isFilial3 ? "10,20" : (isFilial1 ? "73,14" : "83,34")) : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="% Saídas" value={temDados ? "44,40" : "0,00"} suffix="%" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Saldo Total das Contas" value={temDados ? metricas.saldoTotalContas : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Contas Negativas" value={temDados ? metricas.vlrNegativoContas : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Total Estoque" value={temDados ? metricas.valorEstoque : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Total a Receber" value={temDados ? metricas.valorCR : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Total a Pagar" value={temDados ? metricas.valorCP : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
       </div>
 
-      {/* Donut Capital de Giro + Centros de Custo */}
+      {/* Donut Capital de Giro */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
-        {/* Donut */}
         <div className="glass-card" style={{ padding: 16 }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 8 }}>
             🍩 Composição do Capital de Giro
@@ -128,7 +140,6 @@ export default function Tesouraria({ clienteSelecionado = 'todas', periodoPreset
               </div>
             )}
           </div>
-          {/* Legenda em texto claro e sem bordas */}
           {temDados && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 8, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 8 }}>
               {capitalGiroData.map(item => (

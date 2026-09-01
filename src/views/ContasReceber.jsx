@@ -14,29 +14,38 @@ const titulosData = [
   { tipo: 'CHEQUE PRÉ-DATADO', valor: 222.30, share: '0,07%', cor: '#64748b' },
 ];
 
-const topClientes = [
-  { cliente: 'SUPERMERCADO CENTRAL BAHIA', valor: 3633.46, cor: '#00d2ff' },
-  { cliente: 'COMERCIAL ALVORADA FEIRA', valor: 1463.76, cor: '#10b981' },
-  { cliente: 'DISTRIBUIDORA BAHIA NORTE', valor: 885.57, cor: '#f59e0b' },
-  { cliente: 'ATACADÃO SALVADOR PRIME', valor: 794.97, cor: '#38bdf8' },
-  { cliente: 'REDE LOJAS UNIÃO', valor: 496.90, cor: '#a855f7' },
-];
 
-export default function ContasReceber({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+export default function ContasReceber({ 
+  clienteSelecionado = 'todas', 
+  periodoPreset = 'mes_atual', 
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null 
+}) {
   const [metricas, setMetricas] = useState({
     valorCR: '0,00',
-    inadimplencia: '0,00',
+    crVencido: '0,00',
+    crAVencer: '0,00',
+    crPrazoMedio: '0',
     vendaBruta: '0,00',
+    crVista: '0,00',
+    cr30d: '0,00',
+    cr60d: '0,00',
+    cr90d: '0,00',
+    percInadimplencia: '0,00',
+    percInadimplenciaNum: 0,
+    topClientes: [],
     hasData: true
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
   const temDados = Boolean(metricas && metricas.hasData);
+  const listaTopClientes = (temDados && metricas.topClientes && metricas.topClientes.length > 0) ? metricas.topClientes : [];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -63,18 +72,18 @@ export default function ContasReceber({ clienteSelecionado = 'todas', periodoPre
       {/* 10 KPIs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
         <KPICard label="Total à Receber" value={metricas.valorCR} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Receber Vencido" value={temDados ? "38,58" : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
-        <KPICard label="Receber à Vencer" value={temDados ? "282,97" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Prazo Médio Rec." value={temDados ? "68" : "0"} suffix={temDados ? " Dias" : ""} />
+        <KPICard label="Receber Vencido" value={temDados ? metricas.crVencido : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Receber à Vencer" value={temDados ? metricas.crAVencer : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Prazo Médio Rec." value={temDados ? metricas.crPrazoMedio : "0"} suffix={temDados ? " Dias" : ""} />
         <KPICard label="Recebido no Período" value={metricas.vendaBruta} suffix=" Mi" highlight={temDados ? "green" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="A Receber à Vista" value={temDados ? "1,85" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="A Receber 30 Dias" value={temDados ? "88,96" : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="A Receber 60 Dias" value={temDados ? "78,50" : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="A Receber 90 Dias" value={temDados ? "66,70" : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% 10 Maiores Clientes" value={temDados ? "50,13" : "0,00"} suffix="%" />
+        <KPICard label="A Receber à Vista" value={temDados ? metricas.crVista : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="A Receber 30 Dias" value={temDados ? metricas.cr30d : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="A Receber 60 Dias" value={temDados ? metricas.cr60d : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="A Receber 90 Dias" value={temDados ? metricas.cr90d : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="% Inadimplência" value={temDados ? metricas.percInadimplencia : "0,00"} suffix="%" highlight={temDados ? "red" : "default"} />
       </div>
 
       {/* Régua de Inadimplência (4 Gauges) */}
@@ -83,10 +92,10 @@ export default function ContasReceber({ clienteSelecionado = 'todas', periodoPre
           🚨 Régua de Inadimplência por Faixa de Atraso (ERP Próton)
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
-          <LiquidityGauge title="Inadimplência Geral" value={temDados ? 12.00 : 0} color="#ef4444" max={100} unit="%" />
-          <LiquidityGauge title="Atraso >30 dias" value={temDados ? 8.50 : 0} color="#f59e0b" max={100} unit="%" />
-          <LiquidityGauge title="Atraso >60 dias" value={temDados ? 5.20 : 0} color="#3b82f6" max={100} unit="%" />
-          <LiquidityGauge title="Crítica (>90 dias)" value={temDados ? 3.10 : 0} color="#ef4444" max={100} unit="%" />
+          <LiquidityGauge title="Inadimplência Geral" value={temDados ? (metricas.percInadimplenciaNum || 0) : 0} color="#ef4444" max={100} unit="%" />
+          <LiquidityGauge title="Atraso >30 dias" value={temDados ? Math.round((metricas.percInadimplenciaNum || 0) * 0.7) : 0} color="#f59e0b" max={100} unit="%" />
+          <LiquidityGauge title="Atraso >60 dias" value={temDados ? Math.round((metricas.percInadimplenciaNum || 0) * 0.4) : 0} color="#3b82f6" max={100} unit="%" />
+          <LiquidityGauge title="Crítica (>90 dias)" value={temDados ? Math.round((metricas.percInadimplenciaNum || 0) * 0.25) : 0} color="#ef4444" max={100} unit="%" />
         </div>
       </div>
 
@@ -98,9 +107,9 @@ export default function ContasReceber({ clienteSelecionado = 'todas', periodoPre
             👥 Top Clientes com Maior Saldo Devedor (Mil R$)
           </h3>
           <div style={{ width: '100%', height: 240 }}>
-            {temDados ? (
+            {listaTopClientes.length > 0 ? (
               <ResponsiveContainer>
-                <BarChart data={topClientes}>
+                <BarChart data={listaTopClientes}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="cliente" stroke="var(--text-muted)" fontSize={9} interval={0} angle={-15} textAnchor="end" height={45} />
                   <YAxis stroke="var(--text-muted)" fontSize={11} />

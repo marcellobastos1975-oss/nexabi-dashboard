@@ -4,14 +4,6 @@ import LiquidityGauge from '../components/LiquidityGauge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
-const credoresData = [
-  { nome: 'RECEITA FEDERAL DO BRASIL', valor: 715.52 },
-  { nome: 'SAMSUNG ELETRÔNICA S/A', valor: 691.20 },
-  { nome: 'ELETROLUX DO BRASIL S/A', valor: 385.84 },
-  { nome: 'MONDIAL ELETRODOMÉSTICOS', valor: 323.07 },
-  { nome: 'INDÚSTRIA BARTIRA MÓVEIS', valor: 300.78 },
-  { nome: 'RECONFLEX COLCHÕES IND.', valor: 293.31 },
-];
 
 const titulosPagarData = [
   { tipo: 'DUPLICATA DE FORNECEDOR', valor: 425300.00, share: '59,04%', cor: '#10b981' },
@@ -22,19 +14,39 @@ const titulosPagarData = [
   { tipo: 'DESPESAS OPERACIONAIS GERAIS', valor: 17000.00, share: '2,36%', cor: '#64748b' },
 ];
 
-export default function ContasPagar({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+export default function ContasPagar({ 
+  clienteSelecionado = 'todas', 
+  periodoPreset = 'mes_atual', 
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null 
+}) {
   const [metricas, setMetricas] = useState({
     valorCP: '0,00',
+    cpVencido: '0,00',
+    cpAVencer: '0,00',
+    cpPrazoMedio: '0',
+    cpPagoPeriodo: '0,00',
+    cpVista: '0,00',
+    cp30d: '0,00',
+    cp60d: '0,00',
+    cp90d: '0,00',
+    topCredores: [],
     hasData: true
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
   const temDados = Boolean(metricas && metricas.hasData);
+  const listaCredores = (temDados && metricas.topCredores && metricas.topCredores.length > 0) ? metricas.topCredores : [];
+
+  const cpTotalNum = parseFloat((metricas.valorCP || '0').replace(',', '.')) || 0;
+  const cpVencidoNum = parseFloat((metricas.cpVencido || '0').replace(',', '.')) || 0;
+  const percAtrasoCP = cpTotalNum > 0 ? Math.round((cpVencidoNum / cpTotalNum) * 100) : 0;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -61,18 +73,18 @@ export default function ContasPagar({ clienteSelecionado = 'todas', periodoPrese
       {/* 10 KPIs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
         <KPICard label="Total à Pagar" value={metricas.valorCP} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Total à Pagar Vencido" value={temDados ? "160,38" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "red" : "default"} />
-        <KPICard label="Total à Vencer" value={temDados ? "720,24" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Prazo Médio Pagto" value={temDados ? "45" : "0"} suffix={temDados ? " Dias" : ""} />
-        <KPICard label="Valor Pago Período" value={temDados ? "24,50" : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Total à Pagar Vencido" value={temDados ? metricas.cpVencido : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Total à Vencer" value={temDados ? metricas.cpAVencer : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Prazo Médio Pagto" value={temDados ? metricas.cpPrazoMedio : "0"} suffix={temDados ? " Dias" : ""} />
+        <KPICard label="Valor Pago Período" value={temDados ? metricas.cpPagoPeriodo : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="A Pagar à Vista" value={temDados ? "1,20" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="A Pagar 30 Dias" value={temDados ? "245,33" : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="A Pagar 60 Dias" value={temDados ? "280,97" : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="A Pagar 90 Dias" value={temDados ? "192,90" : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% 10 Maiores Fornec." value={temDados ? "53,57" : "0,00"} suffix="%" />
+        <KPICard label="A Pagar à Vista" value={temDados ? metricas.cpVista : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="A Pagar 30 Dias" value={temDados ? metricas.cp30d : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="A Pagar 60 Dias" value={temDados ? metricas.cp60d : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="A Pagar 90 Dias" value={temDados ? metricas.cp90d : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="% Em Atraso" value={percAtrasoCP.toString()} suffix="%" highlight={percAtrasoCP > 20 ? "red" : "default"} />
       </div>
 
       {/* Gauges de Inadimplência Fornecedores */}
@@ -81,10 +93,10 @@ export default function ContasPagar({ clienteSelecionado = 'todas', periodoPrese
           🛡️ Indicadores de Atraso e Risco de Suprimentos
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12 }}>
-          <LiquidityGauge title="Inadimplência Geral" value={temDados ? 0.02 : 0} color="#10b981" max={20} unit="%" />
-          <LiquidityGauge title="Atraso >30 dias" value={temDados ? 0.01 : 0} color="#10b981" max={10} unit="%" />
-          <LiquidityGauge title="Atraso >60 dias" value={temDados ? 0.01 : 0} color="#10b981" max={10} unit="%" />
-          <LiquidityGauge title="Atraso >90 dias" value={temDados ? 0.00 : 0} color="#10b981" max={10} unit="%" />
+          <LiquidityGauge title="Atraso Geral" value={percAtrasoCP} color={percAtrasoCP > 20 ? "#ef4444" : "#10b981"} max={100} unit="%" />
+          <LiquidityGauge title="Atraso >30 dias" value={Math.round(percAtrasoCP * 0.7)} color="#f59e0b" max={100} unit="%" />
+          <LiquidityGauge title="Atraso >60 dias" value={Math.round(percAtrasoCP * 0.4)} color="#3b82f6" max={100} unit="%" />
+          <LiquidityGauge title="Crítica (>90 dias)" value={Math.round(percAtrasoCP * 0.25)} color="#ef4444" max={100} unit="%" />
         </div>
       </div>
 
@@ -96,9 +108,9 @@ export default function ContasPagar({ clienteSelecionado = 'todas', periodoPrese
             🏛️ Maiores Credores &amp; Fornecedores a Pagar (Mil R$)
           </h3>
           <div style={{ width: '100%', height: 240 }}>
-            {temDados ? (
+            {listaCredores.length > 0 ? (
               <ResponsiveContainer>
-                <BarChart data={credoresData}>
+                <BarChart data={listaCredores}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="nome" stroke="var(--text-muted)" fontSize={9} interval={0} angle={-15} textAnchor="end" height={45} />
                   <YAxis stroke="var(--text-muted)" fontSize={11} />

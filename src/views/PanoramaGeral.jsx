@@ -10,24 +10,6 @@ import { Sparkles } from 'lucide-react';
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
 import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
-const historicoVendas12mReal = [
-  { mes: '2026-jan', valor: 24.50 },
-  { mes: '2026-fev', valor: 23.03 },
-  { mes: '2026-mar', valor: 29.69 },
-  { mes: '2026-abr', valor: 28.05 },
-  { mes: '2026-mai', valor: 27.29 },
-  { mes: '2026-jun', valor: 28.22 },
-  { mes: '2026-jul', valor: 29.18 },
-  { mes: '2026-ago', valor: 26.74 },
-];
-
-const treemapDataReal = [
-  { name: 'Venda Bruta', size: 216.70, fill: '#059669' },
-  { name: 'Valor CR', size: 321.55, fill: '#d97706' },
-  { name: 'Valor CP', size: 720.40, fill: '#dc2626' },
-  { name: 'Vr Estoque', size: 7.26, fill: '#2563eb' },
-  { name: 'Vr Contas', size: 38.96, fill: '#0891b2' }
-];
 
 export default function PanoramaGeral({ 
   isRealEmptyTenant = false, 
@@ -35,7 +17,9 @@ export default function PanoramaGeral({
   periodoDesc = 'Mês Atual', 
   clienteSelecionado = 'todas',
   periodoPreset = 'mes_atual',
-  unidade = 'Todas'
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
 
@@ -45,12 +29,27 @@ export default function PanoramaGeral({
     vendaLiquida: '0,00',
     qtdVendas: '0,00',
     ticketMedio: 'R$ 0,00',
+    clientesCompraram: '0,00',
+    vendaBrutaDia: '0,00',
     valorCR: '0,00',
+    crVencido: '0,00',
+    inadimplencia: '0,00',
+    percInadimplencia: '0,00',
+    jurosRecebidos: '0,00',
     valorCP: '0,00',
+    cpVencido: '0,00',
+    aPagarEmAtraso: '0,00',
+    valorCRMenosCP: 'R$ 0,00',
     valorEstoque: '0,00',
     contasFinanc: '0,00',
+    vlrNegativoContas: '0,00',
+    saldoTotalContas: '0,00',
+    saldoTotalContasNum: 0,
+    liquidezGeral: '0,00',
+    liquidezGeralNum: 0,
     margemBruta: '0,00',
-    inadimplencia: '0,00'
+    percMargem: '0,00',
+    historico12m: []
   });
 
   const carregarWidgetsCustomizados = async () => {
@@ -73,10 +72,10 @@ export default function PanoramaGeral({
 
   useEffect(() => {
     carregarWidgetsCustomizados();
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
   const removerWidget = async (id) => {
     try {
@@ -95,16 +94,18 @@ export default function PanoramaGeral({
 
   const temDados = Boolean(metricas && metricas.hasData);
 
-  const historicoGrafico = temDados ? historicoVendas12mReal : [
-    { mes: '2026-jan', valor: 0 },
-    { mes: '2026-fev', valor: 0 },
-    { mes: '2026-mar', valor: 0 },
-    { mes: '2026-abr', valor: 0 },
-    { mes: '2026-mai', valor: 0 },
-    { mes: '2026-jun', valor: 0 },
-    { mes: '2026-jul', valor: 0 },
-    { mes: '2026-ago', valor: 0 },
-  ];
+  const historicoGrafico = (temDados && metricas.historico12m && metricas.historico12m.length > 0)
+    ? metricas.historico12m
+    : [
+      { mes: '2026-jan', valor: 0 },
+      { mes: '2026-fev', valor: 0 },
+      { mes: '2026-mar', valor: 0 },
+      { mes: '2026-abr', valor: 0 },
+      { mes: '2026-mai', valor: 0 },
+      { mes: '2026-jun', valor: 0 },
+      { mes: '2026-jul', valor: 0 },
+      { mes: '2026-ago', valor: 0 },
+    ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -141,25 +142,25 @@ export default function PanoramaGeral({
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
         <KPICard label="Qtd. Vendas" value={temDados ? metricas.qtdVendas : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-        <KPICard label="Clientes Compraram" value={temDados ? "12,05" : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-        <KPICard label="Juros Recebidos" value={temDados ? "2,93" : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="A Pagar em Atraso" value={temDados ? "160,38" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "red" : "default"} />
-        <KPICard label="Vlr Negativo C. Fin" value={temDados ? "-32,70" : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
-        <KPICard label="% Margem" value={temDados ? "55,00" : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
-        <KPICard label="% Inadimplência" value={temDados ? "12,00" : "0,00"} suffix="%" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Clientes Compraram" value={temDados ? metricas.clientesCompraram : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
+        <KPICard label="Juros Recebidos" value={temDados ? metricas.jurosRecebidos : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="A Pagar em Atraso" value={temDados ? metricas.aPagarEmAtraso : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Vlr Negativo C. Fin" value={temDados ? metricas.vlrNegativoContas : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="% Margem" value={temDados ? metricas.percMargem : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Inadimplência" value={temDados ? metricas.percInadimplencia : "0,00"} suffix="%" highlight={temDados ? "red" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta do Dia" value={temDados ? "1,12" : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Venda Bruta do Dia" value={temDados ? metricas.vendaBrutaDia : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
         <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} suffix="" />
-        <KPICard label="Valor CR - CP" value={temDados ? "R$ -398,85" : "R$ 0,00"} suffix={temDados ? " Mi" : ""} highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Valor CR - CP" value={temDados ? metricas.valorCRMenosCP : "R$ 0,00"} suffix="" highlight={temDados ? "yellow" : "default"} />
       </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <LiquidityGauge title="Saldo Total das Contas" value={temDados ? 38.96 : 0} color="#7928ca" max={50} />
-          <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={temDados ? -352.63 : 0} color="#ef4444" max={50} />
+          <LiquidityGauge title="Saldo Total das Contas" value={temDados ? metricas.saldoTotalContasNum : 0} color="#7928ca" max={50} />
+          <LiquidityGauge title="(Est. + CR + Ctas) - CP" value={temDados ? metricas.liquidezGeralNum : 0} color="#ef4444" max={50} />
         </div>
 
         {/* Gráfico de Vendas por Mês */}

@@ -6,38 +6,28 @@ import {
 } from 'recharts';
 import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
-const leadTimeData = [
-  { fornecedor: 'ITATIAIA MÓVEIS', dias: 28 },
-  { fornecedor: 'ELETROLUX DO BRASIL', dias: 21 },
-  { fornecedor: 'SAMSUNG ELETRÔNICA', dias: 15 },
-  { fornecedor: 'PHILCO ELETRÔNICOS', dias: 18 },
-  { fornecedor: 'MONDIAL ELETRODOMÉSTICOS', dias: 14 },
-  { fornecedor: 'MULTILASER INDUSTRIAL', dias: 10 },
-  { fornecedor: 'INDÚSTRIA BARTIRA', dias: 25 },
-  { fornecedor: 'RECONFLEX COLCHÕES', dias: 12 },
-];
 
-const comprasFornecedor = [
-  { nome: 'ELETROLUX DO BRASIL S/A', valor: '385,84', share: '33,29%' },
-  { nome: 'SAMSUNG ELETRÔNICA DA AMAZÔNIA', valor: '292,40', share: '25,23%' },
-  { nome: 'MONDIAL ELETRODOMÉSTICOS S/A', valor: '184,30', share: '15,90%' },
-  { nome: 'ITATIAIA MÓVEIS S/A', valor: '142,80', share: '12,32%' },
-  { nome: 'PHILCO ELETRÔNICOS S/A', valor: '89,60', share: '7,73%' },
-  { nome: 'RECONFLEX COLCHÕES INDÚSTRIA', valor: '63,99', share: '5,53%' },
-];
-
-export default function Compras({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+export default function Compras({ 
+  clienteSelecionado = 'todas', 
+  periodoPreset = 'mes_atual', 
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null 
+}) {
   const [metricas, setMetricas] = useState({
-    hasData: true
+    hasData: false
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
-  const temDados = Boolean(metricas && metricas.hasData);
+  // bi_compras aguarda primeira sincronização de pedidos de fornecedores
+  const temDados = false;
+  const leadTimeData = [];
+  const comprasFornecedor = [];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

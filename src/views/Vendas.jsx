@@ -2,44 +2,39 @@ import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
-const formasPagamento = [
-  { forma: '15-Crediário Próprio', perc: 49.89, cor: '#f59e0b' },
-  { forma: '1-Dinheiro', perc: 26.31, cor: '#10b981' },
-  { forma: '7-Cartão de Crédito/Débito', perc: 23.61, cor: '#00d2ff' },
-  { forma: '20-Pix Instantâneo', perc: 0.11, cor: '#a855f7' },
-  { forma: '3-Cheque Pré-datado', perc: 0.07, cor: '#ec4899' },
-];
-
-const vendedoresData = [
-  { nome: 'KESSIA', valor: '4.248.698,24', share: '15,89%' },
-  { nome: 'NUBIA SILVA', valor: '3.680.462,00', share: '13,76%' },
-  { nome: 'ALINE CRUZ', valor: '3.125.095,74', share: '11,68%' },
-  { nome: 'THAYSIANE', valor: '2.894.241,94', share: '10,82%' },
-  { nome: 'NADIA', valor: '2.274.473,47', share: '8,50%' },
-  { nome: 'DEBORAH SANTOS', valor: '1.984.320,10', share: '7,42%' },
-  { nome: 'MARCOS VINICIUS', valor: '1.745.210,00', share: '6,53%' },
-];
-
-export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+export default function Vendas({ 
+  clienteSelecionado = 'todas', 
+  periodoPreset = 'mes_atual', 
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null 
+}) {
   const [metricas, setMetricas] = useState({
     hasData: true,
     vendaBruta: '0,00',
     vendaLiquida: '0,00',
     impostosDiretos: '0,00',
+    percImpostosDiretos: '0,00',
     cmv: '0,00',
+    percCMV: '0,00',
     margemContribuicao: '0,00',
+    percMargemContribuicao: '0,00',
     ticketMedio: 'R$ 0,00',
     metaVenda: '0,00',
-    metaAtingida: '0,00'
+    metaAtingida: '0,00',
+    topVendedores: [],
+    formasPagamento: []
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
   const temDados = Boolean(metricas && metricas.hasData);
+  const listaVendedores = (temDados && metricas.topVendedores && metricas.topVendedores.length > 0) ? metricas.topVendedores : [];
+  const listaFormas = (temDados && metricas.formasPagamento && metricas.formasPagamento.length > 0) ? metricas.formasPagamento : [];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -67,7 +62,7 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
         <KPICard label="Venda Bruta" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
         <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="% Imp. Diretos" value={temDados ? "23,42" : "0,00"} suffix="%" />
+        <KPICard label="% Imp. Diretos" value={temDados ? metricas.percImpostosDiretos : "0,00"} suffix="%" />
         <KPICard label="Venda Líquida" value={temDados ? metricas.vendaLiquida : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
         <KPICard label="% Vda Líquida" value={temDados ? "100,00" : "0,00"} suffix="%" />
         <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} />
@@ -75,9 +70,9 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
         <KPICard label="CMV (Custo)" value={temDados ? metricas.cmv : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="% CMV" value={temDados ? "45,00" : "0,00"} suffix="%" />
+        <KPICard label="% CMV" value={temDados ? metricas.percCMV : "0,00"} suffix="%" />
         <KPICard label="Margem Contribuição" value={temDados ? metricas.margemContribuicao : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% Margem Contrib." value={temDados ? "55,00" : "0,00"} suffix="%" />
+        <KPICard label="% Margem Contrib." value={temDados ? metricas.percMargemContribuicao : "0,00"} suffix="%" />
         <KPICard label="Meta da Venda" value={temDados ? metricas.metaVenda : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
         <KPICard label="% Meta Atingida" value={temDados ? metricas.metaAtingida : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
       </div>
@@ -90,13 +85,13 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
             💳 Formas de Pagamento
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {temDados ? (
-              formasPagamento.map(f => (
+            {listaFormas.length > 0 ? (
+              listaFormas.map(f => (
                 <div key={f.forma} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px' }}>
                   <span style={{ color: 'var(--text-muted)' }}>{f.forma}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <div style={{ width: 80, height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3, overflow: 'hidden' }}>
-                      <div style={{ width: `${f.perc}%`, height: '100%', background: f.cor, borderRadius: 3 }} />
+                      <div style={{ width: `${Math.min(f.perc, 100)}%`, height: '100%', background: f.cor || '#00d2ff', borderRadius: 3 }} />
                     </div>
                     <strong style={{ color: '#fff', minWidth: 45, textAlign: 'right' }}>{f.perc}%</strong>
                   </div>
@@ -115,7 +110,7 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 10 }}>
             🏆 Top Vendedores — NexaBI Performance
           </h3>
-          {temDados ? (
+          {listaVendedores.length > 0 ? (
             <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)' }}>
@@ -125,8 +120,8 @@ export default function Vendas({ clienteSelecionado = 'todas', periodoPreset = '
                 </tr>
               </thead>
               <tbody>
-                {vendedoresData.map((v, i) => (
-                  <tr key={v.nome} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                {listaVendedores.map((v, i) => (
+                  <tr key={v.nome || i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                     <td style={{ padding: '6px 4px' }}>
                       <span style={{ color: i < 3 ? '#00d2ff' : '#fff', fontWeight: i < 3 ? 700 : 400 }}>
                         {i + 1}º {v.nome}

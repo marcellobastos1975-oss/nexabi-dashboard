@@ -3,39 +3,33 @@ import KPICard from '../components/KPICard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { fetchCompanyMetrics } from '../services/dashboardDataService';
 
-const impostosGerados = [
-  { nome: 'Saldo Imposto', valor: 3.24, cor: '#10b981' },
-  { nome: 'Imposto Entrada', valor: 9.40, cor: '#3b82f6' },
-  { nome: 'Imposto Saídas', valor: 12.64, cor: '#f59e0b' },
-];
 
-const saidasCFOP = [
-  { cfop: 'VM - Venda Mercadorias', valor: 11324.65, cor: '#3b82f6' },
-  { cfop: 'TS - Transferência Saída', valor: 1217.44, cor: '#10b981' },
-  { cfop: 'DF - Devolução Fornecedor', valor: 74.56, cor: '#f59e0b' },
-  { cfop: 'SP - Simples Remessa', valor: 19.55, cor: '#00d2ff' },
-];
-
-const entradasCFOP = [
-  { cfop: 'CO - Compras p/ Comercialização', valor: 8084.07, cor: '#10b981' },
-  { cfop: 'TE - Transferência Entrada', valor: 1163.15, cor: '#3b82f6' },
-  { cfop: 'DC - Devolução de Clientes', valor: 69.51, cor: '#00d2ff' },
-  { cfop: 'BE - Bonificação Entrada', valor: 43.77, cor: '#f59e0b' },
-];
-
-export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = 'mes_atual', unidade = 'Todas' }) {
+export default function Fiscal({ 
+  clienteSelecionado = 'todas', 
+  periodoPreset = 'mes_atual', 
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null 
+}) {
   const [metricas, setMetricas] = useState({
     impostosDiretos: '0,00',
+    percImpostosDiretos: '0,00',
+    vendaBruta: '0,00',
     hasData: true
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
-  const temDados = Boolean(metricas && metricas.hasData);
+  const temDados = Boolean(metricas && metricas.hasData && parseFloat((metricas.vendaBruta || '0').replace(',', '.')) > 0);
+  const impostoDiretoVal = parseFloat((metricas.impostosDiretos || '0').replace(',', '.')) || 0;
+
+  const impostosGerados = [
+    { nome: 'Impostos s/ Venda', valor: impostoDiretoVal, cor: '#f59e0b' }
+  ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -59,23 +53,11 @@ export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = '
         </div>
       )}
 
-      {/* 12 KPIs Tributários */}
+      {/* 3 KPIs Tributários Calculados */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Saldo do Imposto" value={temDados ? (isFilial3 ? "0,35" : (isFilial1 ? "2,89" : "3,24")) : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Imposto Entradas" value={temDados ? (isFilial3 ? "1,05" : (isFilial1 ? "8,35" : "9,40")) : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Imposto Saídas" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="Valor ICMS Venda" value={temDados ? (isFilial3 ? "1,12" : (isFilial1 ? "9,02" : "10,14")) : "0,00"} suffix=" Mi" />
-        <KPICard label="Valor PIS Venda" value={temDados ? (isFilial3 ? "23,10" : (isFilial1 ? "187,61" : "210,71")) : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-        <KPICard label="Valor COFINS Venda" value={temDados ? (isFilial3 ? "106,50" : (isFilial1 ? "865,98" : "972,48")) : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Carga Tributária" value={temDados ? "21,02" : "0,00"} suffix="%" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="Isentas / Outras" value={temDados ? (isFilial3 ? "0,80" : (isFilial1 ? "6,74" : "7,54")) : "0,00"} suffix=" Mi" />
-        <KPICard label="Vendas NF-e (55)" value={temDados ? (isFilial3 ? "15,10" : (isFilial1 ? "122,53" : "137,63")) : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Vendas NFC-e (65)" value={temDados ? (isFilial3 ? "0,72" : (isFilial1 ? "5,93" : "6,65")) : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="IBS Venda (Reforma)" value={temDados ? "4,54" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "purple" : "default"} />
-        <KPICard label="CBS Venda (Reforma)" value={temDados ? "40,81" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="% Carga Tributária" value={temDados ? metricas.percImpostosDiretos : "0,00"} suffix="%" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Base Faturamento" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
       </div>
 
       {/* Gráficos */}
@@ -83,10 +65,10 @@ export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = '
         {/* Impostos Gerados */}
         <div className="glass-card" style={{ padding: 16 }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
-            ⚖️ Impostos Gerados (Mi R$)
+            ⚖️ Estimativa de Tributos Diretos s/ Faturamento (Mi R$)
           </h3>
           <div style={{ width: '100%', height: 220 }}>
-            {temDados ? (
+            {temDados && impostoDiretoVal > 0 ? (
               <ResponsiveContainer>
                 <BarChart data={impostosGerados}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -98,7 +80,7 @@ export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = '
                     labelStyle={{ color: '#00d2ff', fontWeight: 700 }}
                     formatter={(val) => [`R$ ${Number(val).toFixed(2).replace('.', ',')} Mi`, 'Imposto']}
                   />
-                  <Bar dataKey="valor" fill="#00d2ff" radius={[4, 4, 0, 0]}>
+                  <Bar dataKey="valor" fill="#f59e0b" radius={[4, 4, 0, 0]}>
                     {impostosGerados.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.cor} />
                     ))}
@@ -113,25 +95,14 @@ export default function Fiscal({ clienteSelecionado = 'todas', periodoPreset = '
           </div>
         </div>
 
-        {/* Saídas por Natureza */}
+        {/* Informação sobre sincronização de NF-e */}
         <div className="glass-card" style={{ padding: 16 }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 12 }}>
-            📤 Impostos por Natureza de Operação (Saídas)
+            📑 Escrituração e Livros Fiscais
           </h3>
-          {temDados ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {saidasCFOP.map(s => (
-                <div key={s.cfop} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.03)', paddingBottom: 4 }}>
-                  <span>{s.cfop}</span>
-                  <strong style={{ color: s.cor }}>R$ {s.valor.toLocaleString('pt-BR')} Mil</strong>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px', padding: '20px 0' }}>
-              Nenhuma operação fiscal registrada.
-            </div>
-          )}
+          <div style={{ padding: '24px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+            Detalhes por CFOP e Chaves NF-e serão disponibilizados após execução da rotina fiscal no SyncAgent.
+          </div>
         </div>
       </div>
     </div>
