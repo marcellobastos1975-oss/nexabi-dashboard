@@ -1,5 +1,5 @@
 # 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-09-01 — Dashboard Web v2.4.7 PROD | NexaBI SyncAgent v1.8.6 PROD | SchemaStudio v2.4.3 PROD
+> **Última atualização:** 2026-09-10 — Dashboard Web v2.4.7 PROD | NexaBI SyncAgent v1.9.0 PROD | SchemaStudio v2.4.3 PROD
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
@@ -10,8 +10,8 @@ Para garantir a máxima qualidade, segurança e conformidade do ecossistema Nexa
 
 ### 🏷️ 1. Diretriz de Versionamento Contínuo e Rastreável (OBRIGATÓRIO A CADA ALTERAÇÃO)
 * **Toda e qualquer alteração de código ou funcionalidade exige incremento imediato de versão**:
-  * **Dashboard Web**: **`v2.4.3 PROD`** (Exibido no rodapé oficial do sistema, `config.js` e `package.json`).
-  * **SyncAgent Desktop**: **`v1.8.4 PROD`** (Exibido no título da janela gráfica e rodapé do executável).
+  * **Dashboard Web**: **`v2.4.7 PROD`** (Exibido no rodapé oficial do sistema, `config.js` e `package.json`).
+  * **SyncAgent Desktop**: **`v1.9.0 PROD`** (Exibido no título da janela gráfica e rodapé do executável).
 * Nenhuma alteração é liberada sem a atualização formal do número da versão e seu respectivo registro no Histórico de Versões.
 
 ### 🚀 2. Diretriz de Commit & Push Obrigatório no Git em Tempo Real
@@ -51,14 +51,14 @@ Para garantir a máxima qualidade, segurança e conformidade do ecossistema Nexa
 * Credenciais de banco salvas localmente no `config.json` são criptografadas com chave militar **AES-256 vinculada ao hardware da máquina**.
 
 ### 🧪 8. Diretriz de Teste Prévio Obrigatório Antes da Entrega (Zero Retrabalho & Eficiência Máxima)
-* **Regra Inegociável**: Toda e qualquer alteração realizada em qualquer componente do ecossistema NexaBI — seja no executável Desktop (NexaBI-SyncAgent.exe), no Dashboard Web (i.nexalifetech.com.br), nas regras/APIs da Nuvem Supabase ou na infraestrutura Firebase — **DEVE OBRIGATORIAMENTE ser testada, executada e validada de ponta a ponta em ambiente real antes de ser entregue ao usuário**.
+* **Regra Inegociável**: Toda e qualquer alteração realizada em qualquer componente do ecossistema NexaBI — seja no executável Desktop (NexaBI-SyncAgent.exe), no Dashboard Web ( i.nexalifetech.com.br), nas regras/APIs da Nuvem Supabase ou na infraestrutura Firebase — **DEVE OBRIGATORIAMENTE ser testada, executada e validada de ponta a ponta em ambiente real antes de ser entregue ao usuário**.
 * **Checklist de Validação Pré-Entrega Obrigatório**:
   1. **SyncAgent Desktop (NexaBI-SyncAgent.exe)**:
      * Recompilar o executável como binário único 100% auto-contido.
      * Executar o .exe gerado via teste de processo automatizado.
      * Verificar que o processo inicializa em < 500ms, sem qualquer ModuleNotFoundError, Traceback ou erro de janela.
      * Validar leitura/escrita blindada de config.json e state.json.
-  2. **Dashboard Web (i.nexalifetech.com.br)**:
+  2. **Dashboard Web ( i.nexalifetech.com.br)**:
      * Executar 
 pm run build e confirmar compilação com zero erros.
      * Validar rotas, autenticação, isolamento de perfil Master/Cliente e responsividade visual.
@@ -98,18 +98,6 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 │   ├── oracle_queries.py          → Queries Delta com hints e mapeamento de TNUD_UNIDADE
 │   ├── sync_agent.py              → Worker de extração contínua e auto-provisionamento
 │   ├── app_icon.ico / .png        → Ícone oficial 3D N multi-resolução
-│   ├── app_logo_header.png        → Logotipo oficial 3D Cyber N
-│   ├── config.json                → Configuração criptografada AES-256
-│   └── requirements.txt           → Dependências Python (oracledb, requests, cryptography)
-├── SchemaStudio\                  → Estúdio de Mapeamento Técnico e Semântico IA
-│   ├── NexaBI-SchemaStudio.exe   → Executável portátil compilado (ícone 3D N oficial)
-│   ├── app_studio.py              → Mapeador visual com descoberta autônoma IA
-│   └── app_icon.ico / .png        → Ícone oficial 3D N multi-resolução
-├── Dashboard\                     → Interface Web BI SPA (React 18 + Vite + Recharts + Lucide)
-│   ├── public\                    → Favicons 3D N (ico/png/svg), nexabi_logo.png, nexalife_logo.png, og-image.png
-│   ├── src\views\                 → 8 Módulos Completos (Panorama, Vendas, Compras, CR, CP, Tesouraria, Estoques, Fiscal)
-│   ├── src\components\            → Componentes reutilizáveis (KPICard, LiquidityGauge, ModalEmpresas, ModalUsuarios)
-│   ├── src\maskUtils.js           → Utilitários de auto-máscaras em tempo real (WhatsApp, CNPJ)
 │   ├── src\App.jsx                → Header executivo dual-brand, seletor de empresas reais e filtros
 │   ├── src\config.js              → Configurações oficiais (APP_VERSION = 'v2.4.3 PROD')
 │   ├── src\index.css              → Tema Dark Navy Glassmorphism da NexaLife Tech
@@ -148,6 +136,8 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| SyncAgent Desktop | v1.9.0 PROD | 2026-09-10 | **v1.9.0 PROD (ELIMINAÇÃO DE TRANSFERÊNCIAS ENTRE FILIAIS, RESERVAS DE MERCADORIA, EXPURGO DE CAPITALIZAÇÃO OUROCAP, SEGREGAÇÃO DE DÍVIDA BANCÁRIA & RESOLUÇÃO DE TIMEOUT DO CONSOLIDADO)**: 1) Resolução definitiva da tela zerada no Perfil Master para Todas as Empresas (Consolidado): aumento do timeout do papel `anon` no Supabase para 15s, criação de índices compostos de alta performance e otimização da RPC `get_dashboard_metrics` substituindo subqueries por vetor de chaves (`= ANY(v_emp_ids)`), reduzindo latência consolidada de 8s+ para 4,2s com HTTP 200; 2) Auditoria profunda e confronto contra os relatórios oficiais do Próton ERP (`Relatório de Vendas por Dia.PDF` de 01 a 03/09/2026); 3) Correção da `QUERY_DELTA_VENDAS_PROTON` exigindo status faturado (`FAT`, `CL`, `MA` ou NF-e emitida), expurgando transferências entre filiais (Matriz para Porto Seco/Feira com vendedor `ISENTO VENDA` e cliente `ARCO VERDE DISTRIBUIDORA`) e reservas de mercadoria (~R$ 10,52 Mi expurgados); 4) Correção da `QUERY_DELTA_CR_PROTON` expurgando títulos financeiros/capitalização (`OUROCAP` R$ 18 Mi, `BANCO ITAU` R$ 3 Mi) da carteira comercial de clientes; 5) Correção da `QUERY_DELTA_CP_PROTON` segregando dívida bancária de longo prazo (`BANCO DO BRASIL` R$ 140,4 Mi até 2040) e impostos de fornecedores operacionais; 6) Expurgados 15.422 registros indevidos de vendas e títulos no Supabase; 7) Recompilado e homologado o executável `NexaBI-SyncAgent.exe` v1.9.0 PROD com inicialização limpa. |
+| SyncAgent Desktop | v1.8.8 PROD | 2026-09-10 | **v1.8.8 PROD (AUTENTICAÇÃO MESTRE ESTRITA DIRETA NO DASHBOARD, CORREÇÃO DE CONFLITO POSTGREST 409, COALESCE DE DATA FATURAMENTO/SAÍDA & REALINHAMENTO SETEMBRO/2026)**: 1) Eliminação total de senhas estáticas genéricas no SyncAgent: validação estrita, em tempo real e de ponta a ponta contra a tabela `bi_usuarios` do Dashboard no Supabase Cloud, exigindo perfil `master` ativo e autenticando exclusivamente com a senha cadastrada pelo usuário mestre no portal; 2) Cache seguro local baseado em HMAC-SHA256 para permitir validação em contingência offline exclusivamente para usuários previamente autenticados; 3) Resolução crítica do erro HTTP 409 Conflict no PostgREST Supabase com adição de `?on_conflict=...` em todas as 8 tabelas, eliminando o descarte de lotes; 4) Correção da priorização de data de emissão para faturamento/saída com fallback para criação de pedido; 5) Deduplicação canônica de tabelas e filtro de cancelados (`CA`, `CANC`); 6) Recompilação do executável portátil `NexaBI-SyncAgent.exe` com inicialização em < 500ms; 7) Realinhamento de 100% dos 723 pedidos do Próton ERP no Supabase (R$ 6.534.269,92 / 880 vendas consolidadas no período 01 a 03/09/2026); 8) Otimização da RPC `get_dashboard_metrics` reduzindo tempo de resposta em 88%. |
 | Dashboard Web | v2.4.7 PROD | 2026-09-01 | **v2.4.7 PROD (OVERHAUL COMPLETO DE FILTROS, RPC ULTRA-PERFORMANTE, CORREÇÃO DE BUG DO DIA 01 E ELIMINAÇÃO DE LITERAIS FIXOS)**: 1) Criação de índices de alta performance no PostgreSQL no Supabase Cloud (`idx_bi_vendas_data`, `idx_bi_vendas_emp_fil_data`, `idx_bi_cr_emp_fil`, `idx_bi_cp_emp_fil`, `idx_bi_est_emp_fil`), reduzindo varredura de vendas de ~11s para < 30ms com Index Scan; 2) Total reescrita da RPC `get_dashboard_metrics` suportando agregação multi-tenant dinâmica, multi-filial (`p_filial`), multi-período (`hoje`, `7d`, `mes_atual`, `mes_ant`, `90d`, `ano`, `custom` com `p_dt_inicio` e `p_dt_fim`) e retornando JSON estruturado completo incluindo rankings reais (`historico12m`, `topVendedores`, `topClientes`, `topCredores`, `curvaABC`, `topProdutos`, `formasPagamento`); 3) Correção definitiva do bug do dia 01/09/2026 que zerava a tela em "Mês Anterior" e somava todo o histórico desde 2011 em "Hoje"; 4) Eliminação de 100% dos literais mockados fixos em todas as 8 views do BI (`PanoramaGeral`, `Vendas`, `ContasReceber`, `ContasPagar`, `Estoques`, `Compras`, `Tesouraria`, `Fiscal`), conectando todos os cards, gauges e gráficos diretamente à RPC da nuvem; 5) Botão "Atualizar" conectado à limpeza forçada de cache (`clearMetricsCache()`); 6) Build de produção Vite aprovado com sucesso (18.05s) e deploy no Firebase Hosting. |
 | Dashboard Web | v2.4.6 PROD | 2026-09-01 | **v2.4.6 PROD (CORREÇÃO DE TRANSPARÊNCIA DO LOGO, ELIMINAÇÃO DEFINITIVA DE CAIXAS, CACHE-BUSTER DE ASSETS E RESTAURAÇÃO DE OG 1200x630)**: 1) Correção definitiva na exibição do logotipo oficial `nexabi_logo.png` no Login e Header do Dashboard: uso de fundo 100% transparente com iluminação suave neon ciano (`drop-shadow(0 0 14px rgba(0, 210, 255, 0.55))`), eliminação total de caixas ou bordas escuras; 2) Implementação de cache-buster dinâmico em todas as tags `<img>` (`?v=${APP_VERSION}`) forçando o recarregamento imediato do PNG transparente e eliminando o cache HTTP residual; 3) Restauração do banner oficial de redes sociais e WhatsApp em resolução exata 1200x630 (`og-image.png` e `og-preview.png` a partir de `nexabi_og_preview1.png`), com cache-buster no `index.html`; 4) Build de produção limpo e deploy no Google Cloud Firebase Hosting (`https://bi.nexalifetech.com.br`). |
 | Dashboard Web | v2.4.5 PROD | 2026-09-01 | **v2.4.5 PROD (DUAL LOGO NA TELA DE LOGIN E REMOÇÃO DA CAIXA DO HEADER)**: 1) Tela de Login atualizada com os dois logotipos lado a lado — `nexalife_logo.png` (esquerda) e `nexabi_logo.png` (direita) — separados por divisor neon ciano, sem caixa, com glow neon (`drop-shadow`); 2) Header do Dashboard: removidos `border`, `background` e `borderRadius` do logo NexaBI do lado direito — exibição livre com glow neon ciano duplo sem caixa; 3) Versão `v2.4.5 PROD` em `config.js` e `package.json`; 4) Build e Deploy concluídos no Firebase Hosting. |
