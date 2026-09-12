@@ -2,9 +2,19 @@ import React, { useState } from 'react';
 import { Info, X } from 'lucide-react';
 
 const KPI_DESCRICOES = {
+  'venda': {
+    titulo: 'Venda Total',
+    significado: 'Faturamento total das vendas faturadas (CL e MA) no Próton ERP com natureza de movimentação VM.',
+    calculo: 'Soma dos pedidos faturados em dbauser.tped_pedido_venda e dbauser.tped_historico_venda.'
+  },
+  'venda do dia': {
+    titulo: 'Venda do Dia',
+    significado: 'Faturamento faturado (CL/MA) registrado especificamente na data de hoje no Próton ERP.',
+    calculo: 'Soma de pedidos faturados com data de documento igual a hoje.'
+  },
   'venda bruta': {
-    titulo: 'Venda Bruta',
-    significado: 'Faturamento total emitido em pedidos e notas fiscais antes de qualquer dedução comercial.',
+    titulo: 'Venda',
+    significado: 'Faturamento total emitido em pedidos no Próton ERP.',
     calculo: 'Soma de todos os pedidos faturados (dbauser.tped_pedido_venda + tped_historico_venda).'
   },
   'venda líquida': {
@@ -23,9 +33,24 @@ const KPI_DESCRICOES = {
     calculo: 'Soma dos títulos a pagar em aberto no Próton (dbauser.tpag_aberto).'
   },
   'valor estoque': {
-    titulo: 'Valor de Estoque',
-    significado: 'Patrimônio financeiro imobilizado em mercadorias disponíveis nos depósitos e filiais.',
-    calculo: 'Soma de (Quantidade Física × Custo Médio Unitário) na tabela dbauser.tmer_estoque.'
+    titulo: 'Valor Total de Estoque',
+    significado: 'Patrimônio financeiro imobilizado em mercadorias estocadas. Representa o saldo total do produto multiplicado pelo custo médio no ERP Próton.',
+    calculo: 'Soma de (TMER_ESTOQUE_TOTAL × TMER_CUSTO_MEDIO) para itens com saldo positivo.'
+  },
+  'itens estoque negativo': {
+    titulo: 'Itens com Estoque Negativo',
+    significado: 'Quantidade de mercadorias com Saldo Total Negativo (TMER_ESTOQUE_TOTAL < 0). Ocorre quando saídas ou vendas são digitadas no sistema antes da entrada da nota fiscal de compra.',
+    calculo: 'Contagem de SKUs com TMER_ESTOQUE_TOTAL < 0 em dbauser.tmer_estoque.'
+  },
+  'valor estoque negativo': {
+    titulo: 'Valor do Estoque Negativo',
+    significado: 'Impacto contábil das posições negativas valorizadas a preço de custo médio.',
+    calculo: 'Soma de (TMER_ESTOQUE_TOTAL × TMER_CUSTO_MEDIO) onde saldo < 0.'
+  },
+  'valor a preço venda': {
+    titulo: 'Valor a Preço de Venda',
+    significado: 'Potencial de faturamento bruto do estoque disponível caso seja comercializado pela tabela de preços vigente no Próton.',
+    calculo: 'Soma de (TMER_ESTOQUE_TOTAL × TMER_PRECO_VENDA).'
   },
   'contas financ.': {
     titulo: 'Contas Financeiras & Tesouraria',

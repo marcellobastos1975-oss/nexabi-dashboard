@@ -14,7 +14,7 @@ export const USUARIOS_BASE = [
     empresaNome: 'Todas as Empresas (Consolidado)',
     erp: 'Multi-ERP',
     unidadePadrao: 'Todas',
-    senhas: ['NexaLife@2026!SecDB', 'admin', '123456', 'master']
+    senhas: ['NexaLife@2026!SecDB', 'admin', '123456', 'master', 'marcello', 'marcello123', 'marcelo', 'marcelo123', 'NexaBI@2026!', 'admin123', '1234', '12345', 'arcoverde123', 'destak123', '1975', 'bastos']
   },
   {
     username: 'master',

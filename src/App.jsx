@@ -121,6 +121,8 @@ export default function App() {
   const [dataInicio, setDataInicio] = useState(`${anoStr}-${mesStr}-01`);
   const [dataFim, setDataFim] = useState(`${anoStr}-${mesStr}-${diaStr}`);
   const [atualizando, setAtualizando] = useState(false);
+  const [refreshCounter, setRefreshCounter] = useState(0);
+  const [autoRefreshIntervalo, setAutoRefreshIntervalo] = useState(60); // 60s (Padrão Recomendado)
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
   const [drawerAIAberto, setDrawerAIAberto] = useState(false);
@@ -217,10 +219,37 @@ export default function App() {
   const handleAtualizar = () => {
     clearMetricsCache();
     setAtualizando(true);
+    setRefreshCounter(c => c + 1);
     setTimeout(() => {
       setAtualizando(false);
-    }, 600);
+    }, 700);
   };
+
+  // Motor de Atualização Automática Contínua com Smart Visibility Check
+  useEffect(() => {
+    if (autoRefreshIntervalo <= 0) return;
+
+    const timer = setInterval(() => {
+      // Se a aba estiver em segundo plano, não consome requisições do Supabase
+      if (document.hidden) return;
+      clearMetricsCache();
+      setRefreshCounter(c => c + 1);
+    }, autoRefreshIntervalo * 1000);
+
+    const onVisibilityChange = () => {
+      if (!document.hidden && autoRefreshIntervalo > 0) {
+        clearMetricsCache();
+        setRefreshCounter(c => c + 1);
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [autoRefreshIntervalo]);
 
   const handleMudancaClienteMaster = (novoClienteId) => {
     setClienteSelecionado(novoClienteId);
@@ -407,6 +436,39 @@ export default function App() {
               {atualizando ? 'Atualizando...' : 'Atualizar'}
             </button>
 
+            {/* Seletor de Auto-Refresh Inteligente */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 6, 
+              background: 'rgba(5,16,36,0.85)', 
+              padding: '6px 12px', 
+              borderRadius: 10, 
+              border: '1px solid rgba(0,210,255,0.3)',
+              boxShadow: autoRefreshIntervalo > 0 ? '0 0 10px rgba(0, 210, 255, 0.15)' : 'none'
+            }}>
+              <span style={{ fontSize: '11px', color: '#94a3b8' }}>⏱️ Auto:</span>
+              <select
+                value={autoRefreshIntervalo}
+                onChange={(e) => setAutoRefreshIntervalo(Number(e.target.value))}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: autoRefreshIntervalo > 0 ? '#38bdf8' : '#64748b',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+                title="Intervalo de Atualização Automática de Dados do NexaBI"
+              >
+                <option value={0} style={{ background: '#0a1937', color: '#fff' }}>Desativado (Manual)</option>
+                <option value={30} style={{ background: '#0a1937', color: '#fff' }}>30 seg (Monitor TV)</option>
+                <option value={60} style={{ background: '#0a1937', color: '#fff' }}>60 seg (Recomendado)</option>
+                <option value={300} style={{ background: '#0a1937', color: '#fff' }}>5 min (Econômico)</option>
+              </select>
+            </div>
+
             {/* Botão Oficial do Assistente IA (Disponível para Master e Clientes) */}
             <button
               onClick={() => setDrawerAIAberto(true)}
@@ -564,6 +626,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
         {moduloAtivo === 'vendas' && (
@@ -573,6 +636,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
         {moduloAtivo === 'compras' && (
@@ -582,6 +646,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
         {moduloAtivo === 'cr' && (
@@ -591,6 +656,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
         {moduloAtivo === 'cp' && (
@@ -600,6 +666,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
         {moduloAtivo === 'tesouraria' && (
@@ -609,6 +676,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
         {moduloAtivo === 'estoques' && (
@@ -618,6 +686,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
         {moduloAtivo === 'fiscal' && (
@@ -627,6 +696,7 @@ export default function App() {
             unidade={unidade}
             dataInicio={dataInicio}
             dataFim={dataFim}
+            refreshCounter={refreshCounter}
           />
         )}
       </main>

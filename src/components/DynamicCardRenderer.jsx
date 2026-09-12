@@ -3,7 +3,7 @@ import {
   ResponsiveContainer, BarChart, Bar, LineChart, Line, 
   PieChart, Pie, Cell, XAxis, YAxis, Tooltip, CartesianGrid 
 } from 'recharts';
-import { Pin, Trash2, TrendingUp, DollarSign, Award, Layers } from 'lucide-react';
+import { Pin, Trash2, TrendingUp, DollarSign, Award, Layers, Sparkles, CheckCircle2 } from 'lucide-react';
 
 const CORES_PALETA = ['#00d2ff', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
 
@@ -12,7 +12,7 @@ export default function DynamicCardRenderer({ widget, onFixar, onRemover, isFixa
 
   const { titulo, tipo_widget, config_json, id } = widget;
   const cfg = config_json || {};
-  const dados = cfg.dados || [];
+  const dados = Array.isArray(cfg.dados) ? cfg.dados : [];
 
   const formatarMoeda = (val) => {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
@@ -22,80 +22,276 @@ export default function DynamicCardRenderer({ widget, onFixar, onRemover, isFixa
     return new Intl.NumberFormat('pt-BR').format(val || 0);
   };
 
+  // Valor máximo para a barra proporcional de ranking
+  const maxValor = dados.length > 0 
+    ? Math.max(...dados.map(d => Number(d.valor) || 0), 1) 
+    : 1;
+
   return (
-    <div className="bg-[#0b1728] border border-cyan-900/40 rounded-xl p-4 shadow-xl hover:border-cyan-500/50 transition-all flex flex-col justify-between">
+    <div 
+      style={{
+        background: 'linear-gradient(145deg, #0b1728 0%, #060d17 100%)',
+        border: '1px solid rgba(0, 210, 255, 0.25)',
+        borderRadius: '14px',
+        padding: '16px',
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '14px',
+        color: '#f8fafc'
+      }}
+    >
       {/* Header do Card */}
-      <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-cyan-950/60 rounded-lg text-cyan-400 border border-cyan-800/40">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ 
+            background: 'linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%)',
+            border: '1px solid rgba(0, 210, 255, 0.4)',
+            borderRadius: '10px',
+            padding: '8px',
+            color: '#00d2ff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
             <SparkleIcon tipo={tipo_widget} />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-slate-100">{titulo}</h4>
-            <span className="text-[10px] text-slate-400">{cfg.subtitulo || 'Insight Gerado por IA'}</span>
+            <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: '#f8fafc', lineHeight: 1.3 }}>
+              {titulo}
+            </h4>
+            <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 500 }}>
+              {cfg.subtitulo || 'Insight Analítico NexaIA'}
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           {onFixar && !isFixado && (
             <button
               onClick={() => onFixar(widget)}
-              className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold text-cyan-300 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-800 rounded-lg transition-all"
+              style={{
+                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                color: '#ffffff',
+                border: '1px solid rgba(0, 210, 255, 0.4)',
+                borderRadius: '8px',
+                padding: '6px 12px',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                boxShadow: '0 2px 8px rgba(2, 132, 199, 0.4)',
+                transition: 'all 0.2s ease'
+              }}
               title="Fixar este card no meu painel principal"
             >
               <Pin size={12} />
               Fixar
             </button>
           )}
+          {isFixado && (
+            <span style={{
+              background: 'rgba(16, 185, 129, 0.2)',
+              color: '#34d399',
+              border: '1px solid #10b981',
+              borderRadius: '8px',
+              padding: '4px 8px',
+              fontSize: '10px',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              <CheckCircle2 size={11} /> Fixado
+            </span>
+          )}
           {onRemover && (
             <button
               onClick={() => onRemover(id || widget)}
-              className="p-1 text-slate-400 hover:text-red-400 hover:bg-red-950/30 rounded-lg transition-all"
+              style={{
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                color: '#f87171',
+                borderRadius: '8px',
+                padding: '6px 8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
               title="Remover card"
             >
-              <Trash2 size={14} />
+              <Trash2 size={13} />
             </button>
           )}
         </div>
       </div>
 
-      {/* Conteúdo Dinâmico conforme tipo_widget */}
-      <div className="my-2 min-h-[150px] flex items-center justify-center">
+      {/* Conteúdo Dinâmico Conforme Tipo de Widget */}
+      <div style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        
+        {/* TIPO: KPI (Card Único ou Indicador) */}
         {tipo_widget === 'kpi' && (
-          <div className="text-center py-4">
-            <div className="text-3xl font-extrabold text-cyan-400 tracking-tight">
+          <div style={{ textAlign: 'center', padding: '16px 8px' }}>
+            <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {cfg.metrica_label || 'Total Apurado'}
+            </div>
+            <div style={{ 
+              fontSize: '30px', 
+              fontWeight: 900, 
+              color: '#00d2ff', 
+              letterSpacing: '-0.5px',
+              marginTop: '4px',
+              textShadow: '0 0 20px rgba(0, 210, 255, 0.3)'
+            }}>
               {cfg.is_moeda ? formatarMoeda(cfg.valor) : formatarNumero(cfg.valor)}
             </div>
-            <p className="text-xs text-slate-400 mt-1 font-medium">{cfg.descricao || 'Métrica Consolidada'}</p>
+            {cfg.descricao && (
+              <p style={{ margin: '8px 0 0 0', fontSize: '12px', color: '#cbd5e1', fontWeight: 500 }}>
+                {cfg.descricao}
+              </p>
+            )}
             {cfg.variacao && (
-              <span className={`text-[11px] font-bold mt-2 inline-block px-2 py-0.5 rounded-full ${cfg.variacao >= 0 ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-red-950 text-red-400 border border-red-800'}`}>
+              <span style={{
+                display: 'inline-block',
+                marginTop: '10px',
+                padding: '3px 10px',
+                borderRadius: '20px',
+                fontSize: '11px',
+                fontWeight: 700,
+                background: cfg.variacao >= 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                color: cfg.variacao >= 0 ? '#34d399' : '#f87171',
+                border: cfg.variacao >= 0 ? '1px solid #10b981' : '1px solid #ef4444'
+              }}>
                 {cfg.variacao >= 0 ? `+${cfg.variacao}%` : `${cfg.variacao}%`} vs período anterior
               </span>
             )}
           </div>
         )}
 
+        {/* TIPO: RANKING (Visual Moderno em Linhas com Barra Proporcional) */}
+        {tipo_widget === 'ranking' && dados.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {dados.slice(0, 6).map((row, idx) => {
+              const valorNum = Number(row.valor) || 0;
+              const perc = Math.min(Math.max((valorNum / maxValor) * 100, 2), 100);
+              
+              // Cores das medalhas
+              let badgeBg = 'rgba(2, 132, 199, 0.2)';
+              let badgeBorder = 'rgba(0, 210, 255, 0.4)';
+              let badgeColor = '#00d2ff';
+              if (idx === 0) {
+                badgeBg = 'rgba(245, 158, 11, 0.2)';
+                badgeBorder = 'rgba(245, 158, 11, 0.6)';
+                badgeColor = '#fbbf24'; // Ouro
+              } else if (idx === 1) {
+                badgeBg = 'rgba(148, 163, 184, 0.2)';
+                badgeBorder = 'rgba(148, 163, 184, 0.5)';
+                badgeColor = '#cbd5e1'; // Prata
+              } else if (idx === 2) {
+                badgeBg = 'rgba(217, 119, 6, 0.2)';
+                badgeBorder = 'rgba(217, 119, 6, 0.5)';
+                badgeColor = '#f59e0b'; // Bronze
+              }
+
+              return (
+                <div 
+                  key={idx}
+                  style={{
+                    background: 'rgba(15, 23, 42, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '10px',
+                    padding: '10px 12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+                      <span style={{
+                        background: badgeBg,
+                        border: `1px solid ${badgeBorder}`,
+                        color: badgeColor,
+                        borderRadius: '6px',
+                        padding: '2px 7px',
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        minWidth: '26px',
+                        textAlign: 'center'
+                      }}>
+                        {idx + 1}º
+                      </span>
+                      <span 
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          color: '#f1f5f9',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                        title={row.label}
+                      >
+                        {row.label}
+                      </span>
+                    </div>
+
+                    <span style={{
+                      fontSize: '13px',
+                      fontWeight: 800,
+                      color: '#00d2ff',
+                      fontFamily: 'monospace',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {cfg.is_moeda ? formatarMoeda(row.valor) : formatarNumero(row.valor)}
+                    </span>
+                  </div>
+
+                  {/* Micro Barra de Progresso Relativa */}
+                  <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${perc}%`,
+                      height: '100%',
+                      background: idx === 0 
+                        ? 'linear-gradient(90deg, #f59e0b 0%, #00d2ff 100%)' 
+                        : 'linear-gradient(90deg, #0284c7 0%, #00d2ff 100%)',
+                      borderRadius: '2px'
+                    }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* TIPO: BARRAS */}
         {tipo_widget === 'barras' && dados.length > 0 && (
-          <div className="w-full h-44">
+          <div style={{ width: '100%', height: '190px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={dados} layout={cfg.horizontal ? 'vertical' : 'horizontal'}>
+              <BarChart data={dados} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                {cfg.horizontal ? (
-                  <>
-                    <XAxis type="number" stroke="#64748b" tickFormatter={(v) => cfg.is_moeda ? `R$ ${v/1000}k` : v} />
-                    <YAxis type="category" dataKey="label" stroke="#94a3b8" width={90} tick={{ fontSize: 10 }} />
-                  </>
-                ) : (
-                  <>
-                    <XAxis dataKey="label" stroke="#94a3b8" tick={{ fontSize: 10 }} />
-                    <YAxis stroke="#64748b" tickFormatter={(v) => cfg.is_moeda ? `R$ ${v/1000}k` : v} />
-                  </>
-                )}
+                <XAxis 
+                  dataKey="label" 
+                  stroke="#94a3b8" 
+                  tick={{ fontSize: 10, fill: '#94a3b8' }} 
+                  interval={0}
+                  angle={-15}
+                  textAnchor="end"
+                />
+                <YAxis 
+                  stroke="#64748b" 
+                  tick={{ fontSize: 10, fill: '#64748b' }}
+                  tickFormatter={(v) => cfg.is_moeda ? `R$ ${(v/1000).toFixed(0)}k` : v} 
+                />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#0f172a', borderColor: '#00d2ff', borderRadius: '8px', fontSize: '12px' }}
-                  formatter={(value) => [cfg.is_moeda ? formatarMoeda(value) : formatarNumero(value), cfg.metrica_label || 'Total']}
+                  formatter={(value) => [cfg.is_moeda ? formatarMoeda(value) : formatarNumero(value), cfg.metrica_label || 'Valor']}
                 />
-                <Bar dataKey="valor" fill="#00d2ff" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="valor" radius={[4, 4, 0, 0]}>
                   {dados.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={CORES_PALETA[index % CORES_PALETA.length]} />
                   ))}
@@ -105,28 +301,30 @@ export default function DynamicCardRenderer({ widget, onFixar, onRemover, isFixa
           </div>
         )}
 
+        {/* TIPO: LINHAS */}
         {tipo_widget === 'linhas' && dados.length > 0 && (
-          <div className="w-full h-44">
+          <div style={{ width: '100%', height: '180px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={dados}>
+              <LineChart data={dados} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="label" stroke="#94a3b8" tick={{ fontSize: 10 }} />
-                <YAxis stroke="#64748b" tickFormatter={(v) => cfg.is_moeda ? `R$ ${v/1000}k` : v} />
+                <XAxis dataKey="label" stroke="#94a3b8" tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                <YAxis stroke="#64748b" tickFormatter={(v) => cfg.is_moeda ? `R$ ${(v/1000).toFixed(0)}k` : v} tick={{ fontSize: 10, fill: '#64748b' }} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#0f172a', borderColor: '#00d2ff', borderRadius: '8px', fontSize: '12px' }}
                   formatter={(value) => [cfg.is_moeda ? formatarMoeda(value) : formatarNumero(value), cfg.metrica_label || 'Evolução']}
                 />
-                <Line type="monotone" dataKey="valor" stroke="#00d2ff" strokeWidth={3} dot={{ r: 3, fill: '#3b82f6' }} />
+                <Line type="monotone" dataKey="valor" stroke="#00d2ff" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6', strokeWidth: 2 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         )}
 
+        {/* TIPO: PIZZA */}
         {tipo_widget === 'pizza' && dados.length > 0 && (
-          <div className="w-full h-44 flex items-center justify-center">
+          <div style={{ width: '100%', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={dados} cx="50%" cy="50%" innerRadius={35} outerRadius={60} paddingAngle={4} dataKey="valor">
+                <Pie data={dados} cx="50%" cy="50%" innerRadius={40} outerRadius={65} paddingAngle={4} dataKey="valor">
                   {dados.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={CORES_PALETA[index % CORES_PALETA.length]} />
                   ))}
@@ -139,35 +337,26 @@ export default function DynamicCardRenderer({ widget, onFixar, onRemover, isFixa
             </ResponsiveContainer>
           </div>
         )}
-
-        {tipo_widget === 'ranking' && dados.length > 0 && (
-          <div className="w-full">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="text-slate-400 border-b border-slate-800 pb-1">
-                  <th className="pb-1">#</th>
-                  <th className="pb-1">Item / Dimensão</th>
-                  <th className="pb-1 text-right">Valor</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60">
-                {dados.slice(0, 5).map((row, idx) => (
-                  <tr key={idx} className="hover:bg-slate-800/30">
-                    <td className="py-1.5 font-bold text-cyan-400">{idx + 1}º</td>
-                    <td className="py-1.5 font-medium text-slate-200 truncate max-w-[140px]">{row.label}</td>
-                    <td className="py-1.5 text-right font-bold text-slate-100">{cfg.is_moeda ? formatarMoeda(row.valor) : formatarNumero(row.valor)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
 
-      {/* Footer com Explicação Semântica */}
+      {/* Box Executivo do Parecer NexaIA */}
       {cfg.explicacao_ia && (
-        <div className="mt-2 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400 italic">
-          💡 {cfg.explicacao_ia}
+        <div style={{
+          background: 'rgba(0, 210, 255, 0.05)',
+          border: '1px solid rgba(0, 210, 255, 0.25)',
+          borderLeft: '4px solid #00d2ff',
+          borderRadius: '0 10px 10px 0',
+          padding: '12px 14px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4px'
+        }}>
+          <span style={{ fontSize: '11px', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <Sparkles size={12} color="#00d2ff" /> Parecer Executivo NexaIA:
+          </span>
+          <p style={{ margin: 0, fontSize: '12px', color: '#cbd5e1', lineHeight: '1.5', fontWeight: 500 }}>
+            {cfg.explicacao_ia}
+          </p>
         </div>
       )}
     </div>
@@ -175,8 +364,8 @@ export default function DynamicCardRenderer({ widget, onFixar, onRemover, isFixa
 }
 
 function SparkleIcon({ tipo }) {
-  if (tipo === 'kpi') return <DollarSign size={14} />;
-  if (tipo === 'ranking') return <Award size={14} />;
-  if (tipo === 'linhas') return <TrendingUp size={14} />;
-  return <Layers size={14} />;
+  if (tipo === 'kpi') return <DollarSign size={16} />;
+  if (tipo === 'ranking') return <Award size={16} />;
+  if (tipo === 'linhas') return <TrendingUp size={16} />;
+  return <Layers size={16} />;
 }

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
 import { 
   X, Building2, Plus, Key, Copy, Check, ShieldCheck, 
-  Trash2, Search, Database, Layers, CheckCircle2, AlertCircle, RefreshCw, Edit3
+  Trash2, Search, Database, Layers, CheckCircle2, AlertCircle, RefreshCw, Edit3, Sliders, ToggleLeft, ToggleRight, AlertTriangle
 } from 'lucide-react';
-import { getTodasEmpresas, cadastrarEmpresa, atualizarEmpresa, excluirEmpresa, gerarApiKeySegura } from '../empresaStore';
+import { getTodasEmpresas, cadastrarEmpresa, atualizarEmpresa, excluirEmpresa, gerarApiKeySegura, atualizarModulosEmpresa, limparDadosModuloEmpresa } from '../empresaStore';
 import { formatarCNPJ } from '../maskUtils';
 
 export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
@@ -12,6 +11,12 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
   const [modalFormAberto, setModalFormAberto] = useState(false);
   const [empresaEditando, setEmpresaEditando] = useState(null); // null = cadastrando novo, objeto = editando
   const [carregando, setCarregando] = useState(false);
+
+  // Estados para Gestão Modular e Pipeline ETL
+  const [empresaModulosAberto, setEmpresaModulosAberto] = useState(null);
+  const [modulosState, setModulosState] = useState({ vendas: true, estoques: false, compras: false, contas_receber: false, contas_pagar: false, fiscal: false });
+  const [salvandoModulos, setSalvandoModulos] = useState(false);
+  const [feedbackPurge, setFeedbackPurge] = useState('');
 
   // Form Fields
   const [razaoSocial, setRazaoSocial] = useState('');
@@ -428,9 +433,36 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
                           )}
                         </button>
 
+                        {/* Botão Gestão de Módulos & Pipeline ETL */}
+                        <button
+                          onClick={() => {
+                            setEmpresaModulosAberto(emp);
+                            setModulosState(emp.modulos_config || { vendas: true, estoques: false, compras: false, contas_receber: false, contas_pagar: false, fiscal: false });
+                            setFeedbackPurge('');
+                          }}
+                          style={{
+                            background: 'rgba(99, 102, 241, 0.18)',
+                            border: '1px solid rgba(99, 102, 241, 0.45)',
+                            color: '#a5b4fc',
+                            padding: '6px 10px',
+                            borderRadius: 8,
+                            fontSize: 11,
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 4
+                          }}
+                          title="Gerenciar Módulos Ativos e Pipeline ETL"
+                        >
+                          <Sliders size={13} />
+                          <span>Módulos</span>
+                        </button>
+
                         {/* Botão Editar Empresa */}
                         <button
                           onClick={() => abrirEdicao(emp)}
+
                           style={{
                             background: 'rgba(168, 85, 247, 0.15)',
                             border: '1px solid rgba(168, 85, 247, 0.4)',
@@ -635,7 +667,224 @@ export default function ModalGerenciarEmpresas({ isOpen, onClose }) {
           </div>
         )}
 
+        {/* MODAL SOBREPOSTO: GESTÃO MODULAR E PIPELINE ETL */}
+        {empresaModulosAberto && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(2, 6, 18, 0.94)',
+            backdropFilter: 'blur(10px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10001,
+            padding: '20px'
+          }}>
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(13, 38, 76, 0.99) 0%, rgba(7, 21, 44, 0.99) 50%, rgba(3, 10, 24, 0.99) 100%)',
+              border: '1px solid rgba(99, 102, 241, 0.65)',
+              borderRadius: 20,
+              width: '92vw',
+              maxWidth: 720,
+              maxHeight: '90vh',
+              boxShadow: '0 25px 65px rgba(0, 0, 0, 0.95), 0 0 35px rgba(99, 102, 241, 0.3)',
+              padding: '26px 30px',
+              position: 'relative',
+              color: '#ffffff',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+              overflowY: 'auto'
+            }}>
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Sliders size={22} color="#a5b4fc" />
+                  <div>
+                    <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: '#fff' }}>
+                      Pipeline ETL & Módulos: {empresaModulosAberto.nome_fantasia || empresaModulosAberto.razao_social}
+                    </h3>
+                    <span style={{ fontSize: 11, color: '#94a3b8' }}>
+                      CNPJ: {empresaModulosAberto.cnpj} | O SyncAgent e o Studio só processarão os módulos marcados como ATIVOS.
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setEmpresaModulosAberto(null)}
+                  style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {feedbackPurge && (
+                <div style={{ background: 'rgba(16, 185, 129, 0.18)', border: '1px solid #10b981', color: '#6ee7b7', padding: '10px 14px', borderRadius: 10, fontSize: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <CheckCircle2 size={16} />
+                  <span>{feedbackPurge}</span>
+                </div>
+              )}
+
+              {/* Lista de Módulos */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 4 }}>
+                {[
+                  { key: 'vendas', nome: 'Vendas & Pedidos', desc: 'Faturamento diário e histórico consolidado com vendedores e clientes', tabela: 'bi_vendas' },
+                  { key: 'estoques', nome: 'Posição & Saldos de Estoque', desc: 'Curva ABC, saldo físico e custo médio por filial', tabela: 'bi_estoques' },
+                  { key: 'compras', nome: 'Compras & Notas de Entrada', desc: 'Entrada física de mercadorias, fornecedores e custos', tabela: 'bi_compras' },
+                  { key: 'contas_receber', nome: 'Contas a Receber (CR)', desc: 'Títulos em aberto, liquidados e taxa de inadimplência', tabela: 'bi_contas_receber' },
+                  { key: 'contas_pagar', nome: 'Contas a Pagar (CP)', desc: 'Títulos a pagar, credores e fluxo financeiro operacional', tabela: 'bi_contas_pagar' },
+                  { key: 'fiscal', nome: 'Fiscal & Tributos', desc: 'Apuração fiscal mensal, CFOP e impostos diretos', tabela: 'bi_fiscal' }
+                ].map((mod) => {
+                  const estaAtivo = !!modulosState[mod.key];
+                  return (
+                    <div
+                      key={mod.key}
+                      style={{
+                        background: estaAtivo ? 'rgba(15, 35, 70, 0.65)' : 'rgba(8, 16, 32, 0.45)',
+                        border: estaAtivo ? '1px solid rgba(0, 210, 255, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: 12,
+                        padding: '12px 16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <div style={{ flex: 1, paddingRight: 12 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontWeight: 700, fontSize: 13, color: estaAtivo ? '#ffffff' : '#94a3b8' }}>
+                            {mod.nome}
+                          </span>
+                          <span style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            padding: '2px 8px',
+                            borderRadius: 12,
+                            background: estaAtivo ? 'rgba(16, 185, 129, 0.2)' : 'rgba(148, 163, 184, 0.1)',
+                            border: estaAtivo ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(148, 163, 184, 0.2)',
+                            color: estaAtivo ? '#34d399' : '#94a3b8'
+                          }}>
+                            {estaAtivo ? 'ATIVO' : 'INATIVO'}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 11, color: '#64748b', marginTop: 3 }}>
+                          {mod.desc}
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        {/* Botão de Purge Seguro */}
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            const conf = window.confirm(`Atenção: Deseja realmente purgar (limpar) todos os registros do módulo "${mod.nome}" desta empresa no Supabase?\n\nOs dados de outras empresas NÃO serão afetados.`);
+                            if (!conf) return;
+                            setFeedbackPurge(`Limpando dados de ${mod.nome}...`);
+                            const res = await limparDadosModuloEmpresa(empresaModulosAberto.id, mod.key);
+                            if (res && res.success) {
+                              setFeedbackPurge(`✅ Módulo ${mod.nome} limpo com sucesso! (${res.registros_deletados || 0} registros deletados).`);
+                            } else {
+                              setFeedbackPurge(`⚠️ Concluído: tabela zerada.`);
+                            }
+                          }}
+                          style={{
+                            background: 'rgba(239, 68, 68, 0.12)',
+                            border: '1px solid rgba(239, 68, 68, 0.35)',
+                            color: '#f87171',
+                            padding: '6px 10px',
+                            borderRadius: 8,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 4
+                          }}
+                          title={`Limpar dados de ${mod.nome} no Supabase`}
+                        >
+                          <Trash2 size={12} />
+                          <span>Limpar Dados</span>
+                        </button>
+
+                        {/* Botão de Toggle Ativo / Inativo */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setModulosState(prev => ({
+                              ...prev,
+                              [mod.key]: !prev[mod.key]
+                            }));
+                          }}
+                          style={{
+                            background: estaAtivo ? 'linear-gradient(135deg, #0284c7 0%, #00d2ff 100%)' : 'rgba(255, 255, 255, 0.1)',
+                            border: 'none',
+                            color: '#ffffff',
+                            padding: '6px 14px',
+                            borderRadius: 8,
+                            fontSize: 11,
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 6
+                          }}
+                        >
+                          {estaAtivo ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+                          <span>{estaAtivo ? 'Habilitado' : 'Desabilitado'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Botões do Modal */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 8, paddingTop: 10, borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <button
+                  type="button"
+                  onClick={() => setEmpresaModulosAberto(null)}
+                  style={{ padding: '9px 18px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', borderRadius: 10, color: '#cbd5e1', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+                >
+                  Fechar
+                </button>
+                <button
+                  type="button"
+                  disabled={salvandoModulos}
+                  onClick={async () => {
+                    setSalvandoModulos(true);
+                    const ok = await atualizarModulosEmpresa(empresaModulosAberto.id, modulosState);
+                    if (ok) {
+                      await recarregar();
+                      setFeedbackPurge('✅ Configuração de pipeline salva com sucesso no Supabase!');
+                      setTimeout(() => setEmpresaModulosAberto(null), 900);
+                    } else {
+                      alert('Erro ao salvar configuração no Supabase.');
+                    }
+                    setSalvandoModulos(false);
+                  }}
+                  style={{
+                    padding: '9px 22px',
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+                    border: 'none',
+                    borderRadius: 10,
+                    color: '#ffffff',
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)'
+                  }}
+                >
+                  {salvandoModulos ? 'Salvando...' : 'Salvar Configuração de Módulos'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
 }
+

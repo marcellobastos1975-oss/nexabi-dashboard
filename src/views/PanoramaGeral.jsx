@@ -19,7 +19,8 @@ export default function PanoramaGeral({
   periodoPreset = 'mes_atual',
   unidade = 'Todas',
   dataInicio = null,
-  dataFim = null
+  dataFim = null,
+  refreshCounter = 0
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
 
@@ -72,10 +73,10 @@ export default function PanoramaGeral({
 
   useEffect(() => {
     carregarWidgetsCustomizados();
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter]);
 
   const removerWidget = async (id) => {
     try {
@@ -131,7 +132,7 @@ export default function PanoramaGeral({
 
       {/* 1. Grade Superior de KPIs com Tooltips */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Venda" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
         <KPICard label="Valor Estoque" value={temDados ? metricas.valorEstoque : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
         <KPICard label="Valor CR" value={temDados ? metricas.valorCR : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
         <KPICard label="Valor CP" value={temDados ? metricas.valorCP : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
@@ -151,9 +152,10 @@ export default function PanoramaGeral({
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta do Dia" value={temDados ? metricas.vendaBrutaDia : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Venda do Dia" value={temDados ? metricas.vendaBrutaDia : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
         <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} suffix="" />
         <KPICard label="Valor CR - CP" value={temDados ? metricas.valorCRMenosCP : "R$ 0,00"} suffix="" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Itens Estoque Negativo" value={temDados ? metricas.estoqueItensNegativos : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} />
       </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}

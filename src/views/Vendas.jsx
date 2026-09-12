@@ -7,7 +7,8 @@ export default function Vendas({
   periodoPreset = 'mes_atual', 
   unidade = 'Todas',
   dataInicio = null,
-  dataFim = null 
+  dataFim = null,
+  refreshCounter = 0
 }) {
   const [metricas, setMetricas] = useState({
     hasData: true,
@@ -27,10 +28,10 @@ export default function Vendas({
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter]);
 
   const temDados = Boolean(metricas && metricas.hasData);
   const listaVendedores = (temDados && metricas.topVendedores && metricas.topVendedores.length > 0) ? metricas.topVendedores : [];
@@ -60,7 +61,7 @@ export default function Vendas({
 
       {/* Grade de 12 KPIs com Tooltips Interativos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda Bruta" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Venda" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
         <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
         <KPICard label="% Imp. Diretos" value={temDados ? metricas.percImpostosDiretos : "0,00"} suffix="%" />
         <KPICard label="Venda Líquida" value={temDados ? metricas.vendaLiquida : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />

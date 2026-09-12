@@ -10,7 +10,8 @@ export default function Estoques({
   periodoPreset = 'mes_atual', 
   unidade = 'Todas',
   dataInicio = null,
-  dataFim = null 
+  dataFim = null,
+  refreshCounter = 0
 }) {
   const [abaEstoque, setAbaEstoque] = useState('mais_vendidos');
 
@@ -30,10 +31,10 @@ export default function Estoques({
   });
 
   useEffect(() => {
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0).then(data => {
       if (data) setMetricas(data);
     });
-  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
+  }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter]);
 
   const temDados = Boolean(metricas && metricas.hasData);
   const listaProdutos = (temDados && metricas.topProdutos && metricas.topProdutos.length > 0) ? metricas.topProdutos : [];
@@ -75,6 +76,7 @@ export default function Estoques({
         <KPICard label="% Margem Bruta" value={temDados ? metricas.estoqueMargemPerc : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
         <KPICard label="Produtos em Linha" value={temDados ? metricas.produtosEmLinha : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados ? "cyan" : "default"} />
         <KPICard label="Itens Sem Giro" value={temDados ? metricas.estoqueItensSemGiro : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados ? "red" : "default"} />
+        <KPICard label="Itens Estoque Negativo" value={temDados ? metricas.estoqueItensNegativos : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} />
       </div>
 
       {/* Alerta de Decisão Executiva */}

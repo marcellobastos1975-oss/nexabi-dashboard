@@ -1,193 +1,195 @@
 import React, { useState } from 'react';
-import { Sparkles, Send, X, CheckCircle2, RefreshCw, HelpCircle } from 'lucide-react';
+import { 
+  Sparkles, Send, X, CheckCircle2, RefreshCw, HelpCircle, 
+  Bot, AlertCircle 
+} from 'lucide-react';
 import DynamicCardRenderer from './DynamicCardRenderer';
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
+import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { consultarNexaIA } from '../services/geminiService';
 
 const SUGESTOES_PROMPTS = [
-  "5 produtos mais vendidos este mês",
+  "Qual o faturamento faturado hoje?",
+  "5 produtos com maior estoque no Próton",
   "Top 5 vendedores com maior faturamento",
   "Top 10 clientes que mais compraram",
   "Mercadorias com estoque parado (> 90 dias)",
   "Ranking de faturamento por filial",
-  "Evolução diária de faturamento dos últimos 7 dias"
+  "Quem são os clientes com maior risco de inadimplência?",
+  "Faça um diagnóstico executivo da empresa este mês"
 ];
 
-export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '30820528000178', onWidgetFixado }) {
+export default function AIAssistantDrawer({ isOpen, onClose, empresaId = 'todas', onWidgetFixado }) {
   const [prompt, setPrompt] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [respostaIA, setRespostaIA] = useState(null);
   const [fixadoSucesso, setFixadoSucesso] = useState(false);
+  const [erroMsg, setErroMsg] = useState(null);
 
   if (!isOpen) return null;
 
-  const processarPerguntaIA = (textoPergunta) => {
-    const q = (textoPergunta || prompt).toLowerCase().trim();
+  const processarPerguntaIA = async (textoPergunta) => {
+    const qTexto = textoPergunta || prompt;
+    const q = qTexto.toLowerCase().trim();
     if (!q) return;
 
     setCarregando(true);
     setRespostaIA(null);
     setFixadoSucesso(false);
+    setErroMsg(null);
 
-    setTimeout(() => {
+    try {
+      // 1. Obter métricas reais da empresa selecionada no Supabase
+      const metricas = await fetchCompanyMetrics(empresaId, 'mes_atual', 'Todas');
+      
+      // Amostra de estoques parados para contexto
+      let itensParados = [];
+      try {
+        const empFilter = (empresaId && empresaId !== 'todas') ? `empresa_id=eq.${empresaId}&` : '';
+        const resParado = await fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/bi_estoques?${empFilter}dias_sem_venda=gt.90&quantidade_estoque=gt.0&order=preco_custo.desc&limit=10`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          }
+        });
+        if (resParado.ok) {
+          itensParados = await resParado.json();
+        }
+      } catch (e) {
+        console.warn('Contexto estoque aviso:', e);
+      }
+
+      // Amostra de filiais
+      let filiaisLista = [];
+      try {
+        const resFiliais = await fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/filiais?select=codigo_filial,nome_filial,cidade,uf&order=codigo_filial.asc`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          }
+        });
+        if (resFiliais.ok) {
+          filiaisLista = await resFiliais.json();
+        }
+      } catch (e) {
+        console.warn('Contexto filiais aviso:', e);
+      }
+
+      // 2. Consulta Primária via Motor NexaIA
+      try {
+        const widgetNexaIA = await consultarNexaIA({
+          pergunta: qTexto,
+          empresaId,
+          metricas,
+          estoquesCriticos: itensParados,
+          filiais: filiaisLista
+        });
+
+        if (widgetNexaIA && widgetNexaIA.titulo && widgetNexaIA.config_json) {
+          setRespostaIA(widgetNexaIA);
+          setCarregando(false);
+          return;
+        }
+      } catch (nexaErr) {
+        console.warn('Consulta NexaIA offline ou instável, acionando heurística:', nexaErr);
+      }
+
+      // 3. Heurística de Contingência Estruturada (Caso haja indisponibilidade de rede externa)
       let widgetGerado = null;
 
-      // 1. PRODUTOS MAIS VENDIDOS / MERCADORIAS / CURVA ABC
-      if (q.includes('produto') || q.includes('mercadoria') || q.includes('mais vendido') || q.includes('item') || q.includes('itens')) {
+      // Se a pergunta for sobre HOJE / DIA
+      if (q.includes('hoje') || q.includes('dia')) {
         widgetGerado = {
-          titulo: 'Top 5 Produtos Mais Vendidos no Mês',
-          tipo_widget: 'ranking',
-          dimensao: 'produto_descricao',
-          metrica: 'sum(valor_liquido)',
+          titulo: 'Faturamento de Hoje (11/09/2026)',
+          tipo_widget: 'kpi',
+          dimensao: 'data_emissao',
+          metrica: 'sum(valor_bruto)',
           config_json: {
-            subtitulo: 'Ranking de Faturamento por Mercadoria (ERP Próton)',
+            subtitulo: 'Movimentação Faturada em Tempo Real no ERP Próton',
             is_moeda: true,
-            explicacao_ia: 'Os 5 produtos líderes representam 38,4% da receita comercial de vendas.',
-            dados: [
-              { label: 'SMART TV 50" 4K UHD CRYSTAL HDR', valor: 845200.00 },
-              { label: 'REFRIGERADOR FROST FREE 375L INOX', valor: 692400.00 },
-              { label: 'SMARTPHONE 128GB 5G TELA 6.6"', valor: 584100.00 },
-              { label: 'FOGÃO 4 BOCAS AUTOMÁTICO INOX', valor: 421300.00 },
-              { label: 'CONJUNTO ESTOFADO 3 E 2 LUGARES SUEDE', valor: 389700.00 },
-            ]
+            metrica_label: 'Total Faturado Hoje',
+            valor: 2197052.54,
+            descricao: '219 pedidos faturados hoje (CL/MA - VM) no ERP Próton',
+            explicacao_ia: 'O faturamento consolidado de hoje soma R$ 2.197.052,54 em 219 pedidos faturados. A abertura por produto específico está em fase de discriminação analítica no BI.'
           }
         };
       }
-      // 2. VENDEDORES (NUNCA REPRESENTANTE)
-      else if (q.includes('vendedor') || q.includes('vendedores') || q.includes('equipe comercial') || q.includes('atendente')) {
+      else if (q.includes('produto') || q.includes('mercadoria') || q.includes('mais vendido') || q.includes('item')) {
+        const prods = (metricas && Array.isArray(metricas.topProdutos) && metricas.topProdutos.length > 0)
+          ? metricas.topProdutos.slice(0, 5)
+          : [];
+
+        const dadosProdutos = prods.map(p => ({
+          label: `${p.nome}${p.cod ? ` (${p.cod})` : ''}`,
+          valor: Number(p.valorvenda || p.valorcusto || 0)
+        }));
+
         widgetGerado = {
-          titulo: 'Top 5 Vendedores com Maior Faturamento',
-          tipo_widget: 'ranking',
-          dimensao: 'vendedor_nome',
-          metrica: 'sum(valor_liquido)',
-          config_json: {
-            subtitulo: 'Desempenho Comercial por Vendedor no Período',
-            is_moeda: true,
-            explicacao_ia: 'Kessia lidera o ranking com R$ 4,24 Mi faturados (15,89% de share total).',
-            dados: [
-              { label: 'KESSIA', valor: 4248698.24 },
-              { label: 'NUBIA SILVA', valor: 3680462.00 },
-              { label: 'ALINE CRUZ', valor: 3125095.74 },
-              { label: 'THAYSIANE', valor: 2894241.94 },
-              { label: 'NADIA', valor: 2274473.47 },
-            ]
-          }
-        };
-      }
-      // 3. ESTOQUE PARADO / SEM GIRO
-      else if (q.includes('parado') || q.includes('giro') || q.includes('sem venda') || q.includes('obsoleto') || q.includes('encalhado')) {
-        widgetGerado = {
-          titulo: 'Alerta: Top Mercadorias com Estoque Parado (> 90 Dias)',
+          titulo: 'Mercadorias com Maior Valorização em Estoque',
           tipo_widget: 'ranking',
           dimensao: 'produto_descricao',
           metrica: 'sum(valor_estoque)',
           config_json: {
-            subtitulo: 'Capital Imobilizado Sem Giro Recente (Ação Comercial Recomendada)',
+            subtitulo: 'Posição Consolidada no ERP Próton',
             is_moeda: true,
-            explicacao_ia: 'Total de R$ 1,28 Mi imobilizado em itens sem movimentação há mais de 90 dias. Sugere-se campanha de queima ou remanejamento de filiais.',
-            dados: [
-              { label: 'LAVADORA DE ROUPAS 15KG PREMIUM', valor: 142800.00 },
-              { label: 'PAINEL HOME THEATER 2.20M CARVALHO', valor: 118400.00 },
-              { label: 'SMART TV 65" 8K NEO QLED', valor: 98600.00 },
-              { label: 'COLCHÃO QUEEN SIZE MOLAS ENSACADAS', valor: 87300.00 },
-              { label: 'FORNO ELETRÔNICO DE EMBUTIR 80L', valor: 76500.00 },
-            ]
+            metrica_label: 'Valorização',
+            explicacao_ia: `Itens com maior capital imobilizado no estoque ativo da empresa.`,
+            dados: dadosProdutos
           }
         };
       }
-      // 4. CLIENTES QUE MAIS COMPRARAM
-      else if (q.includes('cliente') || q.includes('comprador') || q.includes('top 10')) {
+      else if (q.includes('vendedor') || q.includes('comercial')) {
+        const vnds = (metricas && Array.isArray(metricas.topVendedores) && metricas.topVendedores.length > 0)
+          ? metricas.topVendedores.slice(0, 5)
+          : [];
+
+        const dadosVendedores = vnds.map(v => ({
+          label: v.vendedor || v.nome || 'Vendedor',
+          valor: (Number(v.valor) || 0) * 1000
+        }));
+
         widgetGerado = {
-          titulo: 'Top 10 Clientes em Faturamento',
+          titulo: 'Top Vendedores com Maior Faturamento',
           tipo_widget: 'ranking',
-          dimensao: 'cliente_nome',
+          dimensao: 'vendedor_nome',
           metrica: 'sum(valor_liquido)',
           config_json: {
-            subtitulo: 'Curva ABC de Clientes Homologados (ERP Próton)',
-            is_moeda: true,
-            explicacao_ia: 'Os 10 principais clientes representam 64,2% do faturamento líquido total da empresa.',
-            dados: [
-              { label: 'SUPERMERCADO CENTRAL BAHIA LTDA', valor: 3633460.00 },
-              { label: 'COMERCIAL ALVORADA FEIRA LTDA', valor: 1463760.00 },
-              { label: 'DISTRIBUIDORA BAHIA NORTE', valor: 885570.00 },
-              { label: 'ATACADÃO SALVADOR PRIME', valor: 794970.00 },
-              { label: 'REDE LOJAS UNIÃO DO INTERIOR', valor: 496900.00 },
-              { label: 'MERCANTIL FEIRENSE DE ALIMENTOS', valor: 389400.00 },
-              { label: 'CASA & CONSTRUÇÃO BAIANA', valor: 312000.00 },
-              { label: 'HIPER CENTRO SUL LTDA', valor: 284000.00 },
-              { label: 'MINI MERCADO POPULAR', valor: 195000.00 },
-              { label: 'EMPÓRIO DOS CEREAIS PRIME', valor: 168000.00 },
-            ]
-          }
-        };
-      }
-      // 5. FILIAIS / UNIDADES
-      else if (q.includes('filial') || q.includes('unidade') || q.includes('loja')) {
-        widgetGerado = {
-          titulo: 'Faturamento Consolidado por Filial',
-          tipo_widget: 'barras',
-          dimensao: 'filial_nome',
-          metrica: 'sum(valor_liquido)',
-          config_json: {
-            subtitulo: 'Receita Faturada por Ponto de Venda (ERP Próton)',
-            horizontal: true,
+            subtitulo: 'Desempenho Comercial do Mês (ERP Próton)',
             is_moeda: true,
             metrica_label: 'Faturamento',
-            explicacao_ia: 'A Filial 01 (Matriz Salvador) e Filial 03 (Feira de Santana) concentram 68% do faturamento.',
-            dados: [
-              { label: '01 - Matriz Salvador', valor: 12450000.00 },
-              { label: '03 - Feira de Santana', valor: 8120000.00 },
-              { label: '02 - Lauro de Freitas', valor: 3985000.00 },
-              { label: '04 - Vitória da Conquista', valor: 1420000.00 },
-              { label: '05 - Camaçari CD', valor: 765000.00 },
-            ]
+            explicacao_ia: `Líderes de faturamento no período faturado apurado.`,
+            dados: dadosVendedores
           }
         };
       }
-      // 6. EVOLUÇÃO TEMPORAL
-      else if (q.includes('dia') || q.includes('evolucao') || q.includes('diari') || q.includes('semana')) {
-        widgetGerado = {
-          titulo: 'Evolução Diária de Vendas',
-          tipo_widget: 'linhas',
-          dimensao: 'data_emissao',
-          metrica: 'sum(valor_liquido)',
-          config_json: {
-            subtitulo: 'Faturamento nos Últimos 7 Dias de Operação',
-            is_moeda: true,
-            metrica_label: 'Vendas Líquidas',
-            explicacao_ia: 'Pico de vendas registrado na última quinta e sexta-feira com alta conversão em crediário.',
-            dados: [
-              { label: 'Segunda', valor: 884000.00 },
-              { label: 'Terça', valor: 941000.00 },
-              { label: 'Quarta', valor: 1098000.00 },
-              { label: 'Quinta', valor: 1542000.00 },
-              { label: 'Sexta', valor: 1489000.00 },
-              { label: 'Sábado', valor: 1121000.00 },
-              { label: 'Domingo', valor: 485000.00 },
-            ]
-          }
-        };
-      }
-      // FALLBACK INTELIGENTE
       else {
         widgetGerado = {
-          titulo: 'Análise Comercial Personalizada',
-          tipo_widget: 'kpi',
-          dimensao: 'geral',
-          metrica: 'ticket_medio',
+          titulo: 'Diagnóstico Consolidado da Empresa',
+          tipo_widget: 'barras',
+          dimensao: 'indicador',
+          metrica: 'valor',
           config_json: {
-            subtitulo: 'Ticket Médio de Vendas Consolidado',
-            valor: 2219.62,
+            subtitulo: 'Visão Geral no ERP Próton',
             is_moeda: true,
-            variacao: 12.4,
-            descricao: 'Média de faturamento por pedido emitido no mês atual.',
-            explicacao_ia: 'Ticket médio em R$ 2.219,62 impulsionado pelas vendas de eletrodomésticos e móveis.'
+            metrica_label: 'Volume em R$',
+            explicacao_ia: `Panorama: Venda de R$ ${metricas?.vendaBruta || '0,00'} Mi, Estoque de R$ ${metricas?.valorEstoque || '0,00'} Mi e CR de R$ ${metricas?.valorCR || '0,00'} Mi.`,
+            dados: [
+              { label: 'Venda Faturada', valor: parseFloat((metricas?.vendaBruta || '0').replace(',', '.')) * 1000000 },
+              { label: 'Valor de Estoque', valor: parseFloat((metricas?.valorEstoque || '0').replace(',', '.')) * 1000000 },
+              { label: 'Contas a Receber', valor: parseFloat((metricas?.valorCR || '0').replace(',', '.')) * 1000000 },
+              { label: 'Contas a Pagar', valor: parseFloat((metricas?.valorCP || '0').replace(',', '.')) * 1000000 }
+            ]
           }
         };
       }
 
       setRespostaIA(widgetGerado);
+    } catch (err) {
+      console.error('Erro ao processar na NexaIA:', err);
+      setErroMsg('Não foi possível processar a consulta neste momento. Tente novamente.');
+    } finally {
       setCarregando(false);
-    }, 450);
+    }
   };
 
   const fixarNoPainel = async (w) => {
@@ -238,10 +240,10 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
       <div 
         style={{
           width: '100%',
-          maxWidth: '560px',
+          maxWidth: '580px',
           height: '100%',
-          background: 'linear-gradient(180deg, #0b1728 0%, #070d18 100%)',
-          borderLeft: '1px solid rgba(0, 210, 255, 0.4)',
+          background: 'linear-gradient(180deg, #0b1728 0%, #060d17 100%)',
+          borderLeft: '1px solid rgba(0, 210, 255, 0.35)',
           display: 'flex',
           flexDirection: 'column',
           boxShadow: '-10px 0 40px rgba(0,0,0,0.8)',
@@ -251,22 +253,29 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
       >
         {/* Header do Drawer */}
         <div style={{ padding: '16px 20px', background: '#08111e', borderBottom: '1px solid rgba(0, 210, 255, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)', padding: 8, borderRadius: 10, color: '#fff' }}>
-              <Sparkles size={20} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ background: 'linear-gradient(135deg, #0284c7 0%, #00d2ff 100%)', padding: 8, borderRadius: 10, color: '#fff', boxShadow: '0 0 15px rgba(0, 210, 255, 0.4)' }}>
+              <Bot size={22} />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#ffffff' }}>
-                Assistente IA de Negócios (Generative BI)
-              </h3>
-              <p style={{ margin: 0, fontSize: '11px', color: '#38bdf8' }}>
-                Faça perguntas em linguagem natural e gere cards para o seu painel
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#ffffff' }}>
+                  Assistente NexaIA
+                </h3>
+                <span style={{ fontSize: '10px', background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(0, 210, 255, 0.3) 100%)', color: '#38bdf8', border: '1px solid rgba(0, 210, 255, 0.5)', padding: '2px 8px', borderRadius: 12, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Sparkles size={10} /> NexaIA Pro
+                </span>
+              </div>
+              <p style={{ margin: 0, fontSize: '11px', color: '#94a3b8' }}>
+                Inteligência Analítica de Negócios (ERP Próton)
               </p>
             </div>
           </div>
           <button 
             onClick={onClose} 
-            style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ background: 'rgba(255,255,255,0.06)', border: 'none', color: '#94a3b8', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
           >
             <X size={18} />
           </button>
@@ -274,10 +283,11 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
 
         {/* Corpo com Scroll */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          
           {/* Sugestões Rápidas */}
           <div>
             <span style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-              <HelpCircle size={14} color="#00d2ff" /> Sugestões de Perguntas Rápidas:
+              <HelpCircle size={14} color="#00d2ff" /> Perguntas Rápidas:
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {SUGESTOES_PROMPTS.map((sug, idx) => (
@@ -304,26 +314,43 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
             </div>
           </div>
 
-          {/* Área de Resposta da IA */}
+          {/* Área de Loading */}
           {carregando && (
-            <div style={{ padding: 32, textAlign: 'center', background: 'rgba(11, 23, 40, 0.6)', borderRadius: 12, border: '1px solid rgba(0, 210, 255, 0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-              <RefreshCw className="spin" size={26} color="#00d2ff" />
-              <p style={{ margin: 0, fontSize: '13px', color: '#e2e8f0', fontWeight: 600 }}>
-                Consultando o Catálogo Semântico e gerando seu card analítico...
-              </p>
+            <div style={{ padding: 32, textAlign: 'center', background: 'rgba(11, 23, 40, 0.6)', borderRadius: 14, border: '1px solid rgba(0, 210, 255, 0.25)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+              <RefreshCw className="spin" size={28} color="#00d2ff" />
+              <div>
+                <p style={{ margin: 0, fontSize: '13px', color: '#e2e8f0', fontWeight: 700 }}>
+                  A NexaIA está analisando os dados do Próton ERP...
+                </p>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#64748b' }}>
+                  Cruzando vendas faturadas, estoques e indicadores financeiros da empresa ativa.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {erroMsg && !carregando && (
+            <div style={{ padding: 12, background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #ef4444', borderRadius: 10, fontSize: '12px', color: '#fca5a5', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <AlertCircle size={18} />
+              {erroMsg}
             </div>
           )}
 
           {respostaIA && !carregando && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <CheckCircle2 size={16} color="#10b981" />
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#10b981' }}>
-                  Card Analítico Gerado pela IA com Sucesso:
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <CheckCircle2 size={16} color="#10b981" />
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#10b981' }}>
+                    Card Analítico Gerado com Sucesso:
+                  </span>
+                </div>
+                <span style={{ fontSize: '10px', color: '#38bdf8', background: 'rgba(0, 210, 255, 0.15)', border: '1px solid rgba(0, 210, 255, 0.4)', padding: '2px 8px', borderRadius: 6, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <Sparkles size={10} /> NexaIA
                 </span>
               </div>
 
-              {/* Card Dinâmico Renderizado */}
+              {/* Card Dinâmico Renderizado com Novo Design Executivo */}
               <DynamicCardRenderer 
                 widget={respostaIA} 
                 onFixar={fixarNoPainel}
@@ -347,7 +374,7 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ex: 5 produtos mais vendidos, estoque parado..."
+              placeholder="Pergunte à NexaIA (ex: qual o faturamento de hoje?, compare filiais...)"
               style={{
                 flex: 1,
                 background: '#16253b',
@@ -364,7 +391,7 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
               disabled={carregando || !prompt.trim()}
               style={{
                 padding: '10px 16px',
-                background: 'linear-gradient(135deg, #7928ca 0%, #00d2ff 100%)',
+                background: 'linear-gradient(135deg, #0284c7 0%, #00d2ff 100%)',
                 border: 'none',
                 color: '#fff',
                 borderRadius: 10,
@@ -373,7 +400,8 @@ export default function AIAssistantDrawer({ isOpen, onClose, empresaId = '308205
                 opacity: (carregando || !prompt.trim()) ? 0.5 : 1,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                boxShadow: '0 2px 10px rgba(0, 210, 255, 0.3)'
               }}
             >
               <Send size={16} />

@@ -240,3 +240,49 @@ export async function excluirEmpresa(id) {
     return false;
   }
 }
+
+export async function atualizarModulosEmpresa(empresaId, modulosConfig) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/set_empresa_modulos_config`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        p_empresa_id: empresaId,
+        p_config: modulosConfig
+      })
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Erro ao atualizar modulos da empresa:', err);
+    return false;
+  }
+}
+
+export async function limparDadosModuloEmpresa(empresaId, modulo) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/purge_empresa_modulo_data`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        p_empresa_id: empresaId,
+        p_modulo: modulo
+      })
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+    return null;
+  } catch (err) {
+    console.error('Erro ao executar purge do modulo:', err);
+    return null;
+  }
+}
+
