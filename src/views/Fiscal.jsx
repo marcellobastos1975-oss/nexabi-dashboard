@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 
 
 export default function Fiscal({ 
@@ -11,14 +11,21 @@ export default function Fiscal({
   dataInicio = null,
   dataFim = null 
 }) {
-  const [metricas, setMetricas] = useState({
-    impostosDiretos: '0,00',
-    percImpostosDiretos: '0,00',
-    vendaBruta: '0,00',
-    hasData: true
+  const [metricas, setMetricas] = useState(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) return cached;
+    return {
+      impostosDiretos: '0,00',
+      percImpostosDiretos: '0,00',
+      vendaBruta: '0,00',
+      hasData: true
+    };
   });
 
   useEffect(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) setMetricas(cached);
+
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });

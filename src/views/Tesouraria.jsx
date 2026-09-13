@@ -4,7 +4,7 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip, 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line 
 } from 'recharts';
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 
 
 const centrosCusto = [
@@ -37,17 +37,24 @@ export default function Tesouraria({
   dataInicio = null,
   dataFim = null 
 }) {
-  const [metricas, setMetricas] = useState({
-    contasFinanc: '0,00',
-    saldoTotalContas: '0,00',
-    vlrNegativoContas: '0,00',
-    valorCR: '0,00',
-    valorCP: '0,00',
-    valorEstoque: '0,00',
-    hasData: true
+  const [metricas, setMetricas] = useState(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) return cached;
+    return {
+      contasFinanc: '0,00',
+      saldoTotalContas: '0,00',
+      vlrNegativoContas: '0,00',
+      valorCR: '0,00',
+      valorCP: '0,00',
+      valorEstoque: '0,00',
+      hasData: true
+    };
   });
 
   useEffect(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) setMetricas(cached);
+
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });

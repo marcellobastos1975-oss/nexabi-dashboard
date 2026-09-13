@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import { Sparkles } from 'lucide-react';
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 
 
 export default function PanoramaGeral({ 
@@ -24,33 +24,37 @@ export default function PanoramaGeral({
 }) {
   const [widgetsCustomizados, setWidgetsCustomizados] = useState([]);
 
-  const [metricas, setMetricas] = useState({
-    hasData: true,
-    vendaBruta: '0,00',
-    vendaLiquida: '0,00',
-    qtdVendas: '0,00',
-    ticketMedio: 'R$ 0,00',
-    clientesCompraram: '0,00',
-    vendaBrutaDia: '0,00',
-    valorCR: '0,00',
-    crVencido: '0,00',
-    inadimplencia: '0,00',
-    percInadimplencia: '0,00',
-    jurosRecebidos: '0,00',
-    valorCP: '0,00',
-    cpVencido: '0,00',
-    aPagarEmAtraso: '0,00',
-    valorCRMenosCP: 'R$ 0,00',
-    valorEstoque: '0,00',
-    contasFinanc: '0,00',
-    vlrNegativoContas: '0,00',
-    saldoTotalContas: '0,00',
-    saldoTotalContasNum: 0,
-    liquidezGeral: '0,00',
-    liquidezGeralNum: 0,
-    margemBruta: '0,00',
-    percMargem: '0,00',
-    historico12m: []
+  const [metricas, setMetricas] = useState(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) return cached;
+    return {
+      hasData: true,
+      vendaBruta: '0,00',
+      vendaLiquida: '0,00',
+      qtdVendas: '0,00',
+      ticketMedio: 'R$ 0,00',
+      clientesCompraram: '0,00',
+      vendaBrutaDia: '0,00',
+      valorCR: '0,00',
+      crVencido: '0,00',
+      inadimplencia: '0,00',
+      percInadimplencia: '0,00',
+      jurosRecebidos: '0,00',
+      valorCP: '0,00',
+      cpVencido: '0,00',
+      aPagarEmAtraso: '0,00',
+      valorCRMenosCP: 'R$ 0,00',
+      valorEstoque: '0,00',
+      contasFinanc: '0,00',
+      vlrNegativoContas: '0,00',
+      saldoTotalContas: '0,00',
+      saldoTotalContasNum: 0,
+      liquidezGeral: '0,00',
+      liquidezGeralNum: 0,
+      margemBruta: '0,00',
+      percMargem: '0,00',
+      historico12m: []
+    };
   });
 
   const carregarWidgetsCustomizados = async () => {
@@ -73,6 +77,14 @@ export default function PanoramaGeral({
 
   useEffect(() => {
     carregarWidgetsCustomizados();
+    
+    // 1. Instant cache render (0ms)
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) {
+      setMetricas(cached);
+    }
+
+    // 2. Fetch fresh from Supabase RPC bi_dashboard_cache
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0).then(data => {
       if (data) setMetricas(data);
     });

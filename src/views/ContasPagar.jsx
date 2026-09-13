@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import LiquidityGauge from '../components/LiquidityGauge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 
 
 const titulosPagarData = [
@@ -21,21 +21,28 @@ export default function ContasPagar({
   dataInicio = null,
   dataFim = null 
 }) {
-  const [metricas, setMetricas] = useState({
-    valorCP: '0,00',
-    cpVencido: '0,00',
-    cpAVencer: '0,00',
-    cpPrazoMedio: '0',
-    cpPagoPeriodo: '0,00',
-    cpVista: '0,00',
-    cp30d: '0,00',
-    cp60d: '0,00',
-    cp90d: '0,00',
-    topCredores: [],
-    hasData: true
+  const [metricas, setMetricas] = useState(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) return cached;
+    return {
+      valorCP: '0,00',
+      cpVencido: '0,00',
+      cpAVencer: '0,00',
+      cpPrazoMedio: '0',
+      cpPagoPeriodo: '0,00',
+      cpVista: '0,00',
+      cp30d: '0,00',
+      cp60d: '0,00',
+      cp90d: '0,00',
+      topCredores: [],
+      hasData: true
+    };
   });
 
   useEffect(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) setMetricas(cached);
+
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { AlertTriangle, TrendingDown, Package, Award } from 'lucide-react';
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 
 
 export default function Estoques({ 
@@ -15,22 +15,29 @@ export default function Estoques({
 }) {
   const [abaEstoque, setAbaEstoque] = useState('mais_vendidos');
 
-  const [metricas, setMetricas] = useState({
-    valorEstoque: '0,00',
-    valorEstoqueVenda: '0,00',
-    margemBruta: '0,00',
-    estoqueParado90d: '0,00',
-    produtosEmLinha: '0',
-    estoqueItensSemGiro: '0',
-    estoqueGiroAnual: '0,0',
-    estoqueDuracaoDias: '0',
-    estoqueMargemPerc: '0,00',
-    curvaABC: [],
-    topProdutos: [],
-    hasData: true
+  const [metricas, setMetricas] = useState(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) return cached;
+    return {
+      valorEstoque: '0,00',
+      valorEstoqueVenda: '0,00',
+      margemBruta: '0,00',
+      estoqueParado90d: '0,00',
+      produtosEmLinha: '0',
+      estoqueItensSemGiro: '0',
+      estoqueGiroAnual: '0,0',
+      estoqueDuracaoDias: '0',
+      estoqueMargemPerc: '0,00',
+      curvaABC: [],
+      topProdutos: [],
+      hasData: true
+    };
   });
 
   useEffect(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) setMetricas(cached);
+
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0).then(data => {
       if (data) setMetricas(data);
     });

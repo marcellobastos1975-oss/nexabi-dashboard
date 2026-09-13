@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import LiquidityGauge from '../components/LiquidityGauge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 
 const titulosData = [
   { tipo: 'CARTÃO DE CRÉDITO', valor: 125740.00, share: '39,12%', cor: '#f59e0b' },
@@ -22,23 +22,30 @@ export default function ContasReceber({
   dataInicio = null,
   dataFim = null 
 }) {
-  const [metricas, setMetricas] = useState({
-    valorCR: '0,00',
-    crVencido: '0,00',
-    crAVencer: '0,00',
-    crPrazoMedio: '0',
-    vendaBruta: '0,00',
-    crVista: '0,00',
-    cr30d: '0,00',
-    cr60d: '0,00',
-    cr90d: '0,00',
-    percInadimplencia: '0,00',
-    percInadimplenciaNum: 0,
-    topClientes: [],
-    hasData: true
+  const [metricas, setMetricas] = useState(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) return cached;
+    return {
+      valorCR: '0,00',
+      crVencido: '0,00',
+      crAVencer: '0,00',
+      crPrazoMedio: '0',
+      vendaBruta: '0,00',
+      crVista: '0,00',
+      cr30d: '0,00',
+      cr60d: '0,00',
+      cr90d: '0,00',
+      percInadimplencia: '0,00',
+      percInadimplenciaNum: 0,
+      topClientes: [],
+      hasData: true
+    };
   });
 
   useEffect(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) setMetricas(cached);
+
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim).then(data => {
       if (data) setMetricas(data);
     });

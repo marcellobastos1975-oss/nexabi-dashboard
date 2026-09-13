@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
-import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 
 export default function Vendas({ 
   clienteSelecionado = 'todas', 
@@ -10,24 +10,31 @@ export default function Vendas({
   dataFim = null,
   refreshCounter = 0
 }) {
-  const [metricas, setMetricas] = useState({
-    hasData: true,
-    vendaBruta: '0,00',
-    vendaLiquida: '0,00',
-    impostosDiretos: '0,00',
-    percImpostosDiretos: '0,00',
-    cmv: '0,00',
-    percCMV: '0,00',
-    margemContribuicao: '0,00',
-    percMargemContribuicao: '0,00',
-    ticketMedio: 'R$ 0,00',
-    metaVenda: '0,00',
-    metaAtingida: '0,00',
-    topVendedores: [],
-    formasPagamento: []
+  const [metricas, setMetricas] = useState(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) return cached;
+    return {
+      hasData: true,
+      vendaBruta: '0,00',
+      vendaLiquida: '0,00',
+      impostosDiretos: '0,00',
+      percImpostosDiretos: '0,00',
+      cmv: '0,00',
+      percCMV: '0,00',
+      margemContribuicao: '0,00',
+      percMargemContribuicao: '0,00',
+      ticketMedio: 'R$ 0,00',
+      metaVenda: '0,00',
+      metaAtingida: '0,00',
+      topVendedores: [],
+      formasPagamento: []
+    };
   });
 
   useEffect(() => {
+    const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+    if (cached) setMetricas(cached);
+
     fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0).then(data => {
       if (data) setMetricas(data);
     });

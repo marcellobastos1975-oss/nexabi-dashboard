@@ -1,9 +1,60 @@
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
 
+const STORAGE_PREFIX = 'nexabi_metrics_v2_';
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutos (sincronizado com bi_dashboard_cache)
 const metricsCache = new Map();
+
+export function getMetricsCacheKey(empresaId, periodoPreset, unidade, dataInicio, dataFim) {
+  return `${empresaId || 'todas'}_${periodoPreset || 'mes_atual'}_${unidade || 'Todas'}_${dataInicio || ''}_${dataFim || ''}`;
+}
 
 export function clearMetricsCache() {
   metricsCache.clear();
+  try {
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(STORAGE_PREFIX)) {
+        keysToRemove.push(k);
+      }
+    }
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+  } catch (e) {
+    console.warn('Erro ao limpar cache local:', e);
+  }
+}
+
+/**
+ * Retorna dados em cache de forma síncrona (0ms) para renderização imediata.
+ * Verifica a memória RAM primeiro, e em seguida o localStorage.
+ */
+export function getCachedCompanyMetrics(
+  empresaId = null, 
+  periodoPreset = 'mes_atual', 
+  unidade = 'Todas',
+  dataInicio = null,
+  dataFim = null
+) {
+  const cacheKey = getMetricsCacheKey(empresaId, periodoPreset, unidade, dataInicio, dataFim);
+  
+  if (metricsCache.has(cacheKey)) {
+    return metricsCache.get(cacheKey);
+  }
+
+  try {
+    const raw = localStorage.getItem(STORAGE_PREFIX + cacheKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.data) {
+        metricsCache.set(cacheKey, parsed.data);
+        return parsed.data;
+      }
+    }
+  } catch (e) {
+    // Falha silenciosa no acesso ao localStorage
+  }
+
+  return null;
 }
 
 export async function fetchCompanyMetrics(
@@ -14,13 +65,31 @@ export async function fetchCompanyMetrics(
   dataFim = null,
   forceRefresh = false
 ) {
-  const cacheKey = `${empresaId || 'todas'}_${periodoPreset || 'mes_atual'}_${unidade || 'Todas'}_${dataInicio || ''}_${dataFim || ''}`;
+  const cacheKey = getMetricsCacheKey(empresaId, periodoPreset, unidade, dataInicio, dataFim);
+  const now = Date.now();
 
-  // Se já tiver em cache na sessão atual e não for refresh forçado, retorna imediatamente
+  // 1. Se já estiver em cache na sessão atual (RAM) e não for refresh forçado, retorna imediatamente
   if (!forceRefresh && metricsCache.has(cacheKey)) {
     return metricsCache.get(cacheKey);
   }
 
+  // 2. Verificar cache persistente no localStorage
+  let cachedEntry = null;
+  try {
+    const raw = localStorage.getItem(STORAGE_PREFIX + cacheKey);
+    if (raw) {
+      cachedEntry = JSON.parse(raw);
+      if (cachedEntry && cachedEntry.data) {
+        metricsCache.set(cacheKey, cachedEntry.data);
+        // Se ainda for recente (< 15 min) e não for refresh manual forçado, retorna de imediato
+        if (!forceRefresh && (now - cachedEntry.timestamp < CACHE_TTL_MS)) {
+          return cachedEntry.data;
+        }
+      }
+    }
+  } catch (e) {}
+
+  // 3. Consulta ao Supabase (com cache nativo bi_dashboard_cache respondendo em ~1.3ms)
   try {
     const payload = {
       p_empresa_id: empresaId || 'todas',
@@ -42,15 +111,27 @@ export async function fetchCompanyMetrics(
       },
       body: JSON.stringify(payload)
     });
+
     if (res.ok) {
       const data = await res.json();
       if (data && typeof data === 'object') {
         metricsCache.set(cacheKey, data);
+        try {
+          localStorage.setItem(STORAGE_PREFIX + cacheKey, JSON.stringify({
+            timestamp: Date.now(),
+            data: data
+          }));
+        } catch (e) {}
         return data;
       }
     }
   } catch (err) {
     console.warn('Falha ao consultar get_dashboard_metrics no Supabase:', err);
+  }
+
+  // 4. Se a rede oscilar ou falhar, preserva dados anteriores em cache ao invés de zerar a tela
+  if (cachedEntry && cachedEntry.data) {
+    return cachedEntry.data;
   }
 
   // Fallback caso ocorra falha de rede
