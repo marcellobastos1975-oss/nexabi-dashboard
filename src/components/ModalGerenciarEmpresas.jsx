@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { 
   X, Building2, Plus, Key, Copy, Check, ShieldCheck, 
   Trash2, Search, Database, Layers, CheckCircle2, AlertCircle, RefreshCw, Edit3, Sliders, ToggleLeft, ToggleRight, AlertTriangle
