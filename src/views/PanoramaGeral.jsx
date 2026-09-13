@@ -57,6 +57,10 @@ export default function PanoramaGeral({
     };
   });
 
+  const [carregando, setCarregando] = useState(() => {
+    return !getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
+  });
+
   const carregarWidgetsCustomizados = async () => {
     try {
       const url = `${SUPABASE_DEFAULT_URL}/rest/v1/bi_user_custom_widgets?order=criado_em.desc`;
@@ -78,16 +82,23 @@ export default function PanoramaGeral({
   useEffect(() => {
     carregarWidgetsCustomizados();
     
-    // 1. Instant cache render (0ms)
+    // 1. Instant cache render (0ms) se disponível
     const cached = getCachedCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim);
     if (cached) {
       setMetricas(cached);
+      setCarregando(false);
+    } else {
+      setCarregando(true);
     }
 
     // 2. Fetch fresh from Supabase RPC bi_dashboard_cache
-    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0).then(data => {
-      if (data) setMetricas(data);
-    });
+    fetchCompanyMetrics(clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter > 0)
+      .then(data => {
+        if (data) setMetricas(data);
+      })
+      .finally(() => {
+        setCarregando(false);
+      });
   }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter]);
 
   const removerWidget = async (id) => {
@@ -122,8 +133,26 @@ export default function PanoramaGeral({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Alerta de Empresa Sem Dados Sincronizados */}
-      {!temDados && (
+      {/* Indicador de Carregamento da Nuvem para Novos Dispositivos */}
+      {carregando && (
+        <div style={{
+          background: 'rgba(0, 210, 255, 0.08)',
+          border: '1px solid rgba(0, 210, 255, 0.25)',
+          color: '#67e8f9',
+          padding: '10px 16px',
+          borderRadius: 10,
+          fontSize: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10
+        }}>
+          <span style={{ fontSize: '14px' }}>⚡</span>
+          <span>Sincronizando indicadores em tempo real com a nuvem...</span>
+        </div>
+      )}
+
+      {/* Alerta de Empresa Sem Dados Sincronizados (somente se a nuvem confirmar ausência de dados) */}
+      {!carregando && !temDados && (
         <div style={{
           background: 'rgba(59, 130, 246, 0.12)',
           border: '1px solid rgba(59, 130, 246, 0.35)',
@@ -144,13 +173,13 @@ export default function PanoramaGeral({
 
       {/* 1. Grade Superior de KPIs com Tooltips */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Valor Estoque" value={temDados ? metricas.valorEstoque : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="Valor CR" value={temDados ? metricas.valorCR : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="Valor CP" value={temDados ? metricas.valorCP : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Contas Financ." value={temDados ? metricas.contasFinanc : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Margem Bruta" value={temDados ? metricas.margemBruta : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Inadimplência" value={temDados ? metricas.inadimplencia : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Venda" value={carregando && metricas.vendaBruta === '0,00' ? '...' : (temDados ? metricas.vendaBruta : "0,00")} suffix={carregando && metricas.vendaBruta === '0,00' ? '' : " Mi"} highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Valor Estoque" value={carregando && metricas.valorEstoque === '0,00' ? '...' : (temDados ? metricas.valorEstoque : "0,00")} suffix={carregando && metricas.valorEstoque === '0,00' ? '' : " Mi"} highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Valor CR" value={carregando && metricas.valorCR === '0,00' ? '...' : (temDados ? metricas.valorCR : "0,00")} suffix={carregando && metricas.valorCR === '0,00' ? '' : " Mi"} highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Valor CP" value={carregando && metricas.valorCP === '0,00' ? '...' : (temDados ? metricas.valorCP : "0,00")} suffix={carregando && metricas.valorCP === '0,00' ? '' : " Mi"} highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Contas Financ." value={carregando && metricas.contasFinanc === '0,00' ? '...' : (temDados ? metricas.contasFinanc : "0,00")} suffix={carregando && metricas.contasFinanc === '0,00' ? '' : " Mi"} highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Margem Bruta" value={carregando && metricas.margemBruta === '0,00' ? '...' : (temDados ? metricas.margemBruta : "0,00")} suffix={carregando && metricas.margemBruta === '0,00' ? '' : " Mi"} highlight={temDados ? "green" : "default"} />
+        <KPICard label="Inadimplência" value={carregando && metricas.inadimplencia === '0,00' ? '...' : (temDados ? metricas.inadimplencia : "0,00")} suffix={carregando && metricas.inadimplencia === '0,00' ? '' : " Mi"} highlight={temDados ? "red" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>

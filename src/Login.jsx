@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Lock, User, ChevronRight, AlertCircle, MessageSquare, KeyRound, CheckCircle } from 'lucide-react';
 import { APP_VERSION } from './config';
 import { autenticarUsuario, sincronizarUsuariosSupabase } from './authStore';
+import { fetchCompanyMetrics } from './services/dashboardDataService';
 import ModalRecuperarSenha from './components/ModalRecuperarSenha';
 import './Login.css';
 
@@ -17,7 +18,7 @@ export default function Login({ onLogin }) {
     sincronizarUsuariosSupabase().catch(() => {});
   }, []);
 
-  const handleAuth = (e) => {
+  const handleAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -32,19 +33,25 @@ export default function Login({ onLogin }) {
       return;
     }
 
-    setTimeout(() => {
-      const res = autenticarUsuario(u, p);
-      setLoading(false);
-
-      if (res.sucesso) {
-        // Sessão estrita e isolada por aba (destruída ao fechar a janela/aba)
-        localStorage.removeItem('nexabi_auth_user'); // Limpa resíduos legados
-        sessionStorage.setItem('nexabi_auth_session', JSON.stringify(res.usuario));
-        onLogin(res.usuario);
-      } else {
-        setError(res.erro || 'Credenciais inválidas. Verifique seu login e senha.');
+    const res = autenticarUsuario(u, p);
+    if (res.sucesso) {
+      // Pré-carrega métricas diretamente da nuvem Supabase enquanto o botão exibe 'Entrando...'
+      const targetEmpresa = res.usuario.perfil === 'master' ? 'todas' : (res.usuario.empresaId || 'todas');
+      try {
+        await fetchCompanyMetrics(targetEmpresa, 'mes_atual', 'Todas');
+      } catch (err) {
+        console.warn('Pré-carregamento de métricas em background:', err);
       }
-    }, 350);
+
+      // Sessão estrita e isolada por aba (destruída ao fechar a janela/aba)
+      localStorage.removeItem('nexabi_auth_user'); // Limpa resíduos legados
+      sessionStorage.setItem('nexabi_auth_session', JSON.stringify(res.usuario));
+      setLoading(false);
+      onLogin(res.usuario);
+    } else {
+      setLoading(false);
+      setError(res.erro || 'Credenciais inválidas. Verifique seu login e senha.');
+    }
   };
 
   const handleSenhaRedefinida = (usernameAlvo) => {
