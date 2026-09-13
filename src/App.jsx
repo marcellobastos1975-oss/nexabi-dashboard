@@ -275,30 +275,6 @@ export default function App() {
     modulos_config: usuario.modulos_config
   });
 
-  const modulosConfigAtivo = dadosEmpresaAtual.modulos_config || (
-    clienteAtivo === 'todas'
-      ? { vendas: true, compras: true, contas_receber: true, contas_pagar: true, tesouraria: true, estoques: true, fiscal: true }
-      : { vendas: true, compras: false, contas_receber: false, contas_pagar: false, tesouraria: false, estoques: false, fiscal: false }
-  );
-
-  // Auto-redireciona para o Panorama Geral caso o usuário mude para uma empresa cujo módulo atual esteja desativado
-  useEffect(() => {
-    if (moduloAtivo !== 'panorama' && clienteAtivo !== 'todas') {
-      const mapaKey = {
-        vendas: 'vendas',
-        compras: 'compras',
-        cr: 'contas_receber',
-        cp: 'contas_pagar',
-        tesouraria: 'tesouraria',
-        estoques: 'estoques',
-        fiscal: 'fiscal'
-      }[moduloAtivo];
-      if (mapaKey && modulosConfigAtivo[mapaKey] === false) {
-        setModuloAtivo('panorama');
-      }
-    }
-  }, [clienteAtivo, moduloAtivo, modulosConfigAtivo]);
-
   return (
     <div style={{ minHeight: '100vh', padding: '16px 20px', maxWidth: 1600, margin: '0 auto' }}>
       {/* Header Executivo NexaLife Tech & Alpha Solutions */}
@@ -623,23 +599,9 @@ export default function App() {
         </div>
       </header>
 
-      {/* Navegação entre os Módulos Habilitados */}
+      {/* Navegação entre os 8 Módulos */}
       <nav style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 10, marginBottom: 16 }}>
-        {MODULOS.filter(m => {
-          if (m.id === 'panorama') return true;
-          if (clienteAtivo === 'todas') return true;
-          const mapaKey = {
-            vendas: 'vendas',
-            compras: 'compras',
-            cr: 'contas_receber',
-            cp: 'contas_pagar',
-            tesouraria: 'tesouraria',
-            estoques: 'estoques',
-            fiscal: 'fiscal'
-          }[m.id];
-          if (!mapaKey) return true;
-          return modulosConfigAtivo[mapaKey] !== false;
-        }).map(m => {
+        {MODULOS.map(m => {
           const Icon = m.icon;
           const isActive = moduloAtivo === m.id;
           return (

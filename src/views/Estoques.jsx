@@ -43,7 +43,8 @@ export default function Estoques({
     });
   }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter]);
 
-  const temDados = Boolean(metricas && metricas.hasData);
+  const valorEstoqueNum = parseFloat((metricas?.valorEstoque || '0').replace(',', '.')) || 0;
+  const temDados = Boolean(metricas && valorEstoqueNum > 0);
   const listaProdutos = (temDados && metricas.topProdutos && metricas.topProdutos.length > 0) ? metricas.topProdutos : [];
   const listaCurvaABC = (temDados && metricas.curvaABC && metricas.curvaABC.length > 0) ? metricas.curvaABC : [];
 
@@ -71,8 +72,8 @@ export default function Estoques({
 
       {/* 8 KPIs de Decisão de Estoque */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Valor de Estoque" value={metricas.valorEstoque} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="Valor a Preço Venda" value={metricas.valorEstoqueVenda} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Valor de Estoque" value={temDados ? metricas.valorEstoque : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Valor a Preço Venda" value={temDados ? metricas.valorEstoqueVenda : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
         <KPICard label="Duração Estoque" value={temDados ? metricas.estoqueDuracaoDias : "0"} suffix={temDados ? " Dias" : ""} highlight={temDados ? "green" : "default"} />
         <KPICard label="Estoque Parado (>90d)" value={temDados ? metricas.estoqueParado90d : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
         <KPICard label="Giro de Estoque" value={temDados ? metricas.estoqueGiroAnual : "0,0"} suffix={temDados ? "x / ano" : ""} highlight={temDados ? "cyan" : "default"} />

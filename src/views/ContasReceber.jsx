@@ -51,7 +51,8 @@ export default function ContasReceber({
     });
   }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
-  const temDados = Boolean(metricas && metricas.hasData);
+  const valorCRNum = parseFloat((metricas?.valorCR || '0').replace(',', '.')) || 0;
+  const temDados = Boolean(metricas && valorCRNum > 0);
   const listaTopClientes = (temDados && metricas.topClientes && metricas.topClientes.length > 0) ? metricas.topClientes : [];
 
   return (
@@ -82,7 +83,7 @@ export default function ContasReceber({
         <KPICard label="Receber Vencido" value={temDados ? metricas.crVencido : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
         <KPICard label="Receber à Vencer" value={temDados ? metricas.crAVencer : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
         <KPICard label="Prazo Médio Rec." value={temDados ? metricas.crPrazoMedio : "0"} suffix={temDados ? " Dias" : ""} />
-        <KPICard label="Recebido no Período" value={metricas.vendaBruta} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Recebido no Período" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>

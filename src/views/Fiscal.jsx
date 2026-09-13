@@ -31,8 +31,8 @@ export default function Fiscal({
     });
   }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
-  const temDados = Boolean(metricas && metricas.hasData && parseFloat((metricas.vendaBruta || '0').replace(',', '.')) > 0);
-  const impostoDiretoVal = parseFloat((metricas.impostosDiretos || '0').replace(',', '.')) || 0;
+  const impostoDiretoVal = parseFloat((metricas?.impostosDiretos || '0').replace(',', '.')) || 0;
+  const temDados = Boolean(metricas && impostoDiretoVal > 0);
 
   const impostosGerados = [
     { nome: 'Impostos s/ Venda', valor: impostoDiretoVal, cor: '#f59e0b' }

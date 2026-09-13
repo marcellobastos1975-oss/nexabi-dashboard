@@ -40,7 +40,8 @@ export default function Vendas({
     });
   }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim, refreshCounter]);
 
-  const temDados = Boolean(metricas && metricas.hasData);
+  const vendaBrutaNum = parseFloat((metricas?.vendaBruta || '0').replace(',', '.')) || 0;
+  const temDados = Boolean(metricas && vendaBrutaNum > 0);
   const listaVendedores = (temDados && metricas.topVendedores && metricas.topVendedores.length > 0) ? metricas.topVendedores : [];
   const listaFormas = (temDados && metricas.formasPagamento && metricas.formasPagamento.length > 0) ? metricas.formasPagamento : [];
 

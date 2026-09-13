@@ -171,49 +171,33 @@ export default function PanoramaGeral({
         </div>
       )}
 
-      {/* 1. Grade Superior de KPIs com Tooltips e Identificação de Módulos */}
-      {(() => {
-        const modulosCfg = metricas?.modulosConfig || {
-          vendas: true,
-          contas_receber: true,
-          contas_pagar: true,
-          estoques: true
-        };
-        const isEstoqueAtivo = modulosCfg.estoques !== false;
-        const isCRAtivo = modulosCfg.contas_receber !== false;
-        const isCPAtivo = modulosCfg.contas_pagar !== false;
+      {/* 1. Grade Superior de KPIs com Tooltips */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
+        <KPICard label="Venda" value={carregando && metricas.vendaBruta === '0,00' ? '...' : (temDados ? metricas.vendaBruta : "0,00")} suffix={carregando && metricas.vendaBruta === '0,00' ? '' : " Mi"} highlight={temDados && metricas.vendaBruta !== '0,00' ? "cyan" : "default"} />
+        <KPICard label="Valor Estoque" value={carregando && metricas.valorEstoque === '0,00' ? '...' : (temDados ? metricas.valorEstoque : "0,00")} suffix={carregando && metricas.valorEstoque === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorEstoque !== '0,00' ? "purple" : "default"} />
+        <KPICard label="Valor CR" value={carregando && metricas.valorCR === '0,00' ? '...' : (temDados ? metricas.valorCR : "0,00")} suffix={carregando && metricas.valorCR === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorCR !== '0,00' ? "yellow" : "default"} />
+        <KPICard label="Valor CP" value={carregando && metricas.valorCP === '0,00' ? '...' : (temDados ? metricas.valorCP : "0,00")} suffix={carregando && metricas.valorCP === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorCP !== '0,00' ? "blue" : "default"} />
+        <KPICard label="Contas Financ." value={carregando && metricas.contasFinanc === '0,00' ? '...' : (temDados ? metricas.contasFinanc : "0,00")} suffix={carregando && metricas.contasFinanc === '0,00' ? '' : " Mi"} highlight={temDados && metricas.contasFinanc !== '0,00' ? "cyan" : "default"} />
+        <KPICard label="Margem Bruta" value={carregando && metricas.margemBruta === '0,00' ? '...' : (temDados ? metricas.margemBruta : "0,00")} suffix={carregando && metricas.margemBruta === '0,00' ? '' : " Mi"} highlight={temDados && metricas.margemBruta !== '0,00' ? "green" : "default"} />
+        <KPICard label="Inadimplência" value={carregando && metricas.inadimplencia === '0,00' ? '...' : (temDados ? metricas.inadimplencia : "0,00")} suffix={carregando && metricas.inadimplencia === '0,00' ? '' : " Mi"} highlight={temDados && metricas.inadimplencia !== '0,00' ? "red" : "default"} />
+      </div>
 
-        return (
-          <>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-              <KPICard label="Venda" value={carregando && metricas.vendaBruta === '0,00' ? '...' : (temDados ? metricas.vendaBruta : "0,00")} suffix={carregando && metricas.vendaBruta === '0,00' ? '' : " Mi"} highlight={temDados ? "cyan" : "default"} />
-              <KPICard label="Valor Estoque" value={!isEstoqueAtivo ? "—" : (carregando && metricas.valorEstoque === '0,00' ? '...' : (temDados ? metricas.valorEstoque : "0,00"))} suffix={!isEstoqueAtivo ? "" : (carregando && metricas.valorEstoque === '0,00' ? '' : " Mi")} badge={!isEstoqueAtivo ? "Inativo" : null} highlight={!isEstoqueAtivo ? "default" : (temDados ? "purple" : "default")} />
-              <KPICard label="Valor CR" value={!isCRAtivo ? "—" : (carregando && metricas.valorCR === '0,00' ? '...' : (temDados ? metricas.valorCR : "0,00"))} suffix={!isCRAtivo ? "" : (carregando && metricas.valorCR === '0,00' ? '' : " Mi")} badge={!isCRAtivo ? "Inativo" : null} highlight={!isCRAtivo ? "default" : (temDados ? "yellow" : "default")} />
-              <KPICard label="Valor CP" value={!isCPAtivo ? "—" : (carregando && metricas.valorCP === '0,00' ? '...' : (temDados ? metricas.valorCP : "0,00"))} suffix={!isCPAtivo ? "" : (carregando && metricas.valorCP === '0,00' ? '' : " Mi")} badge={!isCPAtivo ? "Inativo" : null} highlight={!isCPAtivo ? "default" : (temDados ? "blue" : "default")} />
-              <KPICard label="Contas Financ." value={carregando && metricas.contasFinanc === '0,00' ? '...' : (temDados ? metricas.contasFinanc : "0,00")} suffix={carregando && metricas.contasFinanc === '0,00' ? '' : " Mi"} highlight={temDados ? "cyan" : "default"} />
-              <KPICard label="Margem Bruta" value={carregando && metricas.margemBruta === '0,00' ? '...' : (temDados ? metricas.margemBruta : "0,00")} suffix={carregando && metricas.margemBruta === '0,00' ? '' : " Mi"} highlight={temDados ? "green" : "default"} />
-              <KPICard label="Inadimplência" value={!isCRAtivo ? "—" : (carregando && metricas.inadimplencia === '0,00' ? '...' : (temDados ? metricas.inadimplencia : "0,00"))} suffix={!isCRAtivo ? "" : (carregando && metricas.inadimplencia === '0,00' ? '' : " Mi")} badge={!isCRAtivo ? "Inativo" : null} highlight={!isCRAtivo ? "default" : (temDados ? "red" : "default")} />
-            </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10, marginTop: 10 }}>
+        <KPICard label="Qtd. Vendas" value={temDados ? metricas.qtdVendas : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
+        <KPICard label="Clientes Compraram" value={temDados ? metricas.clientesCompraram : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
+        <KPICard label="Juros Recebidos" value={temDados ? metricas.jurosRecebidos : "0,00"} suffix=" Mi" highlight={temDados && metricas.jurosRecebidos !== '0,00' ? "green" : "default"} />
+        <KPICard label="A Pagar em Atraso" value={temDados ? metricas.aPagarEmAtraso : "0,00"} suffix=" Mi" highlight={temDados && metricas.aPagarEmAtraso !== '0,00' ? "red" : "default"} />
+        <KPICard label="Vlr Negativo C. Fin" value={temDados ? metricas.vlrNegativoContas : "0,00"} suffix=" Mi" highlight={temDados && metricas.vlrNegativoContas !== '0,00' ? "red" : "default"} />
+        <KPICard label="% Margem" value={temDados ? metricas.percMargem : "0,00"} suffix="%" highlight={temDados && metricas.percMargem !== '0,00' ? "green" : "default"} />
+        <KPICard label="% Inadimplência" value={temDados ? metricas.percInadimplencia : "0,00"} suffix="%" highlight={temDados && metricas.percInadimplencia !== '0,00' ? "red" : "default"} />
+      </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10, marginTop: 10 }}>
-              <KPICard label="Qtd. Vendas" value={temDados ? metricas.qtdVendas : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-              <KPICard label="Clientes Compraram" value={temDados ? metricas.clientesCompraram : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-              <KPICard label="Juros Recebidos" value={!isCRAtivo ? "—" : (temDados ? metricas.jurosRecebidos : "0,00")} suffix={!isCRAtivo ? "" : " Mi"} badge={!isCRAtivo ? "Inativo" : null} highlight={!isCRAtivo ? "default" : (temDados ? "green" : "default")} />
-              <KPICard label="A Pagar em Atraso" value={!isCPAtivo ? "—" : (temDados ? metricas.aPagarEmAtraso : "0,00")} suffix={!isCPAtivo ? "" : " Mi"} badge={!isCPAtivo ? "Inativo" : null} highlight={!isCPAtivo ? "default" : (temDados ? "red" : "default")} />
-              <KPICard label="Vlr Negativo C. Fin" value={temDados ? metricas.vlrNegativoContas : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
-              <KPICard label="% Margem" value={temDados ? metricas.percMargem : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
-              <KPICard label="% Inadimplência" value={!isCRAtivo ? "—" : (temDados ? metricas.percInadimplencia : "0,00")} suffix={!isCRAtivo ? "" : "%"} badge={!isCRAtivo ? "Inativo" : null} highlight={!isCRAtivo ? "default" : (temDados ? "red" : "default")} />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10, marginTop: 10 }}>
-              <KPICard label="Venda do Dia" value={temDados ? metricas.vendaBrutaDia : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-              <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} suffix="" />
-              <KPICard label="Valor CR - CP" value={(!isCRAtivo || !isCPAtivo) ? "—" : (temDados ? metricas.valorCRMenosCP : "R$ 0,00")} suffix="" badge={(!isCRAtivo || !isCPAtivo) ? "Inativo" : null} highlight={(!isCRAtivo || !isCPAtivo) ? "default" : (temDados ? "yellow" : "default")} />
-              <KPICard label="Itens Estoque Negativo" value={!isEstoqueAtivo ? "—" : (temDados ? metricas.estoqueItensNegativos : "0")} suffix={!isEstoqueAtivo ? "" : (temDados ? " Itens" : "")} badge={!isEstoqueAtivo ? "Inativo" : null} highlight={!isEstoqueAtivo ? "default" : (temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default")} />
-            </div>
-          </>
-        );
-      })()}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10, marginTop: 10 }}>
+        <KPICard label="Venda do Dia" value={temDados ? metricas.vendaBrutaDia : "0,00"} suffix=" Mi" highlight={temDados && metricas.vendaBrutaDia !== '0,00' ? "cyan" : "default"} />
+        <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} suffix="" />
+        <KPICard label="Valor CR - CP" value={temDados ? metricas.valorCRMenosCP : "R$ 0,00"} suffix="" highlight={temDados && metricas.valorCRMenosCP !== 'R$ 0,00' ? "yellow" : "default"} />
+        <KPICard label="Itens Estoque Negativo" value={temDados ? metricas.estoqueItensNegativos : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} />
+      </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>

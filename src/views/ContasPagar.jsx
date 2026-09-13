@@ -48,12 +48,11 @@ export default function ContasPagar({
     });
   }, [clienteSelecionado, periodoPreset, unidade, dataInicio, dataFim]);
 
-  const temDados = Boolean(metricas && metricas.hasData);
+  const cpTotalNum = parseFloat((metricas?.valorCP || '0').replace(',', '.')) || 0;
+  const cpVencidoNum = parseFloat((metricas?.cpVencido || '0').replace(',', '.')) || 0;
+  const percAtrasoCP = (cpTotalNum > 0 && cpVencidoNum > 0) ? Math.round((cpVencidoNum / cpTotalNum) * 100) : 0;
+  const temDados = Boolean(metricas && cpTotalNum > 0);
   const listaCredores = (temDados && metricas.topCredores && metricas.topCredores.length > 0) ? metricas.topCredores : [];
-
-  const cpTotalNum = parseFloat((metricas.valorCP || '0').replace(',', '.')) || 0;
-  const cpVencidoNum = parseFloat((metricas.cpVencido || '0').replace(',', '.')) || 0;
-  const percAtrasoCP = cpTotalNum > 0 ? Math.round((cpVencidoNum / cpTotalNum) * 100) : 0;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -79,7 +78,7 @@ export default function ContasPagar({
 
       {/* 10 KPIs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Total à Pagar" value={metricas.valorCP} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Total à Pagar" value={temDados ? metricas.valorCP : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
         <KPICard label="Total à Pagar Vencido" value={temDados ? metricas.cpVencido : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
         <KPICard label="Total à Vencer" value={temDados ? metricas.cpAVencer : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
         <KPICard label="Prazo Médio Pagto" value={temDados ? metricas.cpPrazoMedio : "0"} suffix={temDados ? " Dias" : ""} />
