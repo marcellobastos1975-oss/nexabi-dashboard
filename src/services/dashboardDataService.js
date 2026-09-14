@@ -89,12 +89,52 @@ export async function fetchCompanyMetrics(
     }
   } catch (e) {}
 
-  // 3. Consulta ao Supabase (com cache nativo bi_dashboard_cache respondendo em ~1.3ms)
+  // 3. Consulta ao Supabase (com leitura direta da bi_dashboard_cache em ~100ms e RPC SWR)
+  const targetEmpresa = empresaId || 'todas';
+  const targetPeriodo = periodoPreset || 'mes_atual';
+  const targetUnidade = unidade || 'Todas';
+
+  // 3.1 Consulta prioritária e ultra-rápida à tabela bi_dashboard_cache (quando não for período personalizado)
+  if (!forceRefresh && !dataInicio && !dataFim && periodoPreset !== 'custom') {
+    try {
+      const cacheUrl = `${SUPABASE_DEFAULT_URL}/rest/v1/bi_dashboard_cache?empresa_id=eq.${encodeURIComponent(targetEmpresa)}&periodo=eq.${encodeURIComponent(targetPeriodo)}&filial=eq.${encodeURIComponent(targetUnidade)}&select=metricas,atualizado_em`;
+      const ctrlFast = new AbortController();
+      const tidFast = setTimeout(() => ctrlFast.abort(), 3000);
+
+      const cacheRes = await fetch(cacheUrl, {
+        signal: ctrlFast.signal,
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+      clearTimeout(tidFast);
+
+      if (cacheRes.ok) {
+        const rows = await cacheRes.json();
+        if (rows && rows.length > 0 && rows[0].metricas && rows[0].metricas.hasData) {
+          const cachedData = rows[0].metricas;
+          metricsCache.set(cacheKey, cachedData);
+          try {
+            localStorage.setItem(STORAGE_PREFIX + cacheKey, JSON.stringify({
+              timestamp: Date.now(),
+              data: cachedData
+            }));
+          } catch (e) {}
+          return cachedData;
+        }
+      }
+    } catch (cacheErr) {
+      console.warn('Consulta rápida a bi_dashboard_cache:', cacheErr);
+    }
+  }
+
+  // 3.2 Chamada da RPC get_dashboard_metrics (com proteção de timeout AbortController de 6 segundos)
   try {
     const payload = {
-      p_empresa_id: empresaId || 'todas',
-      p_periodo: periodoPreset || 'mes_atual',
-      p_filial: unidade || 'Todas'
+      p_empresa_id: targetEmpresa,
+      p_periodo: targetPeriodo,
+      p_filial: targetUnidade
     };
 
     if (periodoPreset === 'custom' && dataInicio && dataFim) {
@@ -102,8 +142,12 @@ export async function fetchCompanyMetrics(
       payload.p_dt_fim = dataFim;
     }
 
+    const ctrlRPC = new AbortController();
+    const tidRPC = setTimeout(() => ctrlRPC.abort(), 6000);
+
     const res = await fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/rpc/get_dashboard_metrics`, {
       method: 'POST',
+      signal: ctrlRPC.signal,
       headers: {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
@@ -111,6 +155,7 @@ export async function fetchCompanyMetrics(
       },
       body: JSON.stringify(payload)
     });
+    clearTimeout(tidRPC);
 
     if (res.ok) {
       const data = await res.json();
