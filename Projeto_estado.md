@@ -1,5 +1,5 @@
 # 📋 Projeto Estado — NexaBI — Alpha Suite (NexaLife Tech & Alpha Solutions)
-> **Última atualização:** 2026-09-14 — Dashboard Web v2.8.5 PROD | NexaBI SyncAgent v1.9.2 PROD | SchemaStudio v2.5.1 PROD
+> **Última atualização:** 2026-09-14 — Dashboard Web v2.8.6 PROD | NexaBI SyncAgent v1.9.2 PROD | SchemaStudio v2.5.1 PROD
 > **Desenvolvido por:** NexaLife Tech & Alpha Solutions
 
 ---
@@ -10,7 +10,7 @@ Para garantir a máxima qualidade, segurança e conformidade do ecossistema Nexa
 
 ### 🏷️ 1. Diretriz de Versionamento Contínuo e Rastreável (OBRIGATÓRIO A CADA ALTERAÇÃO)
 * **Toda e qualquer alteração de código ou funcionalidade exige incremento imediato de versão**:
-  * **Dashboard Web**: **`v2.8.5 PROD`** (Exibido no rodapé oficial do sistema, `config.js` e `package.json`).
+  * **Dashboard Web**: **`v2.8.6 PROD`** (Exibido no rodapé oficial do sistema, `config.js` e `package.json`).
   * **SyncAgent Desktop**: **`v1.9.2 PROD`** (Exibido no título da janela gráfica e rodapé do executável).
   * **SchemaStudio Desktop**: **`v2.5.1 PROD`** (Exibido no título da janela gráfica e rodapé do executável).
 * Nenhuma alteração é liberada sem a atualização formal do número da versão e seu respectivo registro no Histórico de Versões.
@@ -149,6 +149,7 @@ G:\Trabalho\NexaLife Tech\Aplicativos\NexaBI - Alpha-Próton\
 
 | Módulo | Versão | Data | Descrição do Marco |
 |---|---|---|---|
+| Dashboard Web | v2.8.6 PROD | 2026-09-14 | **v2.8.6 PROD (CORREÇÃO DE NOMES NO RANKING TOP VENDEDORES, FORMATAÇÃO DE MOEDA & SHARE DINÂMICO)**: 1) Correção do mapeamento de atributos na tabela '🏆 Top Vendedores' em `views/Vendas.jsx`: adicionado suporte resiliente a `v.vendedor || v.nome`, restaurando a visibilidade dos nomes dos vendedores reais do Próton ERP (ex: Anderson D'Paula, Alsen Andreolli, Celso Carlos); 2) Formatação executiva da coluna de Venda (R$) com suporte a escala Mil e Mi; 3) Cálculo dinâmico do percentual de participação (`share`) sobre o faturamento faturado do período; 4) Build de produção aprovado e deploy no Google Cloud Firebase Hosting (`bi.nexalifetech.com.br`). |
 | Dashboard Web | v2.8.5 PROD | 2026-09-14 | **v2.8.5 PROD (TRANSIÇÃO INSTANTÂNEA DE LOGIN, SWR PERMANENTE NA RPC GET_DASHBOARD_METRICS & LEITURA DIRETA BI_DASHBOARD_CACHE)**: 1) Eliminação definitiva do travamento no login: desacoplado pré-carregamento de rede em `Login.jsx` com `Promise.race` (timeout defensivo máx 1.5s), salvando a sessão de imediato e eliminando a tela presa em 'Identificando e Acessando...'; 2) Resolução do erro 500 (HTTP 57014 statement_timeout) na RPC `get_dashboard_metrics` removendo a restrição de 15 minutos e entregando de imediato os dados consolidados existentes em `bi_dashboard_cache` (< 500ms); 3) No `dashboardDataService.js`, adicionada consulta prioritária direta à tabela `bi_dashboard_cache` via REST (< 150ms) e timeout de 6s com AbortController na RPC para blindar o Dashboard contra telas zeradas (`0,00`); 4) Suporte a 4GB heap no build do Vite (`package.json`), build de produção aprovado e deploy no Google Cloud Firebase Hosting (`bi.nexalifetech.com.br`). |
 | Dashboard Web | v2.8.3 PROD | 2026-09-13 | **v2.8.3 PROD (PRÉ-CARGA EM NUVEM NO LOGIN, ELIMINAÇÃO DE FLICKER 0,00 EM NOVOS DISPOSITIVOS & SKELETON LOADER)**: 1) Implementado pré-carregamento assíncrono das métricas da nuvem Supabase (`bi_dashboard_cache`) diretamente na rotina de login (`Login.jsx`), de modo que no instante em que o usuário transiciona para o Dashboard, os números reais já estão carregados mesmo em dispositivos ou navegadores nunca antes utilizados; 2) Adicionado estado `carregando` em `PanoramaGeral.jsx` exibindo indicador sutil de sincronização com a nuvem e reticências nos cards ao invés de exibir falsos zeros (`0,00`); 3) Build e deploy no Google Cloud Firebase Hosting (`bi.nexalifetech.com.br`). |
 | Dashboard Web | v2.8.2 PROD | 2026-09-13 | **v2.8.2 PROD (INSTANT 0ms SWR CACHING, TABELA BI_DASHBOARD_CACHE NO SUPABASE & ÍNDICE COBRINDO DE ALTA PERFORMANCE)**: 1) Resolução do erro 500 (HTTP 57014 statement_timeout) na RPC get_dashboard_metrics criando índice cobrindo de alta performance idx_bi_vendas_historico_12m na tabela bi_vendas (628k+ registros); 2) Criação da tabela public.bi_dashboard_cache com tempo de resposta de 1.3ms e atualização automática na nuvem; 3) Implementação de Stale-While-Revalidate (SWR) com LocalStorage e getCachedCompanyMetrics nas 8 abas do Dashboard, permitindo carregamento instantâneo (0ms) no login e transição instantânea sem telas zeradas; 4) Build e deploy no Google Cloud Firebase Hosting (bi.nexalifetech.com.br). |

@@ -129,17 +129,28 @@ export default function Vendas({
                 </tr>
               </thead>
               <tbody>
-                {listaVendedores.map((v, i) => (
-                  <tr key={v.nome || i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                    <td style={{ padding: '6px 4px' }}>
-                      <span style={{ color: i < 3 ? '#00d2ff' : '#fff', fontWeight: i < 3 ? 700 : 400 }}>
-                        {i + 1}º {v.nome}
-                      </span>
-                    </td>
-                    <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 600 }}>R$ {v.valor}</td>
-                    <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{v.share}</td>
-                  </tr>
-                ))}
+                {listaVendedores.map((v, i) => {
+                  const nomeVendedor = v.vendedor || v.nome || `Vendedor ${i + 1}`;
+                  const valorNum = parseFloat(String(v.valor || '0').replace(',', '.')) || 0;
+                  const valorFormatado = valorNum >= 1000 
+                    ? `R$ ${(valorNum / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mi`
+                    : `R$ ${valorNum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mil`;
+                  const shareFormatado = v.share || (vendaBrutaNum > 0 
+                    ? `${((valorNum / (vendaBrutaNum * 1000)) * 100).toFixed(1).replace('.', ',')}%` 
+                    : '-');
+
+                  return (
+                    <tr key={nomeVendedor + i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                      <td style={{ padding: '6px 4px' }}>
+                        <span style={{ color: i < 3 ? '#00d2ff' : '#fff', fontWeight: i < 3 ? 700 : 400 }}>
+                          {i + 1}º {nomeVendedor}
+                        </span>
+                      </td>
+                      <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 600 }}>{valorFormatado}</td>
+                      <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{shareFormatado}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           ) : (
