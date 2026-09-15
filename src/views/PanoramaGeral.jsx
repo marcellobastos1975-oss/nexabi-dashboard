@@ -152,7 +152,7 @@ export default function PanoramaGeral({
       )}
 
       {/* Alerta de Empresa Sem Dados Sincronizados (somente se a nuvem confirmar ausência de dados) */}
-      {!carregando && !temDados && (
+      {!carregando && !temDados && !metricas?.isNetworkError && (
         <div style={{
           background: 'rgba(59, 130, 246, 0.12)',
           border: '1px solid rgba(59, 130, 246, 0.35)',
@@ -168,6 +168,44 @@ export default function PanoramaGeral({
           <div>
             <strong>Aguardando Primeira Sincronização:</strong> Nenhum dado localizado para <strong>{nomeEmpresa}</strong> no banco em nuvem. Abra o <strong>NexaBI-SyncAgent</strong> no servidor/estação do cliente para iniciar a ingestão contínua dos dados do ERP Próton.
           </div>
+        </div>
+      )}
+
+      {/* Alerta de Tempo Excedido / Instabilidade de Rede */}
+      {!carregando && !temDados && metricas?.isNetworkError && (
+        <div style={{
+          background: 'rgba(239, 68, 68, 0.12)',
+          border: '1px solid rgba(239, 68, 68, 0.35)',
+          color: '#fca5a5',
+          padding: '12px 18px',
+          borderRadius: 12,
+          fontSize: '13px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 10
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: '18px' }}>⚠️</span>
+            <div>
+              <strong>Tempo de Resposta Excedido:</strong> A nuvem demorou mais que o esperado para consolidar os indicadores.
+            </div>
+          </div>
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{
+              background: 'rgba(0, 210, 255, 0.2)',
+              border: '1px solid #00d2ff',
+              color: '#fff',
+              padding: '6px 14px',
+              borderRadius: 8,
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 600
+            }}
+          >
+            Atualizar
+          </button>
         </div>
       )}
 

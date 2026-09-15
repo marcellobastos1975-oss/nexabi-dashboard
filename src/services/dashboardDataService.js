@@ -5,7 +5,8 @@ const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutos (sincronizado com bi_dashboar
 const metricsCache = new Map();
 
 export function getMetricsCacheKey(empresaId, periodoPreset, unidade, dataInicio, dataFim) {
-  return `${empresaId || 'todas'}_${periodoPreset || 'mes_atual'}_${unidade || 'Todas'}_${dataInicio || ''}_${dataFim || ''}`;
+  const isCustom = periodoPreset === 'custom';
+  return `${empresaId || 'todas'}_${periodoPreset || 'mes_atual'}_${unidade || 'Todas'}_${isCustom ? (dataInicio || '') : ''}_${isCustom ? (dataFim || '') : ''}`;
 }
 
 export function clearMetricsCache() {
@@ -95,11 +96,11 @@ export async function fetchCompanyMetrics(
   const targetUnidade = unidade || 'Todas';
 
   // 3.1 Consulta prioritária e ultra-rápida à tabela bi_dashboard_cache (quando não for período personalizado)
-  if (!forceRefresh && !dataInicio && !dataFim && periodoPreset !== 'custom') {
+  if (!forceRefresh && periodoPreset !== 'custom') {
     try {
       const cacheUrl = `${SUPABASE_DEFAULT_URL}/rest/v1/bi_dashboard_cache?empresa_id=eq.${encodeURIComponent(targetEmpresa)}&periodo=eq.${encodeURIComponent(targetPeriodo)}&filial=eq.${encodeURIComponent(targetUnidade)}&select=metricas,atualizado_em`;
       const ctrlFast = new AbortController();
-      const tidFast = setTimeout(() => ctrlFast.abort(), 3000);
+      const tidFast = setTimeout(() => ctrlFast.abort(), 4000);
 
       const cacheRes = await fetch(cacheUrl, {
         signal: ctrlFast.signal,
@@ -129,7 +130,7 @@ export async function fetchCompanyMetrics(
     }
   }
 
-  // 3.2 Chamada da RPC get_dashboard_metrics (com proteção de timeout AbortController de 6 segundos)
+  // 3.2 Chamada da RPC get_dashboard_metrics (com proteção de timeout AbortController de 30 segundos)
   try {
     const payload = {
       p_empresa_id: targetEmpresa,
@@ -143,7 +144,7 @@ export async function fetchCompanyMetrics(
     }
 
     const ctrlRPC = new AbortController();
-    const tidRPC = setTimeout(() => ctrlRPC.abort(), 6000);
+    const tidRPC = setTimeout(() => ctrlRPC.abort(), 30000);
 
     const res = await fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/rpc/get_dashboard_metrics`, {
       method: 'POST',
@@ -179,9 +180,10 @@ export async function fetchCompanyMetrics(
     return cachedEntry.data;
   }
 
-  // Fallback caso ocorra falha de rede
+  // Fallback caso ocorra falha de rede ou timeout
   const emptyFallback = {
     hasData: false,
+    isNetworkError: true,
     vendaBruta: '0,00',
     vendaLiquida: '0,00',
     qtdVendas: '0,00',
