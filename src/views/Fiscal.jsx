@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata } from '../maskUtils';
 
 
 export default function Fiscal({ 
@@ -62,9 +63,9 @@ export default function Fiscal({
 
       {/* 3 KPIs Tributários Calculados */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="% Carga Tributária" value={temDados ? metricas.percImpostosDiretos : "0,00"} suffix="%" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="Base Faturamento" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.impostosDiretosRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="% Carga Tributária" value={temDados ? metricas.percImpostosDiretos : "0,00"} exactValue={temDados ? `${metricas.percImpostosDiretos}%` : "0,00%"} suffix="%" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Base Faturamento" value={temDados ? metricas.vendaBruta : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.vendaBrutaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
       </div>
 
       {/* Gráficos */}

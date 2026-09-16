@@ -3,6 +3,7 @@ import KPICard from '../components/KPICard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { AlertTriangle, TrendingDown, Package, Award } from 'lucide-react';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata, formatarNumeroInteiro } from '../maskUtils';
 
 
 export default function Estoques({ 
@@ -72,19 +73,19 @@ export default function Estoques({
 
       {/* 8 KPIs de Decisão de Estoque */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Valor de Estoque" value={temDados ? metricas.valorEstoque : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="Valor a Preço Venda" value={temDados ? metricas.valorEstoqueVenda : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Duração Estoque" value={temDados ? metricas.estoqueDuracaoDias : "0"} suffix={temDados ? " Dias" : ""} highlight={temDados ? "green" : "default"} />
-        <KPICard label="Estoque Parado (>90d)" value={temDados ? metricas.estoqueParado90d : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
-        <KPICard label="Giro de Estoque" value={temDados ? metricas.estoqueGiroAnual : "0,0"} suffix={temDados ? "x / ano" : ""} highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Valor de Estoque" value={temDados ? metricas.valorEstoque : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.valorEstoqueRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Valor a Preço Venda" value={temDados ? metricas.valorEstoqueVenda : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.valorEstoqueVendaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Duração Estoque" value={temDados ? metricas.estoqueDuracaoDias : "0"} exactValue={temDados ? `${metricas.estoqueDuracaoDias} dias de cobertura` : "0 dias"} suffix={temDados ? " Dias" : ""} highlight={temDados ? "green" : "default"} />
+        <KPICard label="Estoque Parado (>90d)" value={temDados ? metricas.estoqueParado90d : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.estoqueParado90dRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Giro de Estoque" value={temDados ? metricas.estoqueGiroAnual : "0,0"} exactValue={temDados ? `${metricas.estoqueGiroAnual} rotações anuais` : "0 giros"} suffix={temDados ? "x / ano" : ""} highlight={temDados ? "cyan" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Valor da Margem" value={temDados ? metricas.margemBruta : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="% Margem Bruta" value={temDados ? metricas.estoqueMargemPerc : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Produtos em Linha" value={temDados ? metricas.produtosEmLinha : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Itens Sem Giro" value={temDados ? metricas.estoqueItensSemGiro : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados ? "red" : "default"} />
-        <KPICard label="Itens Estoque Negativo" value={temDados ? metricas.estoqueItensNegativos : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} />
+        <KPICard label="Valor da Margem" value={temDados ? metricas.margemBruta : "0,00"} exactValue={temDados ? (metricas.hasCMVMapeado !== false ? formatarMoedaExata(metricas.margemBrutaRaw) : 'Intervenção humana requerida no SchemaStudio') : "R$ 0,00"} suffix={metricas.hasCMVMapeado !== false ? " Mi" : ""} highlight={temDados && metricas.hasCMVMapeado !== false ? "green" : "warning"} badge={metricas.hasCMVMapeado !== false ? null : "⚠️ Studio"} />
+        <KPICard label="% Margem Bruta" value={temDados ? metricas.estoqueMargemPerc : "0,00"} exactValue={temDados ? `${metricas.estoqueMargemPerc}%` : "0,00%"} suffix="%" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Produtos em Linha" value={temDados ? metricas.produtosEmLinha : "0"} exactValue={temDados ? formatarNumeroInteiro(metricas.produtosEmLinhaRaw, 'itens') : "0 itens"} suffix={temDados ? " Itens" : ""} highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Itens Sem Giro" value={temDados ? metricas.estoqueItensSemGiro : "0"} exactValue={temDados ? formatarNumeroInteiro(metricas.estoqueItensSemGiroRaw, 'itens') : "0 itens"} suffix={temDados ? " Itens" : ""} highlight={temDados ? "red" : "default"} />
+        <KPICard label="Itens Estoque Negativo" value={temDados ? metricas.estoqueItensNegativos : "0"} exactValue={temDados ? formatarNumeroInteiro(metricas.estoqueItensNegativosRaw, 'itens') : "0 itens"} suffix={temDados ? " Itens" : ""} highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} />
       </div>
 
       {/* Alerta de Decisão Executiva */}

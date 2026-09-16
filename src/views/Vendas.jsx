@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata } from '../maskUtils';
 
 export default function Vendas({ 
   clienteSelecionado = 'todas', 
@@ -105,23 +106,23 @@ export default function Vendas({
         </div>
       )}
 
-      {/* Grade de 12 KPIs com Tooltips Interativos */}
+      {/* Grade de 12 KPIs com Tooltips Interativos e Valores Exatos do ERP */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="% Imp. Diretos" value={temDados ? metricas.percImpostosDiretos : "0,00"} suffix="%" />
-        <KPICard label="Venda Líquida" value={temDados ? metricas.vendaLiquida : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="% Vda Líquida" value={temDados ? "100,00" : "0,00"} suffix="%" />
-        <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} />
+        <KPICard label="Venda" value={temDados ? metricas.vendaBruta : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.vendaBrutaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Impostos Diretos" value={temDados ? metricas.impostosDiretos : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.impostosDiretosRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="% Imp. Diretos" value={temDados ? metricas.percImpostosDiretos : "0,00"} exactValue={temDados ? `${metricas.percImpostosDiretos}%` : "0,00%"} suffix="%" />
+        <KPICard label="Venda Líquida" value={temDados ? metricas.vendaLiquida : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.vendaLiquidaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Vda Líquida" value={temDados ? "100,00" : "0,00"} exactValue={temDados ? "100,00%" : "0,00%"} suffix="%" />
+        <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} exactValue={temDados ? (metricas.ticketMedioRaw ? formatarMoedaExata(metricas.ticketMedioRaw) : metricas.ticketMedio) : "R$ 0,00"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="CMV (Custo)" value={temDados ? metricas.cmv : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="% CMV" value={temDados ? metricas.percCMV : "0,00"} suffix="%" />
-        <KPICard label="Margem Contribuição" value={temDados ? metricas.margemContribuicao : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% Margem Contrib." value={temDados ? metricas.percMargemContribuicao : "0,00"} suffix="%" />
-        <KPICard label="Meta da Venda" value={temDados ? metricas.metaVenda : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="% Meta Atingida" value={temDados ? metricas.metaAtingida : "0,00"} suffix="%" highlight={temDados ? "green" : "default"} />
+        <KPICard label="CMV (Custo)" value={temDados ? metricas.cmv : "0,00"} exactValue={temDados ? (metricas.hasCMVMapeado !== false ? formatarMoedaExata(metricas.cmvRaw) : 'Intervenção humana requerida no SchemaStudio') : "R$ 0,00"} suffix={metricas.hasCMVMapeado !== false ? " Mi" : ""} highlight={temDados && metricas.hasCMVMapeado !== false ? "yellow" : "warning"} badge={metricas.hasCMVMapeado !== false ? null : "⚠️ Studio"} />
+        <KPICard label="% CMV" value={temDados ? metricas.percCMV : "0,00"} exactValue={temDados ? (metricas.hasCMVMapeado !== false ? `${metricas.percCMV}%` : "—") : "0,00%"} suffix={metricas.hasCMVMapeado !== false ? "%" : ""} />
+        <KPICard label="Margem Contribuição" value={temDados ? metricas.margemContribuicao : "0,00"} exactValue={temDados ? (metricas.hasCMVMapeado !== false ? formatarMoedaExata(metricas.margemContribuicaoRaw) : 'Intervenção humana requerida no SchemaStudio') : "R$ 0,00"} suffix={metricas.hasCMVMapeado !== false ? " Mi" : ""} highlight={temDados && metricas.hasCMVMapeado !== false ? "purple" : "warning"} badge={metricas.hasCMVMapeado !== false ? null : "⚠️ Studio"} />
+        <KPICard label="% Margem Contrib." value={temDados ? metricas.percMargemContribuicao : "0,00"} exactValue={temDados ? (metricas.hasCMVMapeado !== false ? `${metricas.percMargemContribuicao}%` : "—") : "0,00%"} suffix={metricas.hasCMVMapeado !== false ? "%" : ""} />
+        <KPICard label="Meta da Venda" value={temDados ? metricas.metaVenda : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.metaVendaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="% Meta Atingida" value={temDados ? metricas.metaAtingida : "0,00"} exactValue={temDados ? `${metricas.metaAtingida}%` : "0,00%"} suffix="%" highlight={temDados ? "green" : "default"} />
       </div>
 
       {/* Gráficos e Detalhes */}

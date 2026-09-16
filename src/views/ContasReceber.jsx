@@ -3,6 +3,7 @@ import KPICard from '../components/KPICard';
 import LiquidityGauge from '../components/LiquidityGauge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata } from '../maskUtils';
 
 const titulosData = [
   { tipo: 'CARTÃO DE CRÉDITO', valor: 125740.00, share: '39,12%', cor: '#f59e0b' },
@@ -77,21 +78,21 @@ export default function ContasReceber({
         </div>
       )}
 
-      {/* 10 KPIs */}
+      {/* 10 KPIs com Valores Exatos do ERP */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Total à Receber" value={metricas.valorCR} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Receber Vencido" value={temDados ? metricas.crVencido : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
-        <KPICard label="Receber à Vencer" value={temDados ? metricas.crAVencer : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Prazo Médio Rec." value={temDados ? metricas.crPrazoMedio : "0"} suffix={temDados ? " Dias" : ""} />
-        <KPICard label="Recebido no Período" value={temDados ? metricas.vendaBruta : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Total à Receber" value={metricas.valorCR} exactValue={temDados ? formatarMoedaExata(metricas.valorCRRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Receber Vencido" value={temDados ? metricas.crVencido : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.crVencidoRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Receber à Vencer" value={temDados ? metricas.crAVencer : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.crAVencerRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Prazo Médio Rec." value={temDados ? metricas.crPrazoMedio : "0"} exactValue={temDados ? `${metricas.crPrazoMedio} Dias` : "0 Dias"} suffix={temDados ? " Dias" : ""} />
+        <KPICard label="Recebido no Período" value={temDados ? metricas.vendaBruta : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.vendaBrutaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="A Receber à Vista" value={temDados ? metricas.crVista : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="A Receber 30 Dias" value={temDados ? metricas.cr30d : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="A Receber 60 Dias" value={temDados ? metricas.cr60d : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="A Receber 90 Dias" value={temDados ? metricas.cr90d : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% Inadimplência" value={temDados ? metricas.percInadimplencia : "0,00"} suffix="%" highlight={temDados ? "red" : "default"} />
+        <KPICard label="A Receber à Vista" value={temDados ? metricas.crVista : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.crVistaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="A Receber 30 Dias" value={temDados ? metricas.cr30d : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cr30dRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="A Receber 60 Dias" value={temDados ? metricas.cr60d : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cr60dRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="A Receber 90 Dias" value={temDados ? metricas.cr90d : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cr90dRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="% Inadimplência" value={temDados ? metricas.percInadimplencia : "0,00"} exactValue={temDados ? `${metricas.percInadimplencia}%` : "0,00%"} suffix="%" highlight={temDados ? "red" : "default"} />
       </div>
 
       {/* Régua de Inadimplência (4 Gauges) */}

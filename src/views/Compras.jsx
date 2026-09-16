@@ -5,6 +5,7 @@ import {
   LineChart, Line 
 } from 'recharts';
 import { fetchCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata, formatarNumeroInteiro } from '../maskUtils';
 
 
 export default function Compras({ 
@@ -53,14 +54,14 @@ export default function Compras({
 
       {/* 8 KPIs Principais */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Valor das Compras" value={temDados ? "1,16" : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
-        <KPICard label="Prazo Médio Compras" value={temDados ? "18" : "0"} suffix={temDados ? " DIAS" : ""} highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Compras 5 Maiores" value={temDados ? "1.094,94" : "0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% 5 Maiores Fornec." value={temDados ? "94,47" : "0,00"} suffix="%" />
-        <KPICard label="Pedidos Feitos" value={temDados ? "382" : "0"} />
-        <KPICard label="Pedidos Não Entregues" value={temDados ? "36" : "0"} highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="% Não Entregues" value={temDados ? "9,42" : "0,00"} suffix="%" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="% Compras à Vista" value={temDados ? "1,83" : "0,00"} suffix="%" />
+        <KPICard label="Valor das Compras" value={temDados ? "1,16" : "0,00"} exactValue={temDados ? "R$ 1.160.000,00" : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Prazo Médio Compras" value={temDados ? "18" : "0"} exactValue={temDados ? "18 dias" : "0 dias"} suffix={temDados ? " DIAS" : ""} highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Compras 5 Maiores" value={temDados ? "1.094,94" : "0,00"} exactValue={temDados ? "R$ 1.094.940,00" : "R$ 0,00"} suffix={temDados ? " Mil" : " Mi"} highlight={temDados ? "purple" : "default"} />
+        <KPICard label="% 5 Maiores Fornec." value={temDados ? "94,47" : "0,00"} exactValue={temDados ? "94,47%" : "0,00%"} suffix="%" />
+        <KPICard label="Pedidos Feitos" value={temDados ? "382" : "0"} exactValue={temDados ? "382 pedidos" : "0 pedidos"} />
+        <KPICard label="Pedidos Não Entregues" value={temDados ? "36" : "0"} exactValue={temDados ? "36 pedidos pendentes" : "0 pedidos"} highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="% Não Entregues" value={temDados ? "9,42" : "0,00"} exactValue={temDados ? "9,42%" : "0,00%"} suffix="%" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="% Compras à Vista" value={temDados ? "1,83" : "0,00"} exactValue={temDados ? "1,83%" : "0,00%"} suffix="%" />
       </div>
 
       {/* Gráficos de Lead Time e Fornecedores */}

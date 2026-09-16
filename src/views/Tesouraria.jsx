@@ -5,6 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line 
 } from 'recharts';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata } from '../maskUtils';
 
 
 const centrosCusto = [
@@ -94,11 +95,11 @@ export default function Tesouraria({
 
       {/* 5 KPIs Centrais */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10 }}>
-        <KPICard label="Saldo Total das Contas" value={temDados ? metricas.saldoTotalContas : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="Contas Negativas" value={temDados ? metricas.vlrNegativoContas : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
-        <KPICard label="Total Estoque" value={temDados ? metricas.valorEstoque : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Total a Receber" value={temDados ? metricas.valorCR : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Total a Pagar" value={temDados ? metricas.valorCP : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="Saldo Total das Contas" value={temDados ? metricas.saldoTotalContas : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.saldoTotalContasRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="Contas Negativas" value={temDados ? metricas.vlrNegativoContas : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.vlrNegativoContasRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Total Estoque" value={temDados ? metricas.valorEstoque : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.valorEstoqueRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Total a Receber" value={temDados ? metricas.valorCR : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.valorCRRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Total a Pagar" value={temDados ? metricas.valorCP : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.valorCPRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
       </div>
 
       {/* Donut Capital de Giro */}

@@ -43,3 +43,23 @@ export function formatarCNPJ(valor) {
   if (nums.length <= 12) return `${nums.slice(0, 2)}.${nums.slice(2, 5)}.${nums.slice(5, 8)}/${nums.slice(8)}`;
   return `${nums.slice(0, 2)}.${nums.slice(2, 5)}.${nums.slice(5, 8)}/${nums.slice(8, 12)}-${nums.slice(12, 14)}`;
 }
+
+/**
+ * Formata valor monetário exato com R$ e centavos (ex: 9444821.68 -> R$ 9.444.821,68)
+ */
+export function formatarMoedaExata(valor) {
+  if (valor === null || valor === undefined || valor === '') return 'R$ 0,00';
+  let num = typeof valor === 'number' ? valor : parseFloat(String(valor).replace(/\./g, '').replace(',', '.'));
+  if (isNaN(num)) num = Number(valor) || 0;
+  return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+/**
+ * Formata contagem inteira exata com separador de milhar (ex: 4972 -> 4.972)
+ */
+export function formatarNumeroInteiro(valor, sufixo = '') {
+  if (valor === null || valor === undefined || valor === '') return `0 ${sufixo}`.trim();
+  let num = typeof valor === 'number' ? valor : parseInt(String(valor).replace(/\D/g, ''), 10);
+  if (isNaN(num)) num = 0;
+  return `${num.toLocaleString('pt-BR')}${sufixo ? ' ' + sufixo : ''}`;
+}

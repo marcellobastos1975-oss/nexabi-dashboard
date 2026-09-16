@@ -9,6 +9,7 @@ import {
 import { Sparkles } from 'lucide-react';
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata, formatarNumeroInteiro } from '../maskUtils';
 
 
 export default function PanoramaGeral({ 
@@ -209,32 +210,32 @@ export default function PanoramaGeral({
         </div>
       )}
 
-      {/* 1. Grade Superior de KPIs com Tooltips */}
+      {/* 1. Grade Superior de KPIs com Tooltips e Valores Exatos do ERP */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
-        <KPICard label="Venda" value={carregando && metricas.vendaBruta === '0,00' ? '...' : (temDados ? metricas.vendaBruta : "0,00")} suffix={carregando && metricas.vendaBruta === '0,00' ? '' : " Mi"} highlight={temDados && metricas.vendaBruta !== '0,00' ? "cyan" : "default"} />
-        <KPICard label="Valor Estoque" value={carregando && metricas.valorEstoque === '0,00' ? '...' : (temDados ? metricas.valorEstoque : "0,00")} suffix={carregando && metricas.valorEstoque === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorEstoque !== '0,00' ? "purple" : "default"} />
-        <KPICard label="Valor CR" value={carregando && metricas.valorCR === '0,00' ? '...' : (temDados ? metricas.valorCR : "0,00")} suffix={carregando && metricas.valorCR === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorCR !== '0,00' ? "yellow" : "default"} />
-        <KPICard label="Valor CP" value={carregando && metricas.valorCP === '0,00' ? '...' : (temDados ? metricas.valorCP : "0,00")} suffix={carregando && metricas.valorCP === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorCP !== '0,00' ? "blue" : "default"} />
-        <KPICard label="Contas Financ." value={carregando && metricas.contasFinanc === '0,00' ? '...' : (temDados ? metricas.contasFinanc : "0,00")} suffix={carregando && metricas.contasFinanc === '0,00' ? '' : " Mi"} highlight={temDados && metricas.contasFinanc !== '0,00' ? "cyan" : "default"} />
-        <KPICard label="Margem Bruta" value={carregando && metricas.margemBruta === '0,00' ? '...' : (temDados ? metricas.margemBruta : "0,00")} suffix={carregando && metricas.margemBruta === '0,00' ? '' : " Mi"} highlight={temDados && metricas.margemBruta !== '0,00' ? "green" : "default"} />
-        <KPICard label="Inadimplência" value={carregando && metricas.inadimplencia === '0,00' ? '...' : (temDados ? metricas.inadimplencia : "0,00")} suffix={carregando && metricas.inadimplencia === '0,00' ? '' : " Mi"} highlight={temDados && metricas.inadimplencia !== '0,00' ? "red" : "default"} />
+        <KPICard label="Venda" value={carregando && metricas.vendaBruta === '0,00' ? '...' : (temDados ? metricas.vendaBruta : "0,00")} exactValue={temDados ? formatarMoedaExata(metricas.vendaBrutaRaw) : "R$ 0,00"} suffix={carregando && metricas.vendaBruta === '0,00' ? '' : " Mi"} highlight={temDados && metricas.vendaBruta !== '0,00' ? "cyan" : "default"} />
+        <KPICard label="Valor Estoque" value={carregando && metricas.valorEstoque === '0,00' ? '...' : (temDados ? metricas.valorEstoque : "0,00")} exactValue={temDados ? formatarMoedaExata(metricas.valorEstoqueRaw) : "R$ 0,00"} suffix={carregando && metricas.valorEstoque === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorEstoque !== '0,00' ? "purple" : "default"} />
+        <KPICard label="Valor CR" value={carregando && metricas.valorCR === '0,00' ? '...' : (temDados ? metricas.valorCR : "0,00")} exactValue={temDados ? formatarMoedaExata(metricas.valorCRRaw) : "R$ 0,00"} suffix={carregando && metricas.valorCR === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorCR !== '0,00' ? "yellow" : "default"} />
+        <KPICard label="Valor CP" value={carregando && metricas.valorCP === '0,00' ? '...' : (temDados ? metricas.valorCP : "0,00")} exactValue={temDados ? formatarMoedaExata(metricas.valorCPRaw) : "R$ 0,00"} suffix={carregando && metricas.valorCP === '0,00' ? '' : " Mi"} highlight={temDados && metricas.valorCP !== '0,00' ? "blue" : "default"} />
+        <KPICard label="Contas Financ." value={carregando && metricas.contasFinanc === '0,00' ? '...' : (temDados ? metricas.contasFinanc : "0,00")} exactValue={temDados ? formatarMoedaExata(metricas.contasFinancRaw) : "R$ 0,00"} suffix={carregando && metricas.contasFinanc === '0,00' ? '' : " Mi"} highlight={temDados && metricas.contasFinanc !== '0,00' ? "cyan" : "default"} />
+        <KPICard label="Margem Bruta" value={carregando && metricas.margemBruta === '0,00' ? '...' : (temDados ? metricas.margemBruta : "0,00")} exactValue={temDados ? (metricas.hasCMVMapeado !== false ? formatarMoedaExata(metricas.margemBrutaRaw) : 'Intervenção humana requerida no SchemaStudio') : "R$ 0,00"} suffix={carregando && metricas.margemBruta === '0,00' ? '' : (metricas.hasCMVMapeado !== false ? " Mi" : "")} highlight={temDados && metricas.hasCMVMapeado !== false ? "green" : "warning"} badge={metricas.hasCMVMapeado !== false ? null : "⚠️ Studio"} />
+        <KPICard label="Inadimplência" value={carregando && metricas.inadimplencia === '0,00' ? '...' : (temDados ? metricas.inadimplencia : "0,00")} exactValue={temDados ? formatarMoedaExata(metricas.inadimplenciaRaw) : "R$ 0,00"} suffix={carregando && metricas.inadimplencia === '0,00' ? '' : " Mi"} highlight={temDados && metricas.inadimplencia !== '0,00' ? "red" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10, marginTop: 10 }}>
-        <KPICard label="Qtd. Vendas" value={temDados ? metricas.qtdVendas : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-        <KPICard label="Clientes Compraram" value={temDados ? metricas.clientesCompraram : "0,00"} suffix={temDados ? " Mil" : " Mi"} />
-        <KPICard label="Juros Recebidos" value={temDados ? metricas.jurosRecebidos : "0,00"} suffix=" Mi" highlight={temDados && metricas.jurosRecebidos !== '0,00' ? "green" : "default"} />
-        <KPICard label="A Pagar em Atraso" value={temDados ? metricas.aPagarEmAtraso : "0,00"} suffix=" Mi" highlight={temDados && metricas.aPagarEmAtraso !== '0,00' ? "red" : "default"} />
-        <KPICard label="Vlr Negativo C. Fin" value={temDados ? metricas.vlrNegativoContas : "0,00"} suffix=" Mi" highlight={temDados && metricas.vlrNegativoContas !== '0,00' ? "red" : "default"} />
-        <KPICard label="% Margem" value={temDados ? metricas.percMargem : "0,00"} suffix="%" highlight={temDados && metricas.percMargem !== '0,00' ? "green" : "default"} />
-        <KPICard label="% Inadimplência" value={temDados ? metricas.percInadimplencia : "0,00"} suffix="%" highlight={temDados && metricas.percInadimplencia !== '0,00' ? "red" : "default"} />
+        <KPICard label="Qtd. Vendas" value={temDados ? metricas.qtdVendas : "0,00"} exactValue={temDados ? formatarNumeroInteiro(metricas.qtdVendasRaw, 'pedidos') : "0 pedidos"} suffix={temDados ? " Mil" : " Mi"} />
+        <KPICard label="Clientes Compraram" value={temDados ? metricas.clientesCompraram : "0,00"} exactValue={temDados ? formatarNumeroInteiro(metricas.clientesCompraramRaw, 'clientes') : "0 clientes"} suffix={temDados ? " Mil" : " Mi"} />
+        <KPICard label="Juros Recebidos" value={temDados ? metricas.jurosRecebidos : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.jurosRecebidosRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados && metricas.jurosRecebidos !== '0,00' ? "green" : "default"} />
+        <KPICard label="A Pagar em Atraso" value={temDados ? metricas.aPagarEmAtraso : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.aPagarEmAtrasoRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados && metricas.aPagarEmAtraso !== '0,00' ? "red" : "default"} />
+        <KPICard label="Vlr Negativo C. Fin" value={temDados ? metricas.vlrNegativoContas : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.vlrNegativoContasRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados && metricas.vlrNegativoContas !== '0,00' ? "red" : "default"} />
+        <KPICard label="% Margem" value={temDados ? metricas.percMargem : "0,00"} exactValue={temDados ? (metricas.hasCMVMapeado !== false ? `${metricas.percMargem}%` : "—") : "0,00%"} suffix={metricas.hasCMVMapeado !== false ? "%" : ""} highlight={temDados && metricas.hasCMVMapeado !== false ? "green" : "warning"} />
+        <KPICard label="% Inadimplência" value={temDados ? metricas.percInadimplencia : "0,00"} exactValue={temDados ? `${metricas.percInadimplencia}%` : "0,00%"} suffix="%" highlight={temDados && metricas.percInadimplencia !== '0,00' ? "red" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10, marginTop: 10 }}>
-        <KPICard label="Venda do Dia" value={temDados ? metricas.vendaBrutaDia : "0,00"} suffix=" Mi" highlight={temDados && metricas.vendaBrutaDia !== '0,00' ? "cyan" : "default"} />
-        <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} suffix="" />
-        <KPICard label="Valor CR - CP" value={temDados ? metricas.valorCRMenosCP : "R$ 0,00"} suffix="" highlight={temDados && metricas.valorCRMenosCP !== 'R$ 0,00' ? "yellow" : "default"} />
-        <KPICard label="Itens Estoque Negativo" value={temDados ? metricas.estoqueItensNegativos : "0"} suffix={temDados ? " Itens" : ""} highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} />
+        <KPICard label="Venda do Dia" value={temDados ? metricas.vendaBrutaDia : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.vendaBrutaDiaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados && metricas.vendaBrutaDia !== '0,00' ? "cyan" : "default"} />
+        <KPICard label="Ticket Médio" value={temDados ? metricas.ticketMedio : "R$ 0,00"} exactValue={temDados ? (metricas.ticketMedioRaw ? formatarMoedaExata(metricas.ticketMedioRaw) : metricas.ticketMedio) : "R$ 0,00"} suffix="" />
+        <KPICard label="Valor CR - CP" value={temDados ? metricas.valorCRMenosCP : "R$ 0,00"} exactValue={temDados ? formatarMoedaExata(metricas.valorCRMenosCPRaw) : "R$ 0,00"} suffix="" highlight={temDados && metricas.valorCRMenosCP !== 'R$ 0,00' ? "yellow" : "default"} />
+        <KPICard label="Itens Estoque Negativo" value={temDados ? metricas.estoqueItensNegativos : "0"} exactValue={temDados ? formatarNumeroInteiro(metricas.estoqueItensNegativosRaw, 'itens') : "0 itens"} suffix={temDados ? " Itens" : ""} highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} />
       </div>
 
       {/* 2. Seção Central: Gauges de Liquidez + Gráficos */}

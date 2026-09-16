@@ -3,6 +3,7 @@ import KPICard from '../components/KPICard';
 import LiquidityGauge from '../components/LiquidityGauge';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
+import { formatarMoedaExata } from '../maskUtils';
 
 
 const titulosPagarData = [
@@ -76,21 +77,21 @@ export default function ContasPagar({
         </div>
       )}
 
-      {/* 10 KPIs */}
+      {/* 10 KPIs com Valores Exatos do ERP */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="Total à Pagar" value={temDados ? metricas.valorCP : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="Total à Pagar Vencido" value={temDados ? metricas.cpVencido : "0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
-        <KPICard label="Total à Vencer" value={temDados ? metricas.cpAVencer : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="Prazo Médio Pagto" value={temDados ? metricas.cpPrazoMedio : "0"} suffix={temDados ? " Dias" : ""} />
-        <KPICard label="Valor Pago Período" value={temDados ? metricas.cpPagoPeriodo : "0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
+        <KPICard label="Total à Pagar" value={temDados ? metricas.valorCP : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.valorCPRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="Total à Pagar Vencido" value={temDados ? metricas.cpVencido : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cpVencidoRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "red" : "default"} />
+        <KPICard label="Total à Vencer" value={temDados ? metricas.cpAVencer : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cpAVencerRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="Prazo Médio Pagto" value={temDados ? metricas.cpPrazoMedio : "0"} exactValue={temDados ? `${metricas.cpPrazoMedio} Dias` : "0 Dias"} suffix={temDados ? " Dias" : ""} />
+        <KPICard label="Valor Pago Período" value={temDados ? metricas.cpPagoPeriodo : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cpPagoPeriodoRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "cyan" : "default"} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-        <KPICard label="A Pagar à Vista" value={temDados ? metricas.cpVista : "0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
-        <KPICard label="A Pagar 30 Dias" value={temDados ? metricas.cp30d : "0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
-        <KPICard label="A Pagar 60 Dias" value={temDados ? metricas.cp60d : "0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
-        <KPICard label="A Pagar 90 Dias" value={temDados ? metricas.cp90d : "0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
-        <KPICard label="% Em Atraso" value={percAtrasoCP.toString()} suffix="%" highlight={percAtrasoCP > 20 ? "red" : "default"} />
+        <KPICard label="A Pagar à Vista" value={temDados ? metricas.cpVista : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cpVistaRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "green" : "default"} />
+        <KPICard label="A Pagar 30 Dias" value={temDados ? metricas.cp30d : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cp30dRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "blue" : "default"} />
+        <KPICard label="A Pagar 60 Dias" value={temDados ? metricas.cp60d : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cp60dRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "yellow" : "default"} />
+        <KPICard label="A Pagar 90 Dias" value={temDados ? metricas.cp90d : "0,00"} exactValue={temDados ? formatarMoedaExata(metricas.cp90dRaw) : "R$ 0,00"} suffix=" Mi" highlight={temDados ? "purple" : "default"} />
+        <KPICard label="% Em Atraso" value={percAtrasoCP.toString()} exactValue={temDados ? `${percAtrasoCP}%` : "0%"} suffix="%" highlight={percAtrasoCP > 20 ? "red" : "default"} />
       </div>
 
       {/* Gauges de Inadimplência Fornecedores */}

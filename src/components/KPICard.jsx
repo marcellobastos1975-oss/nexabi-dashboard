@@ -162,6 +162,7 @@ const KPI_DESCRICOES = {
 export default function KPICard({ 
   label, 
   value, 
+  exactValue = null,
   subtext, 
   highlight = 'default', 
   badge = null, 
@@ -172,7 +173,10 @@ export default function KPICard({
   const [modalAberto, setModalAberto] = useState(false);
   const [hoverAtivo, setHoverAtivo] = useState(false);
 
+  const isPendingMapping = value === 'Requer Mapeamento' || (typeof value === 'string' && value.includes('Requer Mapeamento'));
+
   const getHighlightColor = () => {
+    if (isPendingMapping) return '#f59e0b';
     switch (highlight) {
       case 'red':
       case 'alert': return '#ef4444';
@@ -194,6 +198,21 @@ export default function KPICard({
     calculo: 'Mapeado dinamicamente via NexaBI SchemaStudio e SyncAgent.'
   };
 
+  const badgeFinal = badge || (isPendingMapping ? "⚠️ Studio" : null);
+  const subtextFinal = subtext || (isPendingMapping ? "Intervenção requerida via Studio" : null);
+  const prefixFinal = isPendingMapping ? "" : prefix;
+  const suffixFinal = isPendingMapping ? "" : suffix;
+
+  // Resolução do valor exato sem arredondamento (com centavos do ERP)
+  let valorExatoExibicao = exactValue;
+  if (isPendingMapping && !valorExatoExibicao) {
+    valorExatoExibicao = "Intervenção humana requerida no SchemaStudio";
+  } else if (!valorExatoExibicao && value !== undefined && value !== null) {
+    if (suffix === '%' || (prefix && prefix.includes('R$')) || (suffix && (suffix.includes('Itens') || suffix.includes('pedidos') || suffix.includes('Dias')))) {
+      valorExatoExibicao = `${prefix}${value}${suffix}`.trim();
+    }
+  }
+
   return (
     <>
       <div 
@@ -206,7 +225,8 @@ export default function KPICard({
           position: 'relative',
           cursor: 'pointer',
           transition: 'all 0.2s ease',
-          userSelect: 'none'
+          userSelect: 'none',
+          borderColor: isPendingMapping ? 'rgba(245, 158, 11, 0.4)' : undefined
         }}
         onClick={() => setModalAberto(true)}
         onMouseEnter={() => setHoverAtivo(true)}
@@ -218,22 +238,40 @@ export default function KPICard({
             {label}
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            {badge && (
-              <span style={{ fontSize: '10px', padding: '2px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.08)', color: 'var(--text-main)', fontWeight: 600 }}>
-                {badge}
+            {badgeFinal && (
+              <span style={{ 
+                fontSize: '10px', 
+                padding: '2px 6px', 
+                borderRadius: 4, 
+                background: isPendingMapping ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255,255,255,0.08)', 
+                color: isPendingMapping ? '#fde68a' : 'var(--text-main)', 
+                border: isPendingMapping ? '1px solid rgba(245, 158, 11, 0.4)' : 'none',
+                fontWeight: 700 
+              }}>
+                {badgeFinal}
               </span>
             )}
-            <Info size={13} color="#00d2ff" style={{ opacity: 0.7 }} />
+            <Info size={13} color={isPendingMapping ? "#f59e0b" : "#00d2ff"} style={{ opacity: 0.8 }} />
           </div>
         </div>
 
-        <div style={{ fontSize: '20px', fontWeight: 800, fontFamily: 'var(--font-heading)', color: getHighlightColor(), lineHeight: 1.2 }}>
-          {prefix}{value}{suffix}
+        <div style={{ 
+          fontSize: isPendingMapping ? '14px' : '20px', 
+          fontWeight: 800, 
+          fontFamily: 'var(--font-heading)', 
+          color: getHighlightColor(), 
+          lineHeight: 1.2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 4
+        }}>
+          {isPendingMapping && <span>⚠️</span>}
+          {prefixFinal}{value}{suffixFinal}
         </div>
 
-        {subtext && (
-          <span style={{ fontSize: '11px', color: '#64748b', marginTop: 4 }}>
-            {subtext}
+        {subtextFinal && (
+          <span style={{ fontSize: '10.5px', color: isPendingMapping ? '#fbbf24' : '#64748b', marginTop: 4, fontWeight: isPendingMapping ? 600 : 400 }}>
+            {subtextFinal}
           </span>
         )}
 
@@ -245,21 +283,57 @@ export default function KPICard({
               bottom: '105%',
               left: '50%',
               transform: 'translateX(-50%)',
-              background: 'rgba(5, 16, 36, 0.96)',
-              border: '1px solid rgba(0, 210, 255, 0.5)',
-              borderRadius: 8,
-              padding: '8px 12px',
-              width: 240,
-              boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+              background: 'rgba(5, 16, 36, 0.98)',
+              border: '1px solid rgba(0, 210, 255, 0.55)',
+              borderRadius: 10,
+              padding: '10px 14px',
+              minWidth: 260,
+              maxWidth: 320,
+              boxShadow: '0 12px 32px rgba(0,0,0,0.8), 0 0 15px rgba(0, 210, 255, 0.25)',
               zIndex: 999,
               pointerEvents: 'none',
-              backdropFilter: 'blur(10px)'
+              backdropFilter: 'blur(12px)'
             }}
           >
-            <div style={{ fontSize: '11px', fontWeight: 700, color: '#00d2ff', marginBottom: 2 }}>
-              💡 {infoData.titulo}
+            <div style={{ fontSize: '11px', fontWeight: 800, color: isPendingMapping ? '#f59e0b' : '#00d2ff', marginBottom: 6 }}>
+              {isPendingMapping ? '⚠️' : '💡'} {infoData.titulo}
             </div>
-            <div style={{ fontSize: '10px', color: '#e2e8f0', lineHeight: 1.3 }}>
+
+            {isPendingMapping && (
+              <div style={{
+                background: 'rgba(245, 158, 11, 0.15)',
+                border: '1px solid rgba(245, 158, 11, 0.5)',
+                borderRadius: 6,
+                padding: '8px 10px',
+                marginBottom: 8
+              }}>
+                <div style={{ fontSize: '10px', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', marginBottom: 2 }}>
+                  ⚠️ Intervenção Humana Requerida:
+                </div>
+                <div style={{ fontSize: '10px', color: '#fde68a', lineHeight: 1.35 }}>
+                  O custo da mercadoria (CMV) não está mapeado no ERP Próton. Para evitar alucinações ou estimativas arbitrárias em dados contábeis sensíveis, este indicador requer que o custo seja mapeado no <strong>NexaBI-SchemaStudio</strong> para que o SyncAgent envie os dados reais.
+                </div>
+              </div>
+            )}
+
+            {valorExatoExibicao && (
+              <div style={{
+                background: isPendingMapping ? 'rgba(245, 158, 11, 0.1)' : 'rgba(0, 210, 255, 0.12)',
+                border: isPendingMapping ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid rgba(0, 210, 255, 0.35)',
+                borderRadius: 6,
+                padding: '6px 8px',
+                marginBottom: 8
+              }}>
+                <div style={{ fontSize: '9px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  {isPendingMapping ? 'Status de Mapeamento:' : 'Total Exato no ERP (Sem Arredondamento):'}
+                </div>
+                <div style={{ fontSize: '12px', fontWeight: 800, color: isPendingMapping ? '#fbbf24' : '#38bdf8', fontFamily: 'monospace', marginTop: 1 }}>
+                  {valorExatoExibicao}
+                </div>
+              </div>
+            )}
+
+            <div style={{ fontSize: '10.5px', color: '#cbd5e1', lineHeight: 1.35 }}>
               {infoData.significado}
             </div>
           </div>
@@ -285,7 +359,7 @@ export default function KPICard({
           <div 
             style={{
               background: 'linear-gradient(145deg, #0d1b2a 0%, #070d18 100%)',
-              border: '1px solid rgba(0, 210, 255, 0.45)',
+              border: isPendingMapping ? '1px solid rgba(245, 158, 11, 0.6)' : '1px solid rgba(0, 210, 255, 0.45)',
               borderRadius: 16,
               padding: '20px 24px',
               maxWidth: 440,
@@ -317,18 +391,47 @@ export default function KPICard({
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <div style={{ background: 'rgba(0, 210, 255, 0.15)', padding: 8, borderRadius: 10, color: '#00d2ff' }}>
+              <div style={{ 
+                background: isPendingMapping ? 'rgba(245, 158, 11, 0.15)' : 'rgba(0, 210, 255, 0.15)', 
+                padding: 8, 
+                borderRadius: 10, 
+                color: isPendingMapping ? '#f59e0b' : '#00d2ff' 
+              }}>
                 <Info size={22} />
               </div>
               <div>
                 <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: '#ffffff' }}>
                   {infoData.titulo}
                 </h3>
-                <span style={{ fontSize: '12px', color: '#00d2ff', fontWeight: 600 }}>
-                  Valor Atual: {prefix}{value}{suffix}
-                </span>
+                <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: 2 }}>
+                  Valor Resumido: <strong style={{ color: isPendingMapping ? '#f59e0b' : '#00d2ff' }}>{prefixFinal}{value}{suffixFinal}</strong>
+                </div>
+                {valorExatoExibicao && (
+                  <div style={{ fontSize: '12px', color: isPendingMapping ? '#fbbf24' : '#38bdf8', fontWeight: 700, fontFamily: 'monospace' }}>
+                    {isPendingMapping ? valorExatoExibicao : `Total Exato ERP: ${valorExatoExibicao}`}
+                  </div>
+                )}
               </div>
             </div>
+
+            {isPendingMapping && (
+              <div style={{
+                background: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.45)',
+                borderRadius: 10,
+                padding: '12px 14px',
+                marginBottom: 14
+              }}>
+                <div style={{ fontSize: '11px', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', marginBottom: 4 }}>
+                  ⚠️ Intervenção Humana Requerida
+                </div>
+                <p style={{ margin: 0, fontSize: '12px', color: '#fde68a', lineHeight: 1.4 }}>
+                  Este indicador depende do <strong>Custo da Mercadoria Vendida (CMV)</strong>, que não está mapeado no schema de extração do Próton ERP. Em conformidade estrita com as políticas anti-alucinação do NexaBI, nenhum valor presumido ou arbitrário é apresentado em métricas sensíveis.
+                  <br /><br />
+                  <strong>Ação Recomendada:</strong> Utilize o <strong>NexaBI-SchemaStudio</strong> para inspecionar o ERP Próton (ex: <code>dbauser.tmer_mercadoria</code> / <code>tped_pedido_venda_item</code>), atualizar o template do schema e configurar o <strong>SyncAgent</strong> para enviar os custos reais.
+                </p>
+              </div>
+            )}
 
             <div style={{ marginBottom: 14 }}>
               <h4 style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
