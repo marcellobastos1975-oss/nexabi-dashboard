@@ -4,6 +4,77 @@ const STORAGE_PREFIX = 'nexabi_metrics_v2_';
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutos (sincronizado com bi_dashboard_cache)
 const metricsCache = new Map();
 
+// =============================================================================
+// RESOLVEDOR CNPJ → UUID (Correção definitiva do descompasso de identificadores)
+// O frontend usa CNPJ (ex: '30.820.528/0001-78') mas o banco Supabase armazena
+// empresa_id como UUID (ex: '433f17e6-6eba-4de1-b8d0-9715d34089f3').
+// Este resolvedor traduz de forma transparente uma única vez e cacheia em memória.
+// =============================================================================
+let _empresaMapCache = null; // Map<cnpj, uuid> — carregado uma vez por sessão
+let _empresaMapPromise = null; // Evita chamadas concorrentes
+
+async function _carregarMapaEmpresas() {
+  try {
+    const res = await fetch(`${SUPABASE_DEFAULT_URL}/rest/v1/empresas?select=id,cnpj&ativo=eq.true`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    if (res.ok) {
+      const rows = await res.json();
+      const mapa = new Map();
+      if (Array.isArray(rows)) {
+        rows.forEach(e => {
+          if (e.cnpj && e.id) {
+            mapa.set(e.cnpj, e.id);                        // '30.820.528/0001-78' → UUID
+            mapa.set(e.cnpj.replace(/\D/g, ''), e.id);     // '30820528000178' → UUID (sem formatação)
+            mapa.set(e.id, e.id);                           // UUID → UUID (identidade)
+          }
+        });
+      }
+      return mapa;
+    }
+  } catch (err) {
+    console.warn('Falha ao carregar mapa de empresas CNPJ→UUID:', err);
+  }
+  return new Map();
+}
+
+/**
+ * Resolve um identificador de empresa (CNPJ, UUID ou 'todas') para o UUID real do banco.
+ * Retorna 'todas' inalterado para o consolidado Master.
+ */
+async function resolverEmpresaId(empresaId) {
+  if (!empresaId || empresaId === 'todas') return 'todas';
+
+  // Se já parece um UUID (36 chars com hífens), retorna direto
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(empresaId)) {
+    return empresaId;
+  }
+
+  // Carregar mapa se ainda não existir (singleton com proteção contra concorrência)
+  if (!_empresaMapCache) {
+    if (!_empresaMapPromise) {
+      _empresaMapPromise = _carregarMapaEmpresas().then(m => {
+        _empresaMapCache = m;
+        _empresaMapPromise = null;
+        return m;
+      });
+    }
+    await _empresaMapPromise;
+  }
+
+  // Tentar resolver CNPJ → UUID
+  if (_empresaMapCache) {
+    const uuid = _empresaMapCache.get(empresaId) || _empresaMapCache.get(empresaId.replace(/\D/g, ''));
+    if (uuid) return uuid;
+  }
+
+  // Fallback: retorna o identificador original (se for um ID de demonstração como 'silva', 'nordeste', etc.)
+  return empresaId;
+}
+
 export function getMetricsCacheKey(empresaId, periodoPreset, unidade, dataInicio, dataFim) {
   const isCustom = periodoPreset === 'custom';
   return `${empresaId || 'todas'}_${periodoPreset || 'mes_atual'}_${unidade || 'Todas'}_${isCustom ? (dataInicio || '') : ''}_${isCustom ? (dataFim || '') : ''}`;
@@ -91,7 +162,9 @@ export async function fetchCompanyMetrics(
   } catch (e) {}
 
   // 3. Consulta ao Supabase (com leitura direta da bi_dashboard_cache em ~100ms e RPC SWR)
-  const targetEmpresa = empresaId || 'todas';
+  // CORREÇÃO DEFINITIVA: Resolver CNPJ → UUID antes de qualquer consulta ao banco
+  const targetEmpresaRaw = empresaId || 'todas';
+  const targetEmpresa = await resolverEmpresaId(targetEmpresaRaw);
   const targetPeriodo = periodoPreset || 'mes_atual';
   const targetUnidade = unidade || 'Todas';
 
