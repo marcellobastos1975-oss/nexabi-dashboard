@@ -96,9 +96,10 @@ export async function fetchCompanyMetrics(
   const targetUnidade = unidade || 'Todas';
 
   // 3.1 Consulta prioritária e ultra-rápida à tabela bi_dashboard_cache (quando não for período personalizado)
-  if (!forceRefresh && periodoPreset !== 'custom') {
+  if (periodoPreset !== 'custom') {
     try {
-      const cacheUrl = `${SUPABASE_DEFAULT_URL}/rest/v1/bi_dashboard_cache?empresa_id=eq.${encodeURIComponent(targetEmpresa)}&periodo=eq.${encodeURIComponent(targetPeriodo)}&filial=eq.${encodeURIComponent(targetUnidade)}&select=metricas,atualizado_em`;
+      const cacheBuster = forceRefresh ? `&_t=${now}` : '';
+      const cacheUrl = `${SUPABASE_DEFAULT_URL}/rest/v1/bi_dashboard_cache?empresa_id=eq.${encodeURIComponent(targetEmpresa)}&periodo=eq.${encodeURIComponent(targetPeriodo)}&filial=eq.${encodeURIComponent(targetUnidade)}&select=metricas,atualizado_em${cacheBuster}`;
       const ctrlFast = new AbortController();
       const tidFast = setTimeout(() => ctrlFast.abort(), 4000);
 
@@ -175,9 +176,11 @@ export async function fetchCompanyMetrics(
     console.warn('Falha ao consultar get_dashboard_metrics no Supabase:', err);
   }
 
-  // 4. Se a rede oscilar ou falhar, preserva dados anteriores em cache ao invés de zerar a tela
-  if (cachedEntry && cachedEntry.data) {
-    return cachedEntry.data;
+  // 4. Se a rede oscilar ou falhar, preserva SEMPRE dados anteriores em cache ao invés de zerar a tela (Padrão Resiliente)
+  const existingData = metricsCache.get(cacheKey) || cachedEntry?.data;
+  if (existingData && existingData.hasData) {
+    console.info('Preservando snapshot anterior seguro no Dashboard (resiliência ativa)');
+    return existingData;
   }
 
   // Fallback caso ocorra falha de rede ou timeout

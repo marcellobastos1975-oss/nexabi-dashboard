@@ -1,4 +1,4 @@
-export const APP_VERSION = 'v2.8.8 PROD';
+export const APP_VERSION = 'v2.8.9 PROD';
 export const APP_NAME = 'NexaBI — Alpha Suite';
 export const URL_API = 'https://web-production-46d47f.up.railway.app/api';
 export const SUPABASE_URL = 'https://fwlexdycmquuwfrfwokv.supabase.co';

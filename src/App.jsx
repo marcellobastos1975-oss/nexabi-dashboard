@@ -217,7 +217,6 @@ export default function App() {
   };
 
   const handleAtualizar = () => {
-    clearMetricsCache();
     setAtualizando(true);
     setRefreshCounter(c => c + 1);
     setTimeout(() => {
@@ -232,13 +231,11 @@ export default function App() {
     const timer = setInterval(() => {
       // Se a aba estiver em segundo plano, não consome requisições do Supabase
       if (document.hidden) return;
-      clearMetricsCache();
       setRefreshCounter(c => c + 1);
     }, autoRefreshIntervalo * 1000);
 
     const onVisibilityChange = () => {
       if (!document.hidden && autoRefreshIntervalo > 0) {
-        clearMetricsCache();
         setRefreshCounter(c => c + 1);
       }
     };
