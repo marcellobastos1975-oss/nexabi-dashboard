@@ -1,8 +1,18 @@
-import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
+import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY, APP_VERSION } from '../config';
 
-const STORAGE_PREFIX = 'nexabi_metrics_v2_';
+const STORAGE_PREFIX = `nexabi_metrics_${APP_VERSION.replace(/[^a-zA-Z0-9]/g, '_')}_`;
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutos (sincronizado com bi_dashboard_cache)
 const metricsCache = new Map();
+
+// Limpeza automática imediata de caches de versões anteriores no localStorage
+try {
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('nexabi_metrics_') && !k.startsWith(STORAGE_PREFIX)) {
+      localStorage.removeItem(k);
+    }
+  }
+} catch (e) {}
 
 // =============================================================================
 // RESOLVEDOR CNPJ → UUID (Correção definitiva do descompasso de identificadores)
@@ -86,7 +96,7 @@ export function clearMetricsCache() {
     const keysToRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith(STORAGE_PREFIX)) {
+      if (k && k.startsWith('nexabi_metrics_')) {
         keysToRemove.push(k);
       }
     }
@@ -140,12 +150,7 @@ export async function fetchCompanyMetrics(
   const cacheKey = getMetricsCacheKey(empresaId, periodoPreset, unidade, dataInicio, dataFim);
   const now = Date.now();
 
-  // 1. Se já estiver em cache na sessão atual (RAM) e não for refresh forçado, retorna imediatamente
-  if (!forceRefresh && metricsCache.has(cacheKey)) {
-    return metricsCache.get(cacheKey);
-  }
-
-  // 2. Verificar cache persistente no localStorage
+  // Obter snapshot prévio para resiliência imediata caso a rede falhe
   let cachedEntry = null;
   try {
     const raw = localStorage.getItem(STORAGE_PREFIX + cacheKey);
@@ -153,10 +158,6 @@ export async function fetchCompanyMetrics(
       cachedEntry = JSON.parse(raw);
       if (cachedEntry && cachedEntry.data) {
         metricsCache.set(cacheKey, cachedEntry.data);
-        // Se ainda for recente (< 15 min) e não for refresh manual forçado, retorna de imediato
-        if (!forceRefresh && (now - cachedEntry.timestamp < CACHE_TTL_MS)) {
-          return cachedEntry.data;
-        }
       }
     }
   } catch (e) {}
