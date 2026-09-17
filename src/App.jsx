@@ -16,7 +16,7 @@ import Login from './Login';
 import ModalGerenciarUsuarios from './components/ModalGerenciarUsuarios';
 import ModalGerenciarEmpresas from './components/ModalGerenciarEmpresas';
 import AIAssistantDrawer from './components/AIAssistantDrawer';
-import { getTodasEmpresas, getFiliaisEmpresa } from './empresaStore';
+import { getTodasEmpresas, getFiliaisEmpresa, getEmpresasSincronas, EMPRESAS_PADRAO } from './empresaStore';
 import { APP_VERSION } from './config';
 import { clearMetricsCache } from './services/dashboardDataService';
 
@@ -40,6 +40,24 @@ const CATALOGO_EMPRESAS = {
     erp: 'Multi-ERP',
     unidades: [
       { id: 'Todas', label: '🏢 Todas as Unidades (Rede Global)' }
+    ]
+  },
+  '30.820.528/0001-78': {
+    id: '30.820.528/0001-78',
+    nome: 'DESTAK PRIME',
+    labelSelect: '🏪 DESTAK PRIME (Próton ERP)',
+    erp: 'Próton (Oracle)',
+    unidades: [
+      { id: 'Todas', label: '🏢 Todas as Filiais (DESTAK PRIME)' }
+    ]
+  },
+  '10.237.062/0001-75': {
+    id: '10.237.062/0001-75',
+    nome: 'ARCO VERDE',
+    labelSelect: '🏪 ARCO VERDE (Próton ERP)',
+    erp: 'Próton (Oracle)',
+    unidades: [
+      { id: 'Todas', label: '🏢 Todas as Filiais (ARCO VERDE)' }
     ]
   },
   silva: {
@@ -126,7 +144,7 @@ export default function App() {
   const [modalUsuariosAberto, setModalUsuariosAberto] = useState(false);
   const [modalEmpresasAberto, setModalEmpresasAberto] = useState(false);
   const [drawerAIAberto, setDrawerAIAberto] = useState(false);
-  const [empresasCadastradas, setEmpresasCadastradas] = useState([]);
+  const [empresasCadastradas, setEmpresasCadastradas] = useState(() => getEmpresasSincronas());
   const [listaUnidades, setListaUnidades] = useState([
     { id: 'Todas', label: '🏢 Todas as Unidades' }
   ]);
@@ -152,8 +170,12 @@ export default function App() {
   };
 
   useEffect(() => {
-    getTodasEmpresas().then(setEmpresasCadastradas);
-  }, [modalEmpresasAberto, usuario]);
+    getTodasEmpresas().then(dados => {
+      if (Array.isArray(dados) && dados.length > 0) {
+        setEmpresasCadastradas(dados);
+      }
+    });
+  }, [modalEmpresasAberto, usuario, refreshCounter]);
 
   useEffect(() => {
     if (usuario) {
@@ -353,7 +375,7 @@ export default function App() {
                   title="Filtro Master: Clientes Reais Homologados (Consolidado ou Individual)"
                 >
                   <option value="todas">🏢 Todas as Empresas Reais (Consolidado)</option>
-                  {empresasCadastradas
+                  {(empresasCadastradas && empresasCadastradas.length > 0 ? empresasCadastradas : EMPRESAS_PADRAO)
                     .filter(e => e.cnpj !== '00.000.000/0001-00')
                     .map(e => (
                       <option key={e.id || e.cnpj} value={e.cnpj}>

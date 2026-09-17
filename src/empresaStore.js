@@ -9,6 +9,28 @@ const EMPRESAS_CACHE_KEY = 'nexabi_empresas_cache';
 
 export const EMPRESAS_PADRAO = [
   {
+    id: '433f17e6-6eba-4de1-b8d0-9715d34089f3',
+    razao_social: 'DESTAK EMBALAGEM LTDA',
+    nome_fantasia: 'DESTAK PRIME',
+    cnpj: '30.820.528/0001-78',
+    api_key: 'NEXABI_SEC_30820528000178_ZYOMSQ274D',
+    erp_tipo: 'PROTON',
+    banco_tipo: 'ORACLE',
+    ativo: true,
+    criado_em: '2026-08-29T18:35:43Z'
+  },
+  {
+    id: 'f7acf52e-3f6b-4bff-b561-44f14d0861fa',
+    razao_social: 'JGSM IND COM IMP E EXP DE ALIMENTOS LTDA',
+    nome_fantasia: 'ARCO VERDE',
+    cnpj: '10.237.062/0001-75',
+    api_key: 'NEXABI_SEC_10237062000175_KZCLB64HEQ',
+    erp_tipo: 'PROTON',
+    banco_tipo: 'ORACLE',
+    ativo: true,
+    criado_em: '2026-08-31T11:46:47Z'
+  },
+  {
     id: 'e0b957c7-2cfb-4e34-bdb3-fec462e71931',
     razao_social: 'LOJAS SILVA CASA & CONFORTO LTDA',
     nome_fantasia: 'Lojas Silva (Demonstração)',
@@ -18,30 +40,19 @@ export const EMPRESAS_PADRAO = [
     banco_tipo: 'ORACLE',
     ativo: true,
     criado_em: '2026-08-20T18:42:03Z'
-  },
-  {
-    id: 'f1c234a5-6789-4bcd-8ef0-1234567890ab',
-    razao_social: 'REDE NORDESTE MÓVEIS & ELETRO LTDA',
-    nome_fantasia: 'Rede Nordeste Móveis & Eletro',
-    cnpj: '11.222.333/0001-44',
-    api_key: 'NEXABI_SEC_NORDESTE_2026',
-    erp_tipo: 'PROTON',
-    banco_tipo: 'ORACLE',
-    ativo: true,
-    criado_em: '2026-08-21T10:00:00Z'
-  },
-  {
-    id: 'a9b8c7d6-e5f4-3210-fedc-ba9876543210',
-    razao_social: 'ALPHA DISTRIBUIDORA DE ALIMENTOS & LOGÍSTICA S.A.',
-    nome_fantasia: 'Alpha Distribuidora & Logística',
-    cnpj: '22.333.444/0001-55',
-    api_key: 'NEXABI_SEC_ALPHA_2026',
-    erp_tipo: 'TOTVS_PROTHEUS',
-    banco_tipo: 'SQLSERVER',
-    ativo: true,
-    criado_em: '2026-08-21T12:00:00Z'
   }
 ];
+
+export function getEmpresasSincronas() {
+  try {
+    const salvo = localStorage.getItem(EMPRESAS_CACHE_KEY);
+    if (salvo) {
+      const parsed = JSON.parse(salvo);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return EMPRESAS_PADRAO;
+}
 
 export function gerarApiKeySegura(cnpj) {
   const limpo = (cnpj || '').replace(/\D/g, '') || '000';
@@ -52,12 +63,16 @@ export function gerarApiKeySegura(cnpj) {
 
 export async function getTodasEmpresas() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/empresas?select=*&order=criado_em.desc`, {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 4000);
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/empresas?select=*&order=criado_em.desc&_t=${Date.now()}`, {
+      signal: ctrl.signal,
       headers: {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
       }
     });
+    clearTimeout(tid);
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
@@ -69,10 +84,13 @@ export async function getTodasEmpresas() {
     console.warn('Falha ao consultar Supabase REST para empresas:', err);
   }
 
-  // Fallback cache local ou padrão
+  // Fallback cache local ou padrão com as empresas reais
   try {
     const salvo = localStorage.getItem(EMPRESAS_CACHE_KEY);
-    if (salvo) return JSON.parse(salvo);
+    if (salvo) {
+      const parsed = JSON.parse(salvo);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
   } catch {}
 
   return EMPRESAS_PADRAO;
