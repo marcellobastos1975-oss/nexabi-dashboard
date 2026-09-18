@@ -1,7 +1,7 @@
 {
   "name": "nexabi-alpha-proton-dashboard",
   "private": true,
-  "version": "2.9.3",
+  "version": "2.9.4",
   "type": "module",
   "scripts": {
     "prebuild": "node copy_og.cjs",

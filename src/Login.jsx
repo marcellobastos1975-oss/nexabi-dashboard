@@ -39,16 +39,9 @@ export default function Login({ onLogin }) {
       localStorage.removeItem('nexabi_auth_user'); // Limpa resíduos legados
       sessionStorage.setItem('nexabi_auth_session', JSON.stringify(res.usuario));
 
-      // Pré-carregamento defensivo na nuvem com timeout de segurança (máx 1.5s)
+      // Pré-carregamento assíncrono antecipado (non-blocking)
       const targetEmpresa = res.usuario.perfil === 'master' ? 'todas' : (res.usuario.empresaId || 'todas');
-      try {
-        await Promise.race([
-          fetchCompanyMetrics(targetEmpresa, 'mes_atual', 'Todas'),
-          new Promise(resolve => setTimeout(resolve, 1500))
-        ]);
-      } catch (err) {
-        console.warn('Pré-carregamento defensivo de métricas em background:', err);
-      }
+      fetchCompanyMetrics(targetEmpresa, 'mes_atual', 'Todas').catch(() => {});
 
       setLoading(false);
       onLogin(res.usuario);

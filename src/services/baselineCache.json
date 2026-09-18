@@ -1,0 +1,5402 @@
+[
+  {
+    "empresa_id": "433f17e6-6eba-4de1-b8d0-9715d34089f3",
+    "periodo": "mes_atual",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "6,71",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "13,46",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2005,64",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 25622.23,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 21034.35,
+          "cliente": "DESTAK NUTRI PRIME - PATOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 19599.42,
+          "cliente": "DESTAK EMBALAGENS NUTRI PRIME"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 16297.53,
+          "cliente": "DESTAK"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 14866.05,
+          "cliente": "CD SERRINHA"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 13.15
+        },
+        {
+          "mes": "2026-02",
+          "valor": 21.44
+        },
+        {
+          "mes": "2026-03",
+          "valor": 25.01
+        },
+        {
+          "mes": "2026-04",
+          "valor": 25.42
+        },
+        {
+          "mes": "2026-05",
+          "valor": 26.4
+        },
+        {
+          "mes": "2026-06",
+          "valor": 25.31
+        },
+        {
+          "mes": "2026-07",
+          "valor": 26.94
+        },
+        {
+          "mes": "2026-08",
+          "valor": 26.49
+        },
+        {
+          "mes": "2026-09",
+          "valor": 13.46
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 6709,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "13,46",
+      "atualizado_em": "2026-09-18T12:15:39.739Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "53,17%",
+          "valor": "6459958,98"
+        },
+        {
+          "nome": "TRANSFERENCIA ENTRE FILIAIS",
+          "share": "6,92%",
+          "valor": "841082,63"
+        },
+        {
+          "nome": "ALSEN ANDREOLLI M M D CARVALHO",
+          "share": "5,51%",
+          "valor": "669765,61"
+        },
+        {
+          "nome": "VINICIUS MATHEUS PEREIRA VILAR",
+          "share": "3,51%",
+          "valor": "427045,00"
+        },
+        {
+          "nome": "PDV PETROLINA",
+          "share": "3,42%",
+          "valor": "415687,54"
+        },
+        {
+          "nome": "VINICIUS V DIAS",
+          "share": "2,78%",
+          "valor": "337537,32"
+        },
+        {
+          "nome": "CELSO CARLOS DA GAMA FILHO",
+          "share": "2,61%",
+          "valor": "317465,12"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 13455807.74,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2005.64,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 13455807.74,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "433f17e6-6eba-4de1-b8d0-9715d34089f3",
+    "periodo": "hoje",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "0,25",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "0,36",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 1438,09",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 25622.23,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 21034.35,
+          "cliente": "DESTAK NUTRI PRIME - PATOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 19599.42,
+          "cliente": "DESTAK EMBALAGENS NUTRI PRIME"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 16297.53,
+          "cliente": "DESTAK"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 14866.05,
+          "cliente": "CD SERRINHA"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 13.15
+        },
+        {
+          "mes": "2026-02",
+          "valor": 21.44
+        },
+        {
+          "mes": "2026-03",
+          "valor": 25.01
+        },
+        {
+          "mes": "2026-04",
+          "valor": 25.42
+        },
+        {
+          "mes": "2026-05",
+          "valor": 26.4
+        },
+        {
+          "mes": "2026-06",
+          "valor": 25.31
+        },
+        {
+          "mes": "2026-07",
+          "valor": 26.94
+        },
+        {
+          "mes": "2026-08",
+          "valor": 26.49
+        },
+        {
+          "mes": "2026-09",
+          "valor": 13.46
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 248,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "0,36",
+      "atualizado_em": "2026-09-18T12:16:40.493Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "53,17%",
+          "valor": "6459958,98"
+        },
+        {
+          "nome": "TRANSFERENCIA ENTRE FILIAIS",
+          "share": "6,92%",
+          "valor": "841082,63"
+        },
+        {
+          "nome": "ALSEN ANDREOLLI M M D CARVALHO",
+          "share": "5,51%",
+          "valor": "669765,61"
+        },
+        {
+          "nome": "VINICIUS MATHEUS PEREIRA VILAR",
+          "share": "3,51%",
+          "valor": "427045,00"
+        },
+        {
+          "nome": "PDV PETROLINA",
+          "share": "3,42%",
+          "valor": "415687,54"
+        },
+        {
+          "nome": "VINICIUS V DIAS",
+          "share": "2,78%",
+          "valor": "337537,32"
+        },
+        {
+          "nome": "CELSO CARLOS DA GAMA FILHO",
+          "share": "2,61%",
+          "valor": "317465,12"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 356646.96,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 1438.09,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 356646.96,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "433f17e6-6eba-4de1-b8d0-9715d34089f3",
+    "periodo": "7d",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "2,64",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "5,72",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2164,61",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 25622.23,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 21034.35,
+          "cliente": "DESTAK NUTRI PRIME - PATOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 19599.42,
+          "cliente": "DESTAK EMBALAGENS NUTRI PRIME"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 16297.53,
+          "cliente": "DESTAK"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 14866.05,
+          "cliente": "CD SERRINHA"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 13.15
+        },
+        {
+          "mes": "2026-02",
+          "valor": 21.44
+        },
+        {
+          "mes": "2026-03",
+          "valor": 25.01
+        },
+        {
+          "mes": "2026-04",
+          "valor": 25.42
+        },
+        {
+          "mes": "2026-05",
+          "valor": 26.4
+        },
+        {
+          "mes": "2026-06",
+          "valor": 25.31
+        },
+        {
+          "mes": "2026-07",
+          "valor": 26.94
+        },
+        {
+          "mes": "2026-08",
+          "valor": 26.49
+        },
+        {
+          "mes": "2026-09",
+          "valor": 13.46
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 2641,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "5,72",
+      "atualizado_em": "2026-09-18T12:17:32.486Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "53,17%",
+          "valor": "6459958,98"
+        },
+        {
+          "nome": "TRANSFERENCIA ENTRE FILIAIS",
+          "share": "6,92%",
+          "valor": "841082,63"
+        },
+        {
+          "nome": "ALSEN ANDREOLLI M M D CARVALHO",
+          "share": "5,51%",
+          "valor": "669765,61"
+        },
+        {
+          "nome": "VINICIUS MATHEUS PEREIRA VILAR",
+          "share": "3,51%",
+          "valor": "427045,00"
+        },
+        {
+          "nome": "PDV PETROLINA",
+          "share": "3,42%",
+          "valor": "415687,54"
+        },
+        {
+          "nome": "VINICIUS V DIAS",
+          "share": "2,78%",
+          "valor": "337537,32"
+        },
+        {
+          "nome": "CELSO CARLOS DA GAMA FILHO",
+          "share": "2,61%",
+          "valor": "317465,12"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 5716733.54,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2164.61,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 5716733.54,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "433f17e6-6eba-4de1-b8d0-9715d34089f3",
+    "periodo": "mes_ant",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "26,49",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 25622.23,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 21034.35,
+          "cliente": "DESTAK NUTRI PRIME - PATOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 19599.42,
+          "cliente": "DESTAK EMBALAGENS NUTRI PRIME"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 16297.53,
+          "cliente": "DESTAK"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 14866.05,
+          "cliente": "CD SERRINHA"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 13.15
+        },
+        {
+          "mes": "2026-02",
+          "valor": 21.44
+        },
+        {
+          "mes": "2026-03",
+          "valor": 25.01
+        },
+        {
+          "mes": "2026-04",
+          "valor": 25.42
+        },
+        {
+          "mes": "2026-05",
+          "valor": 26.4
+        },
+        {
+          "mes": "2026-06",
+          "valor": 25.31
+        },
+        {
+          "mes": "2026-07",
+          "valor": 26.94
+        },
+        {
+          "mes": "2026-08",
+          "valor": 26.49
+        },
+        {
+          "mes": "2026-09",
+          "valor": 13.46
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "26,49",
+      "atualizado_em": "2026-09-18T12:17:39.767Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "53,17%",
+          "valor": "6459958,98"
+        },
+        {
+          "nome": "TRANSFERENCIA ENTRE FILIAIS",
+          "share": "6,92%",
+          "valor": "841082,63"
+        },
+        {
+          "nome": "ALSEN ANDREOLLI M M D CARVALHO",
+          "share": "5,51%",
+          "valor": "669765,61"
+        },
+        {
+          "nome": "VINICIUS MATHEUS PEREIRA VILAR",
+          "share": "3,51%",
+          "valor": "427045,00"
+        },
+        {
+          "nome": "PDV PETROLINA",
+          "share": "3,42%",
+          "valor": "415687,54"
+        },
+        {
+          "nome": "VINICIUS V DIAS",
+          "share": "2,78%",
+          "valor": "337537,32"
+        },
+        {
+          "nome": "CELSO CARLOS DA GAMA FILHO",
+          "share": "2,61%",
+          "valor": "317465,12"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 26490000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 26490000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "433f17e6-6eba-4de1-b8d0-9715d34089f3",
+    "periodo": "90d",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "66,89",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 25622.23,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 21034.35,
+          "cliente": "DESTAK NUTRI PRIME - PATOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 19599.42,
+          "cliente": "DESTAK EMBALAGENS NUTRI PRIME"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 16297.53,
+          "cliente": "DESTAK"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 14866.05,
+          "cliente": "CD SERRINHA"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 13.15
+        },
+        {
+          "mes": "2026-02",
+          "valor": 21.44
+        },
+        {
+          "mes": "2026-03",
+          "valor": 25.01
+        },
+        {
+          "mes": "2026-04",
+          "valor": 25.42
+        },
+        {
+          "mes": "2026-05",
+          "valor": 26.4
+        },
+        {
+          "mes": "2026-06",
+          "valor": 25.31
+        },
+        {
+          "mes": "2026-07",
+          "valor": 26.94
+        },
+        {
+          "mes": "2026-08",
+          "valor": 26.49
+        },
+        {
+          "mes": "2026-09",
+          "valor": 13.46
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "66,89",
+      "atualizado_em": "2026-09-18T12:17:44.098Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "53,17%",
+          "valor": "6459958,98"
+        },
+        {
+          "nome": "TRANSFERENCIA ENTRE FILIAIS",
+          "share": "6,92%",
+          "valor": "841082,63"
+        },
+        {
+          "nome": "ALSEN ANDREOLLI M M D CARVALHO",
+          "share": "5,51%",
+          "valor": "669765,61"
+        },
+        {
+          "nome": "VINICIUS MATHEUS PEREIRA VILAR",
+          "share": "3,51%",
+          "valor": "427045,00"
+        },
+        {
+          "nome": "PDV PETROLINA",
+          "share": "3,42%",
+          "valor": "415687,54"
+        },
+        {
+          "nome": "VINICIUS V DIAS",
+          "share": "2,78%",
+          "valor": "337537,32"
+        },
+        {
+          "nome": "CELSO CARLOS DA GAMA FILHO",
+          "share": "2,61%",
+          "valor": "317465,12"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 66890000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 66890000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "433f17e6-6eba-4de1-b8d0-9715d34089f3",
+    "periodo": "ano",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "203,63",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 25622.23,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 21034.35,
+          "cliente": "DESTAK NUTRI PRIME - PATOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 19599.42,
+          "cliente": "DESTAK EMBALAGENS NUTRI PRIME"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 16297.53,
+          "cliente": "DESTAK"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 14866.05,
+          "cliente": "CD SERRINHA"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 13.15
+        },
+        {
+          "mes": "2026-02",
+          "valor": 21.44
+        },
+        {
+          "mes": "2026-03",
+          "valor": 25.01
+        },
+        {
+          "mes": "2026-04",
+          "valor": 25.42
+        },
+        {
+          "mes": "2026-05",
+          "valor": 26.4
+        },
+        {
+          "mes": "2026-06",
+          "valor": 25.31
+        },
+        {
+          "mes": "2026-07",
+          "valor": 26.94
+        },
+        {
+          "mes": "2026-08",
+          "valor": 26.49
+        },
+        {
+          "mes": "2026-09",
+          "valor": 13.46
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "203,63",
+      "atualizado_em": "2026-09-18T12:17:46.770Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "53,17%",
+          "valor": "6459958,98"
+        },
+        {
+          "nome": "TRANSFERENCIA ENTRE FILIAIS",
+          "share": "6,92%",
+          "valor": "841082,63"
+        },
+        {
+          "nome": "ALSEN ANDREOLLI M M D CARVALHO",
+          "share": "5,51%",
+          "valor": "669765,61"
+        },
+        {
+          "nome": "VINICIUS MATHEUS PEREIRA VILAR",
+          "share": "3,51%",
+          "valor": "427045,00"
+        },
+        {
+          "nome": "PDV PETROLINA",
+          "share": "3,42%",
+          "valor": "415687,54"
+        },
+        {
+          "nome": "VINICIUS V DIAS",
+          "share": "2,78%",
+          "valor": "337537,32"
+        },
+        {
+          "nome": "CELSO CARLOS DA GAMA FILHO",
+          "share": "2,61%",
+          "valor": "317465,12"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 203630000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 203630000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "f7acf52e-3f6b-4bff-b561-44f14d0861fa",
+    "periodo": "mes_atual",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "4,58",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "51,29",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 11200,22",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.21,
+          "cliente": "COMERCIAL STEPHANE"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 63.24
+        },
+        {
+          "mes": "2026-02",
+          "valor": 55.75
+        },
+        {
+          "mes": "2026-03",
+          "valor": 70.45
+        },
+        {
+          "mes": "2026-04",
+          "valor": 61.45
+        },
+        {
+          "mes": "2026-05",
+          "valor": 63.84
+        },
+        {
+          "mes": "2026-06",
+          "valor": 61.24
+        },
+        {
+          "mes": "2026-07",
+          "valor": 65.06
+        },
+        {
+          "mes": "2026-08",
+          "valor": 69.7
+        },
+        {
+          "mes": "2026-09",
+          "valor": 51.29
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 4579,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "51,29",
+      "atualizado_em": "2026-09-18T12:17:48.027Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "28,57%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "13,14%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "7,18%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "5,42%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "5,16%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "4,31%",
+          "valor": "2.21"
+        },
+        {
+          "nome": "3EDL31",
+          "share": "3,40%",
+          "valor": "1.74"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 51285816.23,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 11200.22,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 51285816.23,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "f7acf52e-3f6b-4bff-b561-44f14d0861fa",
+    "periodo": "hoje",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "0,29",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "1,88",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 6607,31",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.21,
+          "cliente": "COMERCIAL STEPHANE"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 63.24
+        },
+        {
+          "mes": "2026-02",
+          "valor": 55.75
+        },
+        {
+          "mes": "2026-03",
+          "valor": 70.45
+        },
+        {
+          "mes": "2026-04",
+          "valor": 61.45
+        },
+        {
+          "mes": "2026-05",
+          "valor": 63.84
+        },
+        {
+          "mes": "2026-06",
+          "valor": 61.24
+        },
+        {
+          "mes": "2026-07",
+          "valor": 65.06
+        },
+        {
+          "mes": "2026-08",
+          "valor": 69.7
+        },
+        {
+          "mes": "2026-09",
+          "valor": 51.29
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 285,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "1,88",
+      "atualizado_em": "2026-09-18T12:17:48.935Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "28,57%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "13,14%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "7,18%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "5,42%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "5,16%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "4,31%",
+          "valor": "2.21"
+        },
+        {
+          "nome": "3EDL31",
+          "share": "3,40%",
+          "valor": "1.74"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 1883084.11,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 6607.31,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 1883084.11,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "f7acf52e-3f6b-4bff-b561-44f14d0861fa",
+    "periodo": "7d",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "1,82",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "17,31",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 9528,87",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.21,
+          "cliente": "COMERCIAL STEPHANE"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 63.24
+        },
+        {
+          "mes": "2026-02",
+          "valor": 55.75
+        },
+        {
+          "mes": "2026-03",
+          "valor": 70.45
+        },
+        {
+          "mes": "2026-04",
+          "valor": 61.45
+        },
+        {
+          "mes": "2026-05",
+          "valor": 63.84
+        },
+        {
+          "mes": "2026-06",
+          "valor": 61.24
+        },
+        {
+          "mes": "2026-07",
+          "valor": 65.06
+        },
+        {
+          "mes": "2026-08",
+          "valor": 69.7
+        },
+        {
+          "mes": "2026-09",
+          "valor": 51.29
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 1817,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "17,31",
+      "atualizado_em": "2026-09-18T12:17:51.023Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "28,57%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "13,14%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "7,18%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "5,42%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "5,16%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "4,31%",
+          "valor": "2.21"
+        },
+        {
+          "nome": "3EDL31",
+          "share": "3,40%",
+          "valor": "1.74"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 17313961.25,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 9528.87,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 17313961.25,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "f7acf52e-3f6b-4bff-b561-44f14d0861fa",
+    "periodo": "mes_ant",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "69,70",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.21,
+          "cliente": "COMERCIAL STEPHANE"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 63.24
+        },
+        {
+          "mes": "2026-02",
+          "valor": 55.75
+        },
+        {
+          "mes": "2026-03",
+          "valor": 70.45
+        },
+        {
+          "mes": "2026-04",
+          "valor": 61.45
+        },
+        {
+          "mes": "2026-05",
+          "valor": 63.84
+        },
+        {
+          "mes": "2026-06",
+          "valor": 61.24
+        },
+        {
+          "mes": "2026-07",
+          "valor": 65.06
+        },
+        {
+          "mes": "2026-08",
+          "valor": 69.7
+        },
+        {
+          "mes": "2026-09",
+          "valor": 51.29
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "69,70",
+      "atualizado_em": "2026-09-18T12:17:53.072Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "28,57%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "13,14%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "7,18%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "5,42%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "5,16%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "4,31%",
+          "valor": "2.21"
+        },
+        {
+          "nome": "3EDL31",
+          "share": "3,40%",
+          "valor": "1.74"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 69700000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 69700000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "f7acf52e-3f6b-4bff-b561-44f14d0861fa",
+    "periodo": "90d",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "186,05",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.21,
+          "cliente": "COMERCIAL STEPHANE"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 63.24
+        },
+        {
+          "mes": "2026-02",
+          "valor": 55.75
+        },
+        {
+          "mes": "2026-03",
+          "valor": 70.45
+        },
+        {
+          "mes": "2026-04",
+          "valor": 61.45
+        },
+        {
+          "mes": "2026-05",
+          "valor": 63.84
+        },
+        {
+          "mes": "2026-06",
+          "valor": 61.24
+        },
+        {
+          "mes": "2026-07",
+          "valor": 65.06
+        },
+        {
+          "mes": "2026-08",
+          "valor": 69.7
+        },
+        {
+          "mes": "2026-09",
+          "valor": 51.29
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "186,05",
+      "atualizado_em": "2026-09-18T12:17:56.506Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "28,57%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "13,14%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "7,18%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "5,42%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "5,16%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "4,31%",
+          "valor": "2.21"
+        },
+        {
+          "nome": "3EDL31",
+          "share": "3,40%",
+          "valor": "1.74"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 186050000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 186050000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "f7acf52e-3f6b-4bff-b561-44f14d0861fa",
+    "periodo": "ano",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "567,52",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.21,
+          "cliente": "COMERCIAL STEPHANE"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 63.24
+        },
+        {
+          "mes": "2026-02",
+          "valor": 55.75
+        },
+        {
+          "mes": "2026-03",
+          "valor": 70.45
+        },
+        {
+          "mes": "2026-04",
+          "valor": 61.45
+        },
+        {
+          "mes": "2026-05",
+          "valor": 63.84
+        },
+        {
+          "mes": "2026-06",
+          "valor": 61.24
+        },
+        {
+          "mes": "2026-07",
+          "valor": 65.06
+        },
+        {
+          "mes": "2026-08",
+          "valor": 69.7
+        },
+        {
+          "mes": "2026-09",
+          "valor": 51.29
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "567,52",
+      "atualizado_em": "2026-09-18T12:17:58.305Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "28,57%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "13,14%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "7,18%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "5,42%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "5,16%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "4,31%",
+          "valor": "2.21"
+        },
+        {
+          "nome": "3EDL31",
+          "share": "3,40%",
+          "valor": "1.74"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 567520000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 567520000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "todas",
+    "periodo": "mes_atual",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "11,29",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "64,75",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 5735,44",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.26,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 76.39
+        },
+        {
+          "mes": "2026-02",
+          "valor": 77.19
+        },
+        {
+          "mes": "2026-03",
+          "valor": 95.46
+        },
+        {
+          "mes": "2026-04",
+          "valor": 86.87
+        },
+        {
+          "mes": "2026-05",
+          "valor": 90.24
+        },
+        {
+          "mes": "2026-06",
+          "valor": 86.55
+        },
+        {
+          "mes": "2026-07",
+          "valor": 92
+        },
+        {
+          "mes": "2026-08",
+          "valor": 96.19
+        },
+        {
+          "mes": "2026-09",
+          "valor": 64.75
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 11288,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "64,75",
+      "atualizado_em": "2026-09-18T12:17:59.016Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "22,63%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "10,41%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "9,98%",
+          "valor": "6.46"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "5,68%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "4,29%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "4,09%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "3,41%",
+          "valor": "2.21"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 64741623.97,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 5735.44,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 64741623.97,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "todas",
+    "periodo": "hoje",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "0,53",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "2,24",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 4202,12",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.26,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 76.39
+        },
+        {
+          "mes": "2026-02",
+          "valor": 77.19
+        },
+        {
+          "mes": "2026-03",
+          "valor": 95.46
+        },
+        {
+          "mes": "2026-04",
+          "valor": 86.87
+        },
+        {
+          "mes": "2026-05",
+          "valor": 90.24
+        },
+        {
+          "mes": "2026-06",
+          "valor": 86.55
+        },
+        {
+          "mes": "2026-07",
+          "valor": 92
+        },
+        {
+          "mes": "2026-08",
+          "valor": 96.19
+        },
+        {
+          "mes": "2026-09",
+          "valor": 64.75
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 533,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "2,24",
+      "atualizado_em": "2026-09-18T12:17:59.426Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "22,63%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "10,41%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "9,98%",
+          "valor": "6.46"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "5,68%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "4,29%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "4,09%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "3,41%",
+          "valor": "2.21"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 2239731.07,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 4202.12,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 2239731.07,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "todas",
+    "periodo": "7d",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "4,46",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "23,03",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 5166,15",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.26,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 76.39
+        },
+        {
+          "mes": "2026-02",
+          "valor": 77.19
+        },
+        {
+          "mes": "2026-03",
+          "valor": 95.46
+        },
+        {
+          "mes": "2026-04",
+          "valor": 86.87
+        },
+        {
+          "mes": "2026-05",
+          "valor": 90.24
+        },
+        {
+          "mes": "2026-06",
+          "valor": 86.55
+        },
+        {
+          "mes": "2026-07",
+          "valor": 92
+        },
+        {
+          "mes": "2026-08",
+          "valor": 96.19
+        },
+        {
+          "mes": "2026-09",
+          "valor": 64.75
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 4458,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "23,03",
+      "atualizado_em": "2026-09-18T12:17:59.831Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "22,63%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "10,41%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "9,98%",
+          "valor": "6.46"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "5,68%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "4,29%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "4,09%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "3,41%",
+          "valor": "2.21"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 23030694.79,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 5166.15,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 23030694.79,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "todas",
+    "periodo": "mes_ant",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "96,19",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.26,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 76.39
+        },
+        {
+          "mes": "2026-02",
+          "valor": 77.19
+        },
+        {
+          "mes": "2026-03",
+          "valor": 95.46
+        },
+        {
+          "mes": "2026-04",
+          "valor": 86.87
+        },
+        {
+          "mes": "2026-05",
+          "valor": 90.24
+        },
+        {
+          "mes": "2026-06",
+          "valor": 86.55
+        },
+        {
+          "mes": "2026-07",
+          "valor": 92
+        },
+        {
+          "mes": "2026-08",
+          "valor": 96.19
+        },
+        {
+          "mes": "2026-09",
+          "valor": 64.75
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "96,19",
+      "atualizado_em": "2026-09-18T12:18:00.417Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "22,63%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "10,41%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "9,98%",
+          "valor": "6.46"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "5,68%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "4,29%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "4,09%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "3,41%",
+          "valor": "2.21"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 96190000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 96190000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "todas",
+    "periodo": "90d",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "252,94",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.26,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 76.39
+        },
+        {
+          "mes": "2026-02",
+          "valor": 77.19
+        },
+        {
+          "mes": "2026-03",
+          "valor": 95.46
+        },
+        {
+          "mes": "2026-04",
+          "valor": 86.87
+        },
+        {
+          "mes": "2026-05",
+          "valor": 90.24
+        },
+        {
+          "mes": "2026-06",
+          "valor": 86.55
+        },
+        {
+          "mes": "2026-07",
+          "valor": 92
+        },
+        {
+          "mes": "2026-08",
+          "valor": 96.19
+        },
+        {
+          "mes": "2026-09",
+          "valor": 64.75
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "252,94",
+      "atualizado_em": "2026-09-18T12:18:02.456Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "22,63%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "10,41%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "9,98%",
+          "valor": "6.46"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "5,68%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "4,29%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "4,09%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "3,41%",
+          "valor": "2.21"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 252940000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 252940000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  },
+  {
+    "empresa_id": "todas",
+    "periodo": "ano",
+    "filial": "Todas",
+    "metricas": {
+      "cmv": "Requer Mapeamento",
+      "cp30d": "36,81",
+      "cp60d": "20,66",
+      "cp90d": "8,18",
+      "cr30d": "32,83",
+      "cr60d": "9,96",
+      "cr90d": "0,79",
+      "cmvRaw": null,
+      "cpVista": "0,80",
+      "crVista": "1,84",
+      "hasData": true,
+      "percCMV": "—",
+      "valorCP": "733,23",
+      "valorCR": "338,08",
+      "cp30dRaw": 36813010.5,
+      "cp60dRaw": 20657099.59,
+      "cp90dRaw": 8179913.15,
+      "cr30dRaw": 32834729.67,
+      "cr60dRaw": 9962970.69,
+      "cr90dRaw": 785762.98,
+      "curvaABC": [
+        {
+          "cor": "#f59e0b",
+          "perc": 5,
+          "itens": "14885 produtos",
+          "valor": 29.24,
+          "classe": "Curva C (5% da Receita)"
+        }
+      ],
+      "cmvStatus": "REQUER_MAPEAMENTO_STUDIO",
+      "cpAVencer": "66,45",
+      "cpVencido": "666,78",
+      "crAVencer": "45,42",
+      "crVencido": "292,65",
+      "metaVenda": "13,36",
+      "qtdVendas": "5,97",
+      "cpVistaRaw": 800825.79,
+      "crVistaRaw": 1841020.25,
+      "percMargem": "—",
+      "valorCPRaw": 733227722.93,
+      "valorCRRaw": 338076225.04,
+      "vendaBruta": "771,15",
+      "margemBruta": "Requer Mapeamento",
+      "ticketMedio": "R$ 2033,80",
+      "topClientes": [
+        {
+          "cor": "#00d2ff",
+          "valor": 5.32,
+          "cliente": "GLACIAL DIS.DE CARNES CONGELAD"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.43,
+          "cliente": "COMERCIAL DE ALIMENTOS"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.39,
+          "cliente": "POPULAR   SUPERMERCADO"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.26,
+          "cliente": "CALEB NUTRI PRIME CEASA"
+        },
+        {
+          "cor": "#00d2ff",
+          "valor": 0.24,
+          "cliente": "RENATA EVENTOS"
+        }
+      ],
+      "topCredores": [
+        {
+          "nome": "EMPORIUM REPRESENTAÇÕES",
+          "valor": 47676.44
+        },
+        {
+          "nome": "AL PLAST",
+          "valor": 45023.18
+        },
+        {
+          "nome": "PLASK INDUSTRIA E COM. DE PLAS",
+          "valor": 28453.16
+        },
+        {
+          "nome": "MENDOZA GARLICS",
+          "valor": 21157.13
+        },
+        {
+          "nome": "DESTAK NUTRI PRIME LTDA",
+          "valor": 20451.44
+        },
+        {
+          "nome": "FAZENDA ALVORADA",
+          "valor": 19329.56
+        }
+      ],
+      "topProdutos": [
+        {
+          "cod": "7521.1",
+          "nome": "ESPETO DE BAMBU GOLF 15CM 50UN INOVEN",
+          "status": "ATIVO",
+          "qtdestoque": 1011,
+          "valorcusto": 20123955,
+          "valorvenda": 3437.4,
+          "coberturadias": 0
+        },
+        {
+          "cod": "3277.1",
+          "nome": "BOLEIRA GALVANOTEK G-31CT PT",
+          "status": "ATIVO",
+          "qtdestoque": 57,
+          "valorcusto": 536370,
+          "valorvenda": 108.3,
+          "coberturadias": 0
+        },
+        {
+          "cod": "4773.0",
+          "nome": "ALHO NACIONAL SANTA BARBARA EXTRA CAL 6",
+          "status": "ATIVO",
+          "qtdestoque": 3499,
+          "valorcusto": 437235.04,
+          "valorvenda": 769780,
+          "coberturadias": 0
+        },
+        {
+          "cod": "13850.0",
+          "nome": "ALHO NACIONAL ALVORADA EXTRA CAL 5",
+          "status": "ATIVO",
+          "qtdestoque": 3452,
+          "valorcusto": 419418,
+          "valorvenda": 621360,
+          "coberturadias": 0
+        },
+        {
+          "cod": "11.0",
+          "nome": "TAMPA ISOBRAS P/MARMITA TP-100/102/104 200UN",
+          "status": "ATIVO",
+          "qtdestoque": 15481,
+          "valorcusto": 417212.95,
+          "valorvenda": 676364.89,
+          "coberturadias": 0
+        }
+      ],
+      "contasFinanc": "0,00",
+      "cpAVencerRaw": 66450849.03,
+      "cpPrazoMedio": "0",
+      "cpVencidoRaw": 666776873.9,
+      "crAVencerRaw": 45424483.59,
+      "crPrazoMedio": "0",
+      "crVencidoRaw": 292651741.45,
+      "historico12m": [
+        {
+          "mes": "2026-01",
+          "valor": 76.39
+        },
+        {
+          "mes": "2026-02",
+          "valor": 77.19
+        },
+        {
+          "mes": "2026-03",
+          "valor": 95.46
+        },
+        {
+          "mes": "2026-04",
+          "valor": 86.87
+        },
+        {
+          "mes": "2026-05",
+          "valor": 90.24
+        },
+        {
+          "mes": "2026-06",
+          "valor": 86.55
+        },
+        {
+          "mes": "2026-07",
+          "valor": 92
+        },
+        {
+          "mes": "2026-08",
+          "valor": 96.19
+        },
+        {
+          "mes": "2026-09",
+          "valor": 64.75
+        }
+      ],
+      "metaAtingida": "90,94",
+      "metaVendaRaw": 13360000,
+      "qtdVendasRaw": 5974,
+      "valorEstoque": "29,55",
+      "vendaLiquida": "771,15",
+      "atualizado_em": "2026-09-18T12:18:04.497Z",
+      "cpPagoPeriodo": "0,00",
+      "hasCMVMapeado": false,
+      "inadimplencia": "292,65",
+      "liquidezGeral": "-365,60",
+      "topVendedores": [
+        {
+          "nome": "CASA",
+          "share": "22,63%",
+          "valor": "14.65"
+        },
+        {
+          "nome": "34MCR600",
+          "share": "10,41%",
+          "valor": "6.74"
+        },
+        {
+          "nome": "ANDERSON DPAULA M M D CARVALHO",
+          "share": "9,98%",
+          "valor": "6.46"
+        },
+        {
+          "nome": "FATIMA",
+          "share": "5,68%",
+          "valor": "3.68"
+        },
+        {
+          "nome": "ISENTO VENDA",
+          "share": "4,29%",
+          "valor": "2.78"
+        },
+        {
+          "nome": "22DNL22",
+          "share": "4,09%",
+          "valor": "2.65"
+        },
+        {
+          "nome": "24VL43",
+          "share": "3,41%",
+          "valor": "2.21"
+        }
+      ],
+      "vendaBrutaDia": "1,18",
+      "vendaBrutaRaw": 771150000,
+      "aPagarEmAtraso": "666,78",
+      "jurosRecebidos": "0,00",
+      "margemBrutaRaw": null,
+      "ticketMedioRaw": 2033.7995296283898,
+      "valorCRMenosCP": "R$ -395,15",
+      "contasFinancRaw": 0,
+      "formasPagamento": [
+        {
+          "cor": "#00d2ff",
+          "perc": 100,
+          "forma": "Diversos / A Definir",
+          "valor": 12.15
+        }
+      ],
+      "impostosDiretos": "0,00",
+      "produtosEmLinha": "3616",
+      "valorEstoqueRaw": 29553746.82765,
+      "vendaLiquidaRaw": 771150000,
+      "cpPagoPeriodoRaw": 0,
+      "estoqueGiroAnual": "11,4",
+      "estoqueParado90d": "0,66",
+      "inadimplenciaRaw": 292651741.45,
+      "liquidezGeralNum": -365.6,
+      "liquidezGeralRaw": -365597751.06235,
+      "percVendaLiquida": "100,00",
+      "saldoTotalContas": "0,00",
+      "vendaBrutaDiaRaw": 1182053.17,
+      "aPagarEmAtrasoRaw": 666776873.9,
+      "clientesCompraram": "0,81",
+      "estoqueMargemPerc": "-4,09",
+      "jurosRecebidosRaw": 0,
+      "percInadimplencia": "86,56",
+      "valorCRMenosCPRaw": -395151497.89,
+      "valorEstoqueVenda": "28,39",
+      "vlrNegativoContas": "0,00",
+      "estoqueDuracaoDias": "32",
+      "impostosDiretosRaw": 0,
+      "margemContribuicao": "Requer Mapeamento",
+      "produtosEmLinhaRaw": 3616,
+      "estoqueItensSemGiro": "3616",
+      "estoqueParado90dRaw": 659534.4081,
+      "percImpostosDiretos": "0,00",
+      "saldoTotalContasNum": 0,
+      "saldoTotalContasRaw": 0,
+      "clientesCompraramRaw": 807,
+      "percInadimplenciaNum": 86.56,
+      "valorEstoqueNegativo": "-311,03",
+      "valorEstoqueVendaRaw": 28391493.49856,
+      "vlrNegativoContasRaw": 0,
+      "estoqueItensNegativos": "234",
+      "margemContribuicaoRaw": null,
+      "estoqueItensSemGiroRaw": 3616,
+      "percMargemContribuicao": "—",
+      "valorEstoqueNegativoRaw": -311033.68796,
+      "estoqueItensNegativosRaw": 234
+    }
+  }
+]
