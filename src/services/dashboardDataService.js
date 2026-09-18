@@ -1,8 +1,7 @@
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY, APP_VERSION } from '../config';
 import baselineEntries from './baselineCache.json';
 
-const STORAGE_PREFIX = 
-exabi_metrics__;
+const STORAGE_PREFIX = 'nexabi_metrics_' + APP_VERSION.replace(/[^a-zA-Z0-9]/g, '_') + '_';
 const metricsCache = new Map();
 const inFlightRequests = new Map();
 
