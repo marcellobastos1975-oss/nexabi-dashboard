@@ -226,6 +226,23 @@ async function _doFetchCompanyMetrics(
   // 1. Consulta prioritária à tabela bi_dashboard_cache (para todos os presets canônicos)
   if (periodoPreset !== 'custom') {
     try {
+      if (forceRefresh) {
+        try {
+          fetch(SUPABASE_DEFAULT_URL + '/rest/v1/rpc/refresh_dashboard_cache', {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              p_empresa_id: targetEmpresa,
+              p_modulo: 'todos',
+              p_periodo: targetPeriodo
+            })
+          }).catch(() => {});
+        } catch (_) {}
+      }
       const cacheBuster = forceRefresh ? '&_t=' + now : '';
       const cacheUrl = SUPABASE_DEFAULT_URL + '/rest/v1/bi_dashboard_cache?empresa_id=eq.' + encodeURIComponent(targetEmpresa) + '&periodo=eq.' + encodeURIComponent(targetPeriodo) + '&filial=eq.' + encodeURIComponent(targetUnidade) + '&select=metricas,atualizado_em' + cacheBuster;
       
