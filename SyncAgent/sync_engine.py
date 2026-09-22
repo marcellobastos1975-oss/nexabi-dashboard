@@ -40,7 +40,7 @@ from oracle_queries import (
 
 logger = logging.getLogger('NexaBI-SyncEngine')
 
-APP_VERSION = "v1.9.5 PROD"
+APP_VERSION = "v1.9.6 PROD"
 
 def _criar_sessao_cloud_resiliente():
     s = requests.Session()

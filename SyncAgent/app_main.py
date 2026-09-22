@@ -54,12 +54,12 @@ from oracle_queries import QUERY_DELTA_VENDAS_ITENS_PROTON, QUERY_DELTA_VENDAS_I
 
 try:
     # Registra ID explícito para que a Barra de Tarefas e Título do Windows exibam o ícone 3D N oficial
-    myappid = "NexaLife.NexaBI.SyncAgent.v1.9.5"
+    myappid = "NexaLife.NexaBI.SyncAgent.v1.9.6"
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 except Exception:
     pass
 
-APP_VERSION = "v1.9.5 PROD"
+APP_VERSION = "v1.9.6 PROD"
 
 def _setup_agent_logger():
     try:
