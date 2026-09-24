@@ -28,6 +28,7 @@ export default function Vendas({
       metaVenda: '0,00',
       metaAtingida: '0,00',
       topVendedores: [],
+      topClientes: [],
       formasPagamento: []
     };
   });
@@ -44,6 +45,7 @@ export default function Vendas({
   const vendaBrutaNum = parseFloat((metricas?.vendaBruta || '0').replace(',', '.')) || 0;
   const temDados = Boolean(metricas && vendaBrutaNum > 0);
   const listaVendedores = (temDados && metricas.topVendedores && metricas.topVendedores.length > 0) ? metricas.topVendedores : [];
+  const listaTopClientes = (temDados && metricas.topClientes && metricas.topClientes.length > 0) ? metricas.topClientes : [];
   const listaFormas = (temDados && metricas.formasPagamento && metricas.formasPagamento.length > 0) ? metricas.formasPagamento : [];
 
   return (
@@ -195,6 +197,54 @@ export default function Vendas({
           ) : (
             <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px', padding: '20px 0' }}>
               Nenhum ranking de vendas disponível.
+            </div>
+          )}
+        </div>
+
+        {/* Ranking de Clientes que Mais Compram */}
+        <div className="glass-card" style={{ padding: 16, overflowX: 'auto' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', marginBottom: 10 }}>
+            👑 Clientes que Mais Compram — NexaBI Performance
+          </h3>
+          {listaTopClientes.length > 0 ? (
+            <table style={{ width: '100%', fontSize: '11px', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: '6px 4px', textAlign: 'left' }}>Cliente</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Total (R$)</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Pedidos</th>
+                  <th style={{ padding: '6px 4px', textAlign: 'right' }}>Part. (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {listaTopClientes.map((c, i) => {
+                  const nomeCliente = c.cliente || `Cliente ${i + 1}`;
+                  const valorNum = typeof c.valorraw === 'number' ? c.valorraw : ((parseFloat(String(c.valormi || '0').replace(',', '.')) || 0) * 1000000);
+                  const valorFormatado = valorNum >= 1000000 
+                    ? `R$ ${(valorNum / 1000000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mi`
+                    : `R$ ${(valorNum / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mil`;
+                  const shareFormatado = c.share || (vendaBrutaNum > 0 
+                    ? `${((valorNum / (vendaBrutaNum * 1000000)) * 100).toFixed(1).replace('.', ',')}%` 
+                    : '-');
+
+                  return (
+                    <tr key={nomeCliente + i} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                      <td style={{ padding: '6px 4px' }}>
+                        <span style={{ color: i < 3 ? '#00d2ff' : '#fff', fontWeight: i < 3 ? 700 : 400 }}>
+                          {i + 1}º {nomeCliente}
+                        </span>
+                      </td>
+                      <td style={{ padding: '6px 4px', textAlign: 'right', fontWeight: 600 }}>{valorFormatado}</td>
+                      <td style={{ padding: '6px 4px', textAlign: 'right', color: '#94a3b8' }}>{c.qtdpedidos || c.qtdPedidos || '-'}</td>
+                      <td style={{ padding: '6px 4px', textAlign: 'right', color: '#10b981', fontWeight: 600 }}>{shareFormatado}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px', padding: '20px 0' }}>
+              Nenhum ranking de clientes disponível.
             </div>
           )}
         </div>

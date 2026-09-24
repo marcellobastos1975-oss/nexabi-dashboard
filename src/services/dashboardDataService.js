@@ -20,6 +20,8 @@ if (Array.isArray(baselineEntries)) {
       baselineMap.set('30820528000178_' + entry.periodo + '_' + entry.filial, entry.metricas);
     }
     if (entry.empresa_id === 'f7acf52e-3f6b-4bff-b561-44f14d0861fa') {
+      baselineMap.set('10.237.062/0001-75_' + entry.periodo + '_' + entry.filial, entry.metricas);
+      baselineMap.set('10237062000175_' + entry.periodo + '_' + entry.filial, entry.metricas);
       baselineMap.set('41.341.659/0001-09_' + entry.periodo + '_' + entry.filial, entry.metricas);
       baselineMap.set('41341659000109_' + entry.periodo + '_' + entry.filial, entry.metricas);
     }
