@@ -275,23 +275,6 @@ export default function App() {
     setUnidade('Todas');
   };
 
-  // Validação de Módulo Ativo: garante que o usuário não permaneça em módulos desativados
-  useEffect(() => {
-    if (!usuario) return;
-    const empresaReal = empresasCadastradas.find(e => e.cnpj === clienteAtivo || e.id === clienteAtivo);
-    const modConfig = empresaReal?.modulos_config || usuario.modulos_config;
-    const isValido = (moduloAtivo === 'panorama' || moduloAtivo === 'vendas') || Boolean(
-      modConfig && (
-        moduloAtivo === 'cr' ? modConfig.contas_receber :
-        moduloAtivo === 'cp' ? modConfig.contas_pagar :
-        modConfig[moduloAtivo]
-      )
-    );
-    if (!isValido) {
-      setModuloAtivo('panorama');
-    }
-  }, [moduloAtivo, clienteAtivo, empresasCadastradas, usuario]);
-
   // Se não estiver logado, exibe a tela de login (TODOS OS HOOKS JÁ EXECUTADOS ACIMA)
   if (!usuario) {
     return <Login onLogin={handleLogin} />;
@@ -635,16 +618,9 @@ export default function App() {
         </div>
       </header>
 
-      {/* Navegação entre os Módulos Habilitados (Filtro por modulos_config / Isolamento de Vendas) */}
+      {/* Navegação entre os 8 Módulos do Ecossistema NexaBI */}
       <nav style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 10, marginBottom: 16 }}>
-        {MODULOS.filter(m => {
-          if (m.id === 'panorama' || m.id === 'vendas') return true;
-          const configKey = m.id === 'cr' ? 'contas_receber' : m.id === 'cp' ? 'contas_pagar' : m.id;
-          if (dadosEmpresaAtual?.modulos_config) {
-            return Boolean(dadosEmpresaAtual.modulos_config[configKey]);
-          }
-          return false;
-        }).map(m => {
+        {MODULOS.map(m => {
           const Icon = m.icon;
           const isActive = moduloAtivo === m.id;
           return (

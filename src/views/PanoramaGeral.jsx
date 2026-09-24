@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import KPICard from '../components/KPICard';
+import LiquidityGauge from '../components/LiquidityGauge';
 import DynamicCardRenderer from '../components/DynamicCardRenderer';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
-import { Sparkles, Users, Award, TrendingUp, CreditCard } from 'lucide-react';
+import { Sparkles, TrendingUp, CreditCard } from 'lucide-react';
 import { SUPABASE_DEFAULT_URL, SUPABASE_ANON_KEY } from '../config';
 import { fetchCompanyMetrics, getCachedCompanyMetrics } from '../services/dashboardDataService';
 import { formatarMoedaExata, formatarNumeroInteiro } from '../maskUtils';
@@ -33,11 +34,27 @@ export default function PanoramaGeral({
       ticketMedio: 'R$ 0,00',
       clientesCompraram: '0,00',
       vendaBrutaDia: '0,00',
+      valorCR: '0,00',
+      crVencido: '0,00',
+      inadimplencia: '0,00',
+      percInadimplencia: '0,00',
+      jurosRecebidos: '0,00',
+      valorCP: '0,00',
+      cpVencido: '0,00',
+      aPagarEmAtraso: '0,00',
+      valorCRMenosCP: 'R$ 0,00',
+      valorEstoque: '0,00',
+      contasFinanc: '0,00',
+      vlrNegativoContas: '0,00',
+      saldoTotalContas: '0,00',
+      saldoTotalContasNum: 0,
+      liquidezGeral: '0,00',
+      liquidezGeralNum: 0,
+      margemBruta: '0,00',
+      percMargem: '0,00',
       metaVenda: '0,00',
       metaAtingida: '0,00',
       historico12m: [],
-      topVendedores: [],
-      topClientes: [],
       formasPagamento: []
     };
   });
@@ -118,14 +135,6 @@ export default function PanoramaGeral({
       { mes: '2026-09', valor: 0 },
     ];
 
-  const listaVendedores = (temDados && metricas.topVendedores && metricas.topVendedores.length > 0) 
-    ? metricas.topVendedores 
-    : [];
-
-  const listaTopClientes = (temDados && metricas.topClientes && metricas.topClientes.length > 0) 
-    ? metricas.topClientes 
-    : [];
-
   const listaFormas = (temDados && metricas.formasPagamento && metricas.formasPagamento.length > 0) 
     ? metricas.formasPagamento 
     : [];
@@ -146,32 +155,12 @@ export default function PanoramaGeral({
           gap: 10
         }}>
           <span style={{ fontSize: '14px' }}>⚡</span>
-          <span>Sincronizando indicadores de vendas em tempo real com a nuvem...</span>
+          <span>Sincronizando indicadores analíticos em tempo real com a nuvem...</span>
         </div>
       )}
 
-      {/* Alerta de Empresa Sem Dados Sincronizados */}
-      {!carregando && !temDados && !metricas?.isNetworkError && (
-        <div style={{
-          background: 'rgba(59, 130, 246, 0.12)',
-          border: '1px solid rgba(59, 130, 246, 0.35)',
-          color: '#93c5fd',
-          padding: '12px 18px',
-          borderRadius: 12,
-          fontSize: '13px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10
-        }}>
-          <span style={{ fontSize: '18px' }}>ℹ️</span>
-          <div>
-            <strong>Aguardando Primeira Sincronização:</strong> Nenhum pedido de venda localizado para <strong>{nomeEmpresa}</strong> no banco em nuvem. Abra o <strong>NexaBI-SyncAgent</strong> no servidor/estação do cliente para iniciar a ingestão contínua das vendas do ERP Próton.
-          </div>
-        </div>
-      )}
-
-      {/* Alerta de Tempo Excedido / Instabilidade de Rede */}
-      {!carregando && !temDados && metricas?.isNetworkError && (
+      {/* Alerta de Resposta de Rede */}
+      {metricas?.isNetworkError && (
         <div style={{
           background: 'rgba(239, 68, 68, 0.12)',
           border: '1px solid rgba(239, 68, 68, 0.35)',
@@ -187,7 +176,7 @@ export default function PanoramaGeral({
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: '18px' }}>⚠️</span>
             <div>
-              <strong>Tempo de Resposta Excedido:</strong> A nuvem demorou mais que o esperado para consolidar os indicadores de vendas.
+              <strong>Tempo de Resposta Excedido:</strong> A nuvem demorou mais que o esperado para consolidar os indicadores.
             </div>
           </div>
           <button 
@@ -208,8 +197,8 @@ export default function PanoramaGeral({
         </div>
       )}
 
-      {/* 1. Grade Superior: Grandes Números de Vendas (Cockpit Executivo) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
+      {/* 1. Grade Superior: Grandes Números da Empresa */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
         <KPICard 
           label="Venda Bruta" 
           value={carregando && metricas.vendaBruta === '0,00' ? '...' : (temDados ? metricas.vendaBruta : "0,00")} 
@@ -225,18 +214,51 @@ export default function PanoramaGeral({
           highlight={temDados && metricas.vendaLiquida !== '0,00' ? "green" : "default"} 
         />
         <KPICard 
-          label="Venda do Dia" 
-          value={temDados ? metricas.vendaBrutaDia : "0,00"} 
-          exactValue={temDados ? formatarMoedaExata(metricas.vendaBrutaDiaRaw) : "R$ 0,00"} 
-          suffix=" Mi" 
-          highlight={temDados && metricas.vendaBrutaDia !== '0,00' ? "cyan" : "default"} 
+          label="Valor Estoque" 
+          value={carregando && metricas.valorEstoque === '0,00' ? '...' : (temDados && metricas.valorEstoque !== '0,00' ? metricas.valorEstoque : "0,00")} 
+          exactValue={temDados && metricas.valorEstoqueRaw ? formatarMoedaExata(metricas.valorEstoqueRaw) : "R$ 0,00"} 
+          suffix={carregando && metricas.valorEstoque === '0,00' ? '' : " Mi"} 
+          highlight={temDados && metricas.valorEstoque !== '0,00' ? "purple" : "default"} 
         />
         <KPICard 
-          label="Ticket Médio" 
-          value={temDados ? metricas.ticketMedio : "R$ 0,00"} 
-          exactValue={temDados ? (metricas.ticketMedioRaw ? formatarMoedaExata(metricas.ticketMedioRaw) : metricas.ticketMedio) : "R$ 0,00"} 
-          suffix="" 
+          label="Valor CR" 
+          value={carregando && metricas.valorCR === '0,00' ? '...' : (temDados && metricas.valorCR !== '0,00' ? metricas.valorCR : "0,00")} 
+          exactValue={temDados && metricas.valorCRRaw ? formatarMoedaExata(metricas.valorCRRaw) : "R$ 0,00"} 
+          suffix={carregando && metricas.valorCR === '0,00' ? '' : " Mi"} 
+          highlight={temDados && metricas.valorCR !== '0,00' ? "yellow" : "default"} 
         />
+        <KPICard 
+          label="Valor CP" 
+          value={carregando && metricas.valorCP === '0,00' ? '...' : (temDados && metricas.valorCP !== '0,00' ? metricas.valorCP : "0,00")} 
+          exactValue={temDados && metricas.valorCPRaw ? formatarMoedaExata(metricas.valorCPRaw) : "R$ 0,00"} 
+          suffix={carregando && metricas.valorCP === '0,00' ? '' : " Mi"} 
+          highlight={temDados && metricas.valorCP !== '0,00' ? "blue" : "default"} 
+        />
+        <KPICard 
+          label="Contas Financ." 
+          value={carregando && metricas.contasFinanc === '0,00' ? '...' : (temDados && metricas.contasFinanc !== '0,00' ? metricas.contasFinanc : "0,00")} 
+          exactValue={temDados && metricas.contasFinancRaw ? formatarMoedaExata(metricas.contasFinancRaw) : "R$ 0,00"} 
+          suffix={carregando && metricas.contasFinanc === '0,00' ? '' : " Mi"} 
+          highlight={temDados && metricas.contasFinanc !== '0,00' ? "cyan" : "default"} 
+        />
+        <KPICard 
+          label="Margem Bruta" 
+          value={carregando && metricas.margemBruta === '0,00' ? '...' : (temDados && metricas.margemBruta !== '0,00' ? metricas.margemBruta : "0,00")} 
+          exactValue={temDados && metricas.margemBrutaRaw ? formatarMoedaExata(metricas.margemBrutaRaw) : "R$ 0,00"} 
+          suffix={carregando && metricas.margemBruta === '0,00' ? '' : " Mi"} 
+          highlight={temDados && metricas.margemBruta !== '0,00' ? "green" : "default"} 
+        />
+        <KPICard 
+          label="Inadimplência" 
+          value={carregando && metricas.inadimplencia === '0,00' ? '...' : (temDados && metricas.inadimplencia !== '0,00' ? metricas.inadimplencia : "0,00")} 
+          exactValue={temDados && metricas.inadimplenciaRaw ? formatarMoedaExata(metricas.inadimplenciaRaw) : "R$ 0,00"} 
+          suffix={carregando && metricas.inadimplencia === '0,00' ? '' : " Mi"} 
+          highlight={temDados && metricas.inadimplencia !== '0,00' ? "red" : "default"} 
+        />
+      </div>
+
+      {/* 2. Grade Intermediária: Indicadores Operacionais */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
         <KPICard 
           label="Qtd. Vendas" 
           value={temDados ? metricas.qtdVendas : "0,00"} 
@@ -250,6 +272,58 @@ export default function PanoramaGeral({
           suffix={temDados ? " Mil" : " Mi"} 
         />
         <KPICard 
+          label="Juros Recebidos" 
+          value={temDados && metricas.jurosRecebidos !== '0,00' ? metricas.jurosRecebidos : "0,00"} 
+          exactValue={temDados && metricas.jurosRecebidosRaw ? formatarMoedaExata(metricas.jurosRecebidosRaw) : "R$ 0,00"} 
+          suffix=" Mi" 
+          highlight={temDados && metricas.jurosRecebidos !== '0,00' ? "green" : "default"} 
+        />
+        <KPICard 
+          label="A Pagar em Atraso" 
+          value={temDados && metricas.aPagarEmAtraso !== '0,00' ? metricas.aPagarEmAtraso : "0,00"} 
+          exactValue={temDados && metricas.aPagarEmAtrasoRaw ? formatarMoedaExata(metricas.aPagarEmAtrasoRaw) : "R$ 0,00"} 
+          suffix=" Mi" 
+          highlight={temDados && metricas.aPagarEmAtraso !== '0,00' ? "red" : "default"} 
+        />
+        <KPICard 
+          label="Vlr Negativo C. Fin" 
+          value={temDados && metricas.vlrNegativoContas !== '0,00' ? metricas.vlrNegativoContas : "0,00"} 
+          exactValue={temDados && metricas.vlrNegativoContasRaw ? formatarMoedaExata(metricas.vlrNegativoContasRaw) : "R$ 0,00"} 
+          suffix=" Mi" 
+          highlight={temDados && metricas.vlrNegativoContas !== '0,00' ? "red" : "default"} 
+        />
+        <KPICard 
+          label="% Margem" 
+          value={temDados && metricas.percMargem !== '0,00' ? metricas.percMargem : "0,00"} 
+          exactValue={temDados && metricas.percMargem !== '0,00' ? `${metricas.percMargem}%` : "0,00%"} 
+          suffix="%" 
+          highlight={temDados && metricas.percMargem !== '0,00' ? "green" : "default"} 
+        />
+        <KPICard 
+          label="% Inadimplência" 
+          value={temDados && metricas.percInadimplencia !== '0,00' ? metricas.percInadimplencia : "0,00"} 
+          exactValue={temDados && metricas.percInadimplencia !== '0,00' ? `${metricas.percInadimplencia}%` : "0,00%"} 
+          suffix="%" 
+          highlight={temDados && metricas.percInadimplencia !== '0,00' ? "red" : "default"} 
+        />
+      </div>
+
+      {/* 3. Grade de Velocidade e Metas */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 10 }}>
+        <KPICard 
+          label="Venda do Dia" 
+          value={temDados ? metricas.vendaBrutaDia : "0,00"} 
+          exactValue={temDados ? formatarMoedaExata(metricas.vendaBrutaDiaRaw) : "R$ 0,00"} 
+          suffix=" Mi" 
+          highlight={temDados && metricas.vendaBrutaDia !== '0,00' ? "cyan" : "default"} 
+        />
+        <KPICard 
+          label="Ticket Médio" 
+          value={temDados ? metricas.ticketMedio : "R$ 0,00"} 
+          exactValue={temDados ? (metricas.ticketMedioRaw ? formatarMoedaExata(metricas.ticketMedioRaw) : metricas.ticketMedio) : "R$ 0,00"} 
+          suffix="" 
+        />
+        <KPICard 
           label="Meta da Venda" 
           value={temDados ? metricas.metaVenda : "0,00"} 
           exactValue={temDados ? formatarMoedaExata(metricas.metaVendaRaw) : "R$ 0,00"} 
@@ -257,11 +331,41 @@ export default function PanoramaGeral({
           highlight={temDados ? "green" : "default"} 
           badge={temDados && metricas.metaAtingida ? `${metricas.metaAtingida}%` : null}
         />
+        <KPICard 
+          label="Valor CR - CP" 
+          value={temDados && metricas.valorCRMenosCP !== 'R$ 0,00' ? metricas.valorCRMenosCP : "R$ 0,00"} 
+          exactValue={temDados && metricas.valorCRMenosCPRaw ? formatarMoedaExata(metricas.valorCRMenosCPRaw) : "R$ 0,00"} 
+          suffix="" 
+          highlight={temDados && metricas.valorCRMenosCP !== 'R$ 0,00' ? "yellow" : "default"} 
+        />
+        <KPICard 
+          label="Itens Estoque Negativo" 
+          value={temDados && metricas.estoqueItensNegativos ? metricas.estoqueItensNegativos : "0"} 
+          exactValue={temDados && metricas.estoqueItensNegativosRaw ? formatarNumeroInteiro(metricas.estoqueItensNegativosRaw, 'itens') : "0 itens"} 
+          suffix={temDados ? " Itens" : ""} 
+          highlight={temDados && Number(metricas.estoqueItensNegativos) > 0 ? "red" : "default"} 
+        />
       </div>
 
-      {/* 2. Seção Central: Gráfico de Histórico de Vendas Mensal + Formas de Pagamento */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 16 }}>
-        {/* Gráfico Histórico de Vendas */}
+      {/* 4. Seção Central: Gauges de Liquidez + Gráficos */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+        {/* Gauges de Liquidez */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <LiquidityGauge 
+            title="Saldo Total das Contas" 
+            value={temDados ? (metricas.saldoTotalContasNum || 0) : 0} 
+            color="#7928ca" 
+            max={50} 
+          />
+          <LiquidityGauge 
+            title="(Est. + CR + Ctas) - CP" 
+            value={temDados ? (metricas.liquidezGeralNum || 0) : 0} 
+            color="#00d2ff" 
+            max={50} 
+          />
+        </div>
+
+        {/* Gráfico Histórico de Vendas Mensal */}
         <div className="glass-card" style={{ padding: 18, minHeight: 250, flex: 2 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
             <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -317,122 +421,7 @@ export default function PanoramaGeral({
         </div>
       </div>
 
-      {/* 3. Seção de Rankings: Vendedores e Clientes que Mais Compram */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 16 }}>
-        {/* Ranking de Vendedores */}
-        <div className="glass-card" style={{ padding: 18, overflowX: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Award size={16} color="#38bdf8" />
-              <span>🏆 Top Vendedores — Performance</span>
-            </h3>
-            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>{periodoDesc}</span>
-          </div>
-          {listaVendedores.length > 0 ? (
-            <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
-                  <th style={{ padding: '8px 6px', textAlign: 'left' }}>Vendedor</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'right' }}>Venda (R$)</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'right' }}>Part. (%)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {listaVendedores.map((v, i) => {
-                  const nomeVendedor = v.vendedor || v.nome || `Vendedor ${i + 1}`;
-                  const valorNum = parseFloat(String(v.valor || '0').replace(',', '.')) || 0;
-                  const valorFormatado = valorNum >= 1000 
-                    ? `R$ ${(valorNum / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mi`
-                    : `R$ ${valorNum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mil`;
-                  const shareFormatado = v.share || (vendaBrutaNum > 0 
-                    ? `${((valorNum / (vendaBrutaNum * 1000)) * 100).toFixed(1).replace('.', ',')}%` 
-                    : '-');
-
-                  return (
-                    <tr key={nomeVendedor + i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                      <td style={{ padding: '8px 6px' }}>
-                        <span style={{ color: i < 3 ? '#38bdf8' : '#e2e8f0', fontWeight: i < 3 ? 700 : 400 }}>
-                          {i + 1}º {nomeVendedor}
-                        </span>
-                      </td>
-                      <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: '#f8fafc' }}>
-                        {valorFormatado}
-                      </td>
-                      <td style={{ padding: '8px 6px', textAlign: 'right', color: '#10b981', fontWeight: 700 }}>
-                        {shareFormatado}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          ) : (
-            <div style={{ textAlign: 'center', color: '#64748b', fontSize: '12px', padding: '30px 0' }}>
-              Nenhum ranking de vendedores disponível para este período.
-            </div>
-          )}
-        </div>
-
-        {/* Ranking de Clientes que Mais Compram */}
-        <div className="glass-card" style={{ padding: 18, overflowX: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Users size={16} color="#00d2ff" />
-              <span>👑 Clientes que Mais Compram</span>
-            </h3>
-            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>{periodoDesc}</span>
-          </div>
-          {listaTopClientes.length > 0 ? (
-            <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
-                  <th style={{ padding: '8px 6px', textAlign: 'left' }}>Cliente</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'right' }}>Total Comprado</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'right' }}>Pedidos</th>
-                  <th style={{ padding: '8px 6px', textAlign: 'right' }}>Share (%)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {listaTopClientes.map((c, i) => {
-                  const nomeCliente = c.cliente || `Cliente ${i + 1}`;
-                  const valorNum = typeof c.valorraw === 'number' ? c.valorraw : ((parseFloat(String(c.valormi || '0').replace(',', '.')) || 0) * 1000000);
-                  const valorFormatado = valorNum >= 1000000 
-                    ? `R$ ${(valorNum / 1000000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mi`
-                    : `R$ ${(valorNum / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mil`;
-                  const shareFormatado = c.share || (vendaBrutaNum > 0 
-                    ? `${((valorNum / (vendaBrutaNum * 1000000)) * 100).toFixed(1).replace('.', ',')}%` 
-                    : '-');
-
-                  return (
-                    <tr key={nomeCliente + i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                      <td style={{ padding: '8px 6px' }}>
-                        <span style={{ color: i < 3 ? '#00d2ff' : '#e2e8f0', fontWeight: i < 3 ? 700 : 400 }}>
-                          {i + 1}º {nomeCliente}
-                        </span>
-                      </td>
-                      <td style={{ padding: '8px 6px', textAlign: 'right', fontWeight: 600, color: '#f8fafc' }}>
-                        {valorFormatado}
-                      </td>
-                      <td style={{ padding: '8px 6px', textAlign: 'right', color: '#94a3b8', fontWeight: 500 }}>
-                        {c.qtdpedidos || c.qtdPedidos || '-'}
-                      </td>
-                      <td style={{ padding: '8px 6px', textAlign: 'right', color: '#10b981', fontWeight: 700 }}>
-                        {shareFormatado}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          ) : (
-            <div style={{ textAlign: 'center', color: '#64748b', fontSize: '12px', padding: '30px 0' }}>
-              Nenhum ranking de clientes disponível para este período.
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* 4. Seção de Cards & Insights Personalizados da IA (Fixados no Painel) */}
+      {/* 5. Seção de Cards & Insights Personalizados da IA (Fixados no Painel) */}
       {widgetsCustomizados.length > 0 && (
         <div style={{ marginTop: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
